@@ -10,7 +10,7 @@ declare enum RideStatus {
   NO_SHOW = 'no_show'           // Khách không xuất hiện
 }
 
-declare interface Driver {
+export interface Driver {
   id: number;
   first_name: string;
   last_name: string;
@@ -22,7 +22,7 @@ declare interface Driver {
   approval_status: string;
 }
 
-declare interface MarkerData {
+export interface MarkerData {
   latitude: number;
   longitude: number;
   id: number;
@@ -39,7 +39,7 @@ declare interface MarkerData {
   price?: string;
 }
 
-declare interface MapProps {
+export interface MapProps {
   destinationLatitude?: number;
   destinationLongitude?: number;
   onDriverTimesCalculated?: (driversWithTimes: MarkerData[]) => void;
@@ -91,7 +91,7 @@ export interface Ride {
   };
 }
 
-declare interface Rating {
+export interface Rating {
   id: number;
   ride_id: number;
   user_id: string;
@@ -101,7 +101,7 @@ declare interface Rating {
   created_at: string;
 }
 
-declare interface ButtonProps extends TouchableOpacityProps {
+export interface ButtonProps extends TouchableOpacityProps {
   title: string;
   bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success" | "amber" | "red";
   textVariant?: "primary" | "default" | "secondary" | "danger" | "success" | "amber" | "red";
@@ -111,7 +111,7 @@ declare interface ButtonProps extends TouchableOpacityProps {
   loading?: boolean;
 }
 
-declare interface GoogleInputProps {
+export interface GoogleInputProps {
   icon?: string;
   initialLocation?: string;
   containerStyle?: string;
@@ -127,7 +127,7 @@ declare interface GoogleInputProps {
   }) => void;
 }
 
-declare interface InputFieldProps extends TextInputProps {
+export interface InputFieldProps extends TextInputProps {
   label: string;
   icon?: any;
   secureTextEntry?: boolean;
@@ -139,7 +139,7 @@ declare interface InputFieldProps extends TextInputProps {
   error?: string;
 }
 
-declare interface PaymentProps {
+export interface PaymentProps {
   fullName: string;
   email: string;
   amount: string;
@@ -153,7 +153,7 @@ declare interface PaymentProps {
   destinationLongitude: number;
 }
 
-declare interface LocationStore {
+export interface LocationStore {
   userLatitude: number | null;
   userLongitude: number | null;
   userAddress: string | null;
@@ -180,7 +180,7 @@ declare interface LocationStore {
   }) => void;
 }
 
-declare interface DriverStore {
+export interface DriverStore {
   drivers: MarkerData[];
   selectedDriver: number | null;
   setSelectedDriver: (driverId: number) => void;
@@ -195,7 +195,7 @@ declare interface DriverCardProps {
 }
 
 // Promo Code Types
-declare interface PromoCode {
+export interface PromoCode {
   id: number;
   code: string;
   description: string;
@@ -213,7 +213,7 @@ declare interface PromoCode {
   created_at: string;
 }
 
-declare interface PromoCodeUsage {
+export interface PromoCodeUsage {
   id: number;
   promo_code_id: number;
   user_id: string;
@@ -224,7 +224,7 @@ declare interface PromoCodeUsage {
   used_at: string;
 }
 
-declare interface PromoCodeData {
+export interface PromoCodeData {
   promo_code_id: number;
   code: string;
   discount_type: string;
@@ -234,7 +234,7 @@ declare interface PromoCodeData {
   final_amount: number;
 }
 
-declare interface PromoStore {
+export interface PromoStore {
   appliedPromo: PromoCodeData | null;
   availablePromos: PromoCode[];
   isValidating: boolean;
@@ -245,7 +245,7 @@ declare interface PromoStore {
 }
 
 // Driver Mode Types
-declare interface DriverProfile {
+export interface DriverProfile {
   id: number;
   clerk_id: string;
   email: string;
@@ -291,7 +291,7 @@ declare interface DriverProfile {
   }[];
 }
 
-declare interface DriverDocument {
+export interface DriverDocument {
   id: number;
   driver_id: number;
   document_type:
@@ -308,7 +308,7 @@ declare interface DriverDocument {
   rejection_reason?: string;
 }
 
-declare interface DriverEarnings {
+export interface DriverEarnings {
   total_earnings: number;
   total_commission: number;
   net_earnings: number;
@@ -320,7 +320,7 @@ declare interface DriverEarnings {
   }[];
 }
 
-declare interface RideRequest {
+export interface RideRequest {
   ride_id: number;
   user_id: string;
   passenger_name: string;
@@ -337,7 +337,7 @@ declare interface RideRequest {
   created_at: string;
 }
 
-declare interface DriverModeStore {
+export interface DriverModeStore {
   // Driver info
   driverProfile: DriverProfile | null;
   isDriver: boolean;
@@ -371,7 +371,7 @@ declare interface DriverModeStore {
 }
 
 // Ride Status Sync Types
-declare interface RideStatusEvent {
+export interface RideStatusEvent {
   id: number;
   ride_id: number;
   old_status: string;
@@ -383,7 +383,7 @@ declare interface RideStatusEvent {
   created_at: string;
 }
 
-declare interface RideStatusSyncData {
+export interface RideStatusSyncData {
   ride_id: number;
   current_status: string;
   last_status_update: string;

@@ -37,10 +37,10 @@ const DriverHome = () => {
   });
   const [currentLocation, setCurrentLocation] = useState<LocationState>({
     address: 'Đang tải vị trí...',
-    city: '',
+    city: 'Đà Nẵng',
     coordinates: '',
-    latitude: 0,
-    longitude: 0,
+    latitude: 16.047079,
+    longitude: 108.206230,
     heading: null,
   });
   const { user } = useAuth();
@@ -191,25 +191,40 @@ const DriverHome = () => {
   const getCurrentLocation = useCallback(async () => {
     setIsLoadingLocation(true);
 
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setCurrentLocation({
-        address: 'Không có quyền truy cập vị trí',
-        city: 'Vui lòng cấp quyền trong cài đặt',
-        coordinates: '',
-        latitude: 0,
-        longitude: 0,
-        heading: null,
-      });
-      setIsLoadingLocation(false);
-      return;
-    }
-
     try {
-      console.log('[DriverHome] Getting current position...');
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
+      // 1. Kiểm tra xem dịch vụ định vị có được bật không
+      const isServicesEnabled = await Location.hasServicesEnabledAsync();
+      if (!isServicesEnabled) {
+        throw new Error('Location services disabled');
+      }
+
+      // 2. Xin quyền truy cập
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setCurrentLocation({
+          address: 'Hải Châu, Đà Nẵng',
+          city: 'Đà Nẵng',
+          coordinates: '16.0471° N, 108.2062° E',
+          latitude: 16.047079,
+          longitude: 108.206230,
+          heading: null,
+        });
+        setIsLoadingLocation(false);
+        return;
+      }
+
+      console.log('[DriverHome] Getting position...');
+      
+      // 3. Ưu tiên lấy vị trí cuối cùng đã biết (nhanh hơn)
+      let location = await Location.getLastKnownPositionAsync({});
+      
+      // 4. Nếu không có, mới lấy vị trí hiện tại (chính xác nhưng chậm hơn)
+      if (!location) {
+        location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+      }
+
       const { latitude, longitude } = location.coords;
       console.log('[DriverHome] Coordinates obtained:', latitude, longitude);
       
@@ -228,15 +243,15 @@ const DriverHome = () => {
       if (isOnline) {
         updateLocationToServer(latitude, longitude, location.coords.heading || undefined);
       }
-    } catch (error) {
-      console.error('[DriverHome] Location error:', error);
-      // Fallback values so UI doesn't hang
+    } catch (error: any) {
+      console.warn('[DriverHome] Location error logic handled:', error.message);
+      // Fallback values so UI doesn't hang - Priority Da Nang
       setCurrentLocation(prev => ({
         ...prev,
-        address: 'Không thể xác định vị trí',
-        city: 'Việt Nam',
-        latitude: 21.0285,
-        longitude: 105.8542,
+        address: 'Hải Châu, Đà Nẵng (Fallback)',
+        city: 'Đà Nẵng',
+        latitude: 16.047079,
+        longitude: 108.206230,
       }));
     } finally {
       setIsLoadingLocation(false);

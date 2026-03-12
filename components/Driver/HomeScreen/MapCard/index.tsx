@@ -36,8 +36,8 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
           console.warn('[MapCard] Permission denied');
           // Fallback to a default location (e.g., Hanoi) if denied
           setRegion({
-            latitude: 21.0285,
-            longitude: 105.8542,
+            latitude: 16.047079,
+            longitude: 108.206230,
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
           });
@@ -60,10 +60,10 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
         setRegion(currentRegion);
       } catch (error) {
         console.error('[MapCard] Error getting location:', error);
-        // Fallback to a default location on error
+        // Fallback to a default location (Da Nang) on error
         setRegion({
-          latitude: 21.0285,
-          longitude: 105.8542,
+          latitude: 16.047079,
+          longitude: 108.206230,
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         });

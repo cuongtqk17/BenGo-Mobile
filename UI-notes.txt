@@ -1,0 +1,4 @@
+1. Icon Styling: circle, nền xanh nhạt
+<View className="w-12 h-12 items-center justify-center bg-green-50 rounded-full">
+    <Ionicons name={item.icon} size={20} color="#10B981" />
+</View>

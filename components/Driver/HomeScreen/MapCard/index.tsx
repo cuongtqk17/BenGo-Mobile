@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export interface MarkerLocation {
   id: string;
@@ -115,7 +116,7 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
             }}
           >
             <View
-              className="bg-white p-2 rounded-full border border-gray-100"
+              className="bg-white p-2.5 rounded-full border border-gray-100 items-center justify-center"
               style={{
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
@@ -124,7 +125,7 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
                 elevation: 4,
               }}
             >
-              <Text className="text-xl">🚗</Text>
+              <FontAwesome5 name="car-side" size={18} color="#10B981" />
             </View>
           </Marker>
         )}

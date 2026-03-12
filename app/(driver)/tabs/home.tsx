@@ -1,4 +1,5 @@
 import { View, Text, Alert, Modal, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
@@ -343,7 +344,7 @@ const DriverHome = () => {
             }}
             onPress={getCurrentLocation}
           >
-            <Text className="text-xl">📍</Text>
+            <Ionicons name="location-sharp" size={24} color="#10B981" />
           </TouchableOpacity>
         </View>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Switch } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 interface ToggleCardProps {
   isOnline: boolean;
@@ -20,7 +21,7 @@ const ToggleCard: React.FC<ToggleCardProps> = ({ isOnline, onToggle }) => {
     >
       <View className="flex-row items-center flex-1 pr-4">
         <View className="bg-green-50 w-11 h-11 rounded-2xl items-center justify-center mr-4">
-          <Text className="text-xl">🚗</Text>
+          <FontAwesome5 name="car" size={20} color="#10B981" />
         </View>
         <View className="flex-1">
           <Text className="text-gray-900 text-[13px] font-JakartaBold">Chế độ nhận đơn</Text>

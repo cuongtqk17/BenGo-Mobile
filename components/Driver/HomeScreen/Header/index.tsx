@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Switch, Image } from 'react-native';
 import { icons } from '@/constants';
+import { Ionicons } from '@expo/vector-icons';
 
 interface HeaderProps {
   isOnline: boolean;
@@ -14,11 +15,12 @@ const Header: React.FC<HeaderProps> = ({
   isOnline,
   onToggleStatus,
   userName,
+  avatarUrl,
   disabled = false,
 }) => {
   return (
     <View
-      className="flex-row items-center justify-between px-5 py-3 bg-white border-b border-gray-50 rounded-b-2xl"
+      className="flex-row items-center justify-between px-5 py-3 bg-white"
       style={{
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
@@ -28,12 +30,12 @@ const Header: React.FC<HeaderProps> = ({
       }}
     >
       <View className="flex-row items-center">
-        <View className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center border border-gray-50">
-          <Image
-            source={icons.person}
-            className="w-6 h-6"
-            tintColor="#374151"
-          />
+        <View className="w-12 h-12 items-center justify-center bg-green-50 rounded-full overflow-hidden">
+          {avatarUrl ? (
+            <Image source={{ uri: avatarUrl }} className="w-full h-full" />
+          ) : (
+            <Ionicons name="person" size={24} color="#10B981" />
+          )}
         </View>
         <View className="ml-3">
           <Text className="text-gray-900 text-base font-JakartaBold leading-tight">{userName || 'Tài xế'}</Text>

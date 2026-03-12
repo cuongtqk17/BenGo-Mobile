@@ -74,7 +74,7 @@ export default function ProfileScreen() {
       if (response.success && response.data) {
         setUserData(response.data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const toggleOnlineStatus = async () => {
@@ -178,7 +178,16 @@ export default function ProfileScreen() {
             {t("profile.profile")}
           </Text>
 
-          <View className="relative mb-4 shadow-lg bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+          <View
+            className="relative mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.07,
+              shadowRadius: 10,
+              elevation: 4,
+            }}
+          >
             <ImageBackground
               source={{ uri: backgroundImageUrl }}
               style={{ width: "100%", height: 200 }}
@@ -196,15 +205,22 @@ export default function ProfileScreen() {
                 }}
               />
               <View className="flex justify-center items-center h-full">
-                <View 
-                  className="w-[110px] h-[110px] rounded-full bg-green-100 flex items-center justify-center border-4 border-white shadow-xl"
+                <View
+                  className="w-[110px] h-[110px] rounded-full bg-green-100 flex items-center justify-center border-4 border-white"
+                  style={{
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 8 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 12,
+                    elevation: 8,
+                  }}
                 >
                   <Ionicons name="person" size={60} color="#16a34a" />
                 </View>
                 <Text className="mt-3 text-xl font-JakartaBold text-neutral-200">
                   {userData?.name || user?.name}
                 </Text>
-                <Text className="mt-1 text-sm font-JakartaMedium text-neutral-200/80">
+                <Text className="mt-1 text-base font-JakartaMedium text-neutral-200/80">
                   {user?.email || ""}
                 </Text>
               </View>
@@ -216,7 +232,16 @@ export default function ProfileScreen() {
               <Text className="mb-4 text-xl font-JakartaBold">
                 {t("driver.driverDetails")}
               </Text>
-              <View className="flex flex-col p-4 mb-4 shadow-sm bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+              <View
+                className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
                 <View className="flex-row items-center mb-4">
                   <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
                     <Ionicons name="car-sport" size={20} color="white" />
@@ -225,7 +250,7 @@ export default function ProfileScreen() {
                     <Text className="text-lg font-JakartaBold text-gray-900">
                       {t("driver.viewProfile")}
                     </Text>
-                    <Text className="text-sm font-JakartaMedium text-gray-600">
+                    <Text className="text-base font-JakartaMedium text-gray-600">
                       {t("driver.manageDriverAccount")}
                     </Text>
                   </View>
@@ -251,7 +276,7 @@ export default function ProfileScreen() {
                               : "#EF4444"
                         }
                       />
-                      <Text className="ml-2 text-sm font-JakartaBold text-gray-700">
+                      <Text className="ml-2 text-base font-JakartaBold text-gray-700">
                         {t("common.status")}:{" "}
                         <Text
                           className={
@@ -340,7 +365,16 @@ export default function ProfileScreen() {
               <Text className="mb-4 text-xl font-JakartaBold">
                 {t("profile.profileInfo")}
               </Text>
-              <View className="flex flex-col shadow-sm mb-4 p-2 bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+              <View
+                className="flex flex-col mb-4 p-2 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
                 {/* Name Item */}
                 <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
                   <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
@@ -392,7 +426,16 @@ export default function ProfileScreen() {
           <Text className="mb-4 text-xl font-JakartaBold">
             {t("profile.settings")}
           </Text>
-          <View className="flex flex-col p-4 mb-4 shadow-sm bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+          <View
+            className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.05,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          >
             <LanguageSwitcher />
           </View>
 
@@ -401,7 +444,16 @@ export default function ProfileScreen() {
               <Text className="mb-4 text-xl font-JakartaBold">
                 {t("driver.driverMode")}
               </Text>
-              <View className="flex flex-col p-4 mb-4 shadow-sm bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+              <View
+                className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
                 <View className="flex-row items-center mb-4">
                   <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
                     <Ionicons name="car-sport" size={20} color="white" />
@@ -410,7 +462,7 @@ export default function ProfileScreen() {
                     <Text className="text-lg font-JakartaBold text-gray-900">
                       {t("driver.becomeDriver")}
                     </Text>
-                    <Text className="text-sm font-JakartaMedium text-gray-600">
+                    <Text className="text-base font-JakartaMedium text-gray-600">
                       {t("driver.earnMoney")}
                     </Text>
                   </View>

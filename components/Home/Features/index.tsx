@@ -43,7 +43,7 @@ const FeatureItem = ({ item, t }: { item: FeatureItem; t: any }) => (
         <Text className="text-lg text-neutral-200 font-JakartaBold">
           {t(item.titleKey)}
         </Text>
-        <Text className="text-sm text-neutral-200/80">{t(item.descKey)}</Text>
+        <Text className="text-base text-neutral-200/80">{t(item.descKey)}</Text>
       </View>
       <View
         className="w-12 h-12 bg-green-600 rounded-full"

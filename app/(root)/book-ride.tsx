@@ -142,7 +142,7 @@ const BookRide = () => {
                   </Text>
                   <View className="items-end">
                     {discountInfo && (
-                      <Text className="text-sm font-JakartaMedium text-gray-500 line-through">
+                      <Text className="text-base font-JakartaMedium text-gray-500 line-through">
                         {Number(driverDetails?.price).toLocaleString("vi-VN")}{" "}
                         VNĐ
                       </Text>
@@ -201,7 +201,7 @@ const BookRide = () => {
                     </View>
 
                     {/* Center: Savings */}
-                    <Text className="text-sm font-JakartaMedium text-green-600 flex-1 text-center">
+                    <Text className="text-base font-JakartaMedium text-green-600 flex-1 text-center">
                       -{discountInfo.amount.toLocaleString("vi-VN")}₫
                     </Text>
 
@@ -214,7 +214,7 @@ const BookRide = () => {
                       }}
                       className="bg-red-500 py-2 px-3 rounded-lg flex flex-row items-center"
                     >
-                      <Text className="text-white font-JakartaBold text-sm mr-1">
+                      <Text className="text-white font-JakartaBold text-base mr-1">
                         {t("common.cancel")}
                       </Text>
                       <Ionicons name="trash-outline" size={16} color="#fff" />

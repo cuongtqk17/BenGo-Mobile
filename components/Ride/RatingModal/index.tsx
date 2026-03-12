@@ -227,7 +227,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
               blurOnSubmit={true}
               onSubmitEditing={dismissKeyboard}
             />
-            <Text className="text-sm font-JakartaMedium text-gray-400 text-right mt-1">
+            <Text className="text-base font-JakartaMedium text-gray-400 text-right mt-1">
               {comment.length}/500 {t("rating.characterLimit")}
             </Text>
           </View>

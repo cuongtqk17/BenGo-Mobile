@@ -23,7 +23,16 @@ const ProfileScreen = () => {
         <View className="mt-10 space-y-4">
            {/* Profile menu items */}
            <TouchableOpacity className="flex-row items-center p-4 bg-gray-50 rounded-2xl mb-3">
-              <View className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4 shadow-sm">
+              <View 
+                className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              >
                  <Ionicons name="person-outline" size={20} color="#22C55E" />
               </View>
               <Text className="flex-1 font-JakartaMedium text-gray-700">Thông tin cá nhân</Text>
@@ -31,7 +40,16 @@ const ProfileScreen = () => {
            </TouchableOpacity>
 
            <TouchableOpacity className="flex-row items-center p-4 bg-gray-50 rounded-2xl mb-3">
-              <View className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4 shadow-sm">
+              <View 
+                className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              >
                  <Ionicons name="car-outline" size={20} color="#22C55E" />
               </View>
               <Text className="flex-1 font-JakartaMedium text-gray-700">Thông tin xe</Text>
@@ -39,7 +57,16 @@ const ProfileScreen = () => {
            </TouchableOpacity>
 
            <TouchableOpacity className="flex-row items-center p-4 bg-gray-50 rounded-2xl mb-3">
-              <View className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4 shadow-sm">
+              <View 
+                className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              >
                  <Ionicons name="settings-outline" size={20} color="#22C55E" />
               </View>
               <Text className="flex-1 font-JakartaMedium text-gray-700">Cài đặt</Text>
@@ -50,7 +77,16 @@ const ProfileScreen = () => {
              onPress={logout}
              className="flex-row items-center p-4 bg-red-50 rounded-2xl mt-4"
            >
-              <View className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4 shadow-sm">
+              <View 
+                className="w-10 h-10 bg-white items-center justify-center rounded-xl mr-4"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              >
                  <Ionicons name="log-out-outline" size={20} color="#EF4444" />
               </View>
               <Text className="flex-1 font-JakartaMedium text-red-600">Đăng xuất</Text>

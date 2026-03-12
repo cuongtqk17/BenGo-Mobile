@@ -232,7 +232,14 @@ export default function HomeScreen() {
             </Text>
             <TouchableOpacity
               onPress={handleSignOut}
-              className="justify-center items-center w-10 h-10 bg-white rounded-full shadow-sm"
+              className="justify-center items-center w-10 h-10 bg-white rounded-full"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
             >
               <Image source={icons.out} className="w-4 h-4" />
             </TouchableOpacity>
@@ -241,7 +248,14 @@ export default function HomeScreen() {
           {/* Search Input */}
           <GoogleTextInput
             icon={icons.search}
-            containerStyle="bg-white shadow-md shadow-neutral-300"
+            containerStyle="bg-white"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              elevation: 5,
+            }}
             handlePress={handleDestinationPress}
           />
 
@@ -250,7 +264,16 @@ export default function HomeScreen() {
             <Text className="mb-4 text-xl font-JakartaBold text-secondary-900">
               {t("home.whereTo")}
             </Text>
-            <View className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden shadow-sm">
+            <View 
+              className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+            >
               {isDriver && lastRide && !storeDestinationLatitude ? (
                 <DriverMap
                   rideOriginLatitude={Number(lastRide.origin_latitude)}

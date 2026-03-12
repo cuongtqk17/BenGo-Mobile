@@ -78,8 +78,16 @@ export default function PromoCard({ promo, mode = "view" }: PromoCardProps) {
         }
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="w-full min-h-[140px] h-fit rounded-xl shadow-lg shadow-black/20"
-        style={{ borderRadius: 16, padding: 16 }}
+        className="w-full min-h-[140px] h-fit rounded-xl"
+        style={{
+          borderRadius: 16,
+          padding: 16,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 10 },
+          shadowOpacity: 0.2,
+          shadowRadius: 15,
+          elevation: 10,
+        }}
       >
         {/* Icon & Discount */}
         <View className="flex-row items-center justify-between mb-3">
@@ -99,7 +107,7 @@ export default function PromoCard({ promo, mode = "view" }: PromoCardProps) {
 
         {/* Code */}
         <View className="bg-white/20 px-3 py-1.5 rounded-full self-start mb-2">
-          <Text className="text-neutral-200 font-JakartaBold text-sm tracking-wider">
+          <Text className="text-neutral-200 font-JakartaBold text-base tracking-wider">
             {promo.code}
           </Text>
         </View>
@@ -116,7 +124,7 @@ export default function PromoCard({ promo, mode = "view" }: PromoCardProps) {
         {promo.end_date && (
           <View className="flex-row items-center justify-end mt-2">
             <Ionicons name="time-outline" size={12} color="white" />
-            <Text className="ml-1 text-neutral-200/80 font-Jakarta text-sm">
+            <Text className="ml-1 text-neutral-200/80 font-Jakarta text-base">
               {t("promo.until")} {formatEndDate()}
             </Text>
           </View>

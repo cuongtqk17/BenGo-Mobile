@@ -9,7 +9,16 @@ const EarningsScreen = () => {
         <Text className="text-2xl font-JakartaBold text-gray-900">Thu nhập</Text>
         <Text className="text-gray-500 mt-1 font-Jakarta">Xem thống kê và số dư của bạn</Text>
         
-        <View className="mt-8 bg-green-500 p-6 rounded-3xl shadow-sm">
+        <View 
+          className="mt-8 bg-green-500 p-6 rounded-3xl"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
           <Text className="text-white/80 font-Jakarta">Số dư hiện tại</Text>
           <Text className="text-white text-3xl font-JakartaBold mt-1">0 ₫</Text>
         </View>

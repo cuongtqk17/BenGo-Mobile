@@ -85,7 +85,16 @@ export default function PromoDetailScreen() {
         </View>
 
         {/* Promo Details */}
-        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
+        <View
+          className="mx-4 mt-4 bg-white rounded-3xl p-4"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
           <Text className="text-xl font-JakartaBold mb-4">
             {t("promo.details")}
           </Text>
@@ -134,7 +143,7 @@ export default function PromoDetailScreen() {
                   <Ionicons name={item.icon} size={20} color="#10B981" />
                 </View>
                 <View className="flex-1 ml-3">
-                  <Text className="text-sm text-gray-500 font-JakartaMedium">
+                  <Text className="text-base text-gray-500 font-JakartaMedium">
                     {item.label}
                   </Text>
                   <Text className="text-base font-JakartaBold text-gray-900">

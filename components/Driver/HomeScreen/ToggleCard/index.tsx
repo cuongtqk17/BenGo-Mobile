@@ -8,14 +8,23 @@ interface ToggleCardProps {
 
 const ToggleCard: React.FC<ToggleCardProps> = ({ isOnline, onToggle }) => {
   return (
-    <View className="flex-row items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mx-5">
+    <View
+      className="flex-row items-center justify-between bg-white p-4 rounded-2xl border border-gray-100 mx-5"
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+      }}
+    >
       <View className="flex-row items-center flex-1 pr-4">
         <View className="bg-green-50 w-11 h-11 rounded-2xl items-center justify-center mr-4">
           <Text className="text-xl">🚗</Text>
         </View>
         <View className="flex-1">
           <Text className="text-gray-900 text-[13px] font-JakartaBold">Chế độ nhận đơn</Text>
-          <Text className="text-gray-500 text-[11px] font-Jakarta">
+          <Text className="text-gray-500 text-base font-Jakarta">
             {isOnline ? 'Bạn đang sẵn sàng nhận đơn hàng' : 'Bật để bắt đầu nhận đơn'}
           </Text>
         </View>

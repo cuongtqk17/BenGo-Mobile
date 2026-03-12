@@ -141,26 +141,26 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
 
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
                 <View className="flex flex-row justify-between items-center mb-2">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                  <Text className="text-base text-gray-700 font-JakartaSemiBold">
                     {t("payment.transactionId")}:
                   </Text>
-                  <Text className="text-sm text-gray-600 font-JakartaRegular">
+                  <Text className="text-base text-gray-600 font-JakartaRegular">
                     QR{Date.now().toString().slice(-6)}
                   </Text>
                 </View>
                 <View className="flex flex-row justify-between items-center mb-2">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                  <Text className="text-base text-gray-700 font-JakartaSemiBold">
                     {t("payment.amount")}:
                   </Text>
-                  <Text className="text-sm text-green-600 font-JakartaSemiBold">
+                  <Text className="text-base text-green-600 font-JakartaSemiBold">
                     {Number(amount).toLocaleString("vi-VN")} VNĐ
                   </Text>
                 </View>
                 <View className="flex flex-row justify-between items-center">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                  <Text className="text-base text-gray-700 font-JakartaSemiBold">
                     {t("payment.time")}:
                   </Text>
-                  <Text className="text-sm text-gray-600 font-JakartaRegular">
+                  <Text className="text-base text-gray-600 font-JakartaRegular">
                     {new Date().toLocaleTimeString("vi-VN")}
                   </Text>
                 </View>
@@ -203,7 +203,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                   }}
                 />
               </View>
-              <Text className="mt-2 text-sm text-gray-500 font-JakartaRegular">
+              <Text className="mt-2 text-base text-gray-500 font-JakartaRegular">
                 {t("payment.doNotCloseApp")}
               </Text>
             </>

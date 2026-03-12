@@ -9,9 +9,8 @@ const DriverCard = ({ item, selected, setSelected }: DriverCardProps) => {
   return (
     <TouchableOpacity
       onPress={setSelected}
-      className={`${
-        selected === item.id ? "bg-general-600" : "bg-white"
-      } flex flex-row items-center justify-between p-4 rounded-xl`}
+      className={`${selected === item.id ? "bg-general-600" : "bg-white"
+        } flex flex-row items-center justify-between p-4 rounded-xl`}
     >
       <Image
         source={{ uri: item.profile_image_url }}
@@ -24,30 +23,30 @@ const DriverCard = ({ item, selected, setSelected }: DriverCardProps) => {
 
           <View className="flex flex-row items-center ml-2 space-x-1">
             <Image source={icons.star} className="w-3.5 h-3.5" />
-            <Text className="text-sm font-JakartaRegular">4</Text>
+            <Text className="text-base font-JakartaRegular">4</Text>
           </View>
         </View>
 
         <View className="flex flex-row justify-start items-center">
           <View className="flex flex-row items-center">
-            <Text className="ml-1 text-sm font-JakartaRegular">
+            <Text className="ml-1 text-base font-JakartaRegular">
               {Number(item.price).toLocaleString("vi-VN")} VNĐ
             </Text>
           </View>
 
-          <Text className="mx-1 text-sm font-JakartaRegular text-general-800">
+          <Text className="mx-1 text-base font-JakartaRegular text-general-800">
             |
           </Text>
 
-          <Text className="text-sm font-JakartaRegular text-general-800">
+          <Text className="text-base font-JakartaRegular text-general-800">
             {formatTime(parseInt(`${item.time}`) || 5)}
           </Text>
 
-          <Text className="mx-1 text-sm font-JakartaRegular text-general-800">
+          <Text className="mx-1 text-base font-JakartaRegular text-general-800">
             |
           </Text>
 
-          <Text className="text-sm font-JakartaRegular text-general-800">
+          <Text className="text-base font-JakartaRegular text-general-800">
             {item.car_seats} chỗ
           </Text>
         </View>

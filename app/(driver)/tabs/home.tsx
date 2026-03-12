@@ -74,8 +74,11 @@ const DriverHome = () => {
       return;
     }
 
-    setIsTogglingStatus(true);
     const newStatus = !isOnline;
+
+    // Optimistic update
+    setIsOnline(newStatus);
+    setIsTogglingStatus(true);
 
     try {
       console.log('[DriverHome] Toggling status to:', newStatus);
@@ -86,7 +89,6 @@ const DriverHome = () => {
           lng: currentLocation.longitude,
         },
       });
-      setIsOnline(newStatus);
 
       if (newStatus) {
         fetchPendingOrders();
@@ -95,6 +97,8 @@ const DriverHome = () => {
       }
     } catch (error: any) {
       console.error('Toggle status error:', error);
+      // Revert state if API fails
+      setIsOnline(!newStatus);
       Alert.alert('Lỗi', 'Không thể cập nhật trạng thái hoạt động');
     } finally {
       setIsTogglingStatus(false);
@@ -151,7 +155,7 @@ const DriverHome = () => {
     try {
       const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
       console.log('[DriverHome] Reverse geocoding for:', { latitude, longitude });
-      
+
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=vi`
       );
@@ -214,10 +218,10 @@ const DriverHome = () => {
       }
 
       console.log('[DriverHome] Getting position...');
-      
+
       // 3. Ưu tiên lấy vị trí cuối cùng đã biết (nhanh hơn)
       let location = await Location.getLastKnownPositionAsync({});
-      
+
       // 4. Nếu không có, mới lấy vị trí hiện tại (chính xác nhưng chậm hơn)
       if (!location) {
         location = await Location.getCurrentPositionAsync({
@@ -227,7 +231,7 @@ const DriverHome = () => {
 
       const { latitude, longitude } = location.coords;
       console.log('[DriverHome] Coordinates obtained:', latitude, longitude);
-      
+
       const { address, city } = await reverseGeocode(latitude, longitude);
       console.log('[DriverHome] Address resolved:', address, city);
 
@@ -300,79 +304,87 @@ const DriverHome = () => {
         isOnline={isOnline}
         onToggleStatus={toggleOnlineStatus}
         userName={user?.name}
+        disabled={isTogglingStatus}
       />
 
       <View className="flex-1">
-        <SummaryCard 
+        <SummaryCard
           totalEarnings={driverStats.totalEarnings}
           totalTrips={driverStats.totalTrips}
         />
 
         <View className="px-5 mb-2">
-           {isOnline ? (
-             <Text className="text-green-600 text-[11px] font-JakartaMedium italic">
-               Đang tìm đơn hàng mới xung quanh bạn...
-             </Text>
-           ) : (
-             <Text className="text-red-500 text-[11px] font-JakartaBold">
-               Bạn đang tắt chế độ nhận đơn
-             </Text>
-           )}
+          {isOnline ? (
+            <Text className="text-green-600 text-base font-JakartaMedium italic">
+              Đang tìm đơn hàng mới xung quanh bạn...
+            </Text>
+          ) : (
+            <Text className="text-red-500 text-base font-JakartaBold">
+              Bạn đang tắt chế độ nhận đơn
+            </Text>
+          )}
         </View>
 
         <View className="flex-1 relative">
-           <MapCard 
-             orders={pendingOrders}
-             onOrderPress={handleOrderPress}
-           />
-           
-           {/* Recenter FAB */}
-           <TouchableOpacity 
-             className="absolute right-5 bottom-5 w-12 h-12 bg-white rounded-full shadow-md items-center justify-center border border-gray-100"
-             onPress={getCurrentLocation}
-           >
-              <Text className="text-xl">📍</Text>
-           </TouchableOpacity>
+          <MapCard
+            orders={pendingOrders}
+            onOrderPress={handleOrderPress}
+          />
+
+          {/* Recenter FAB */}
+          <TouchableOpacity
+            className="absolute right-5 bottom-5 w-12 h-12 bg-white rounded-full items-center justify-center border border-gray-100"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 4,
+            }}
+            onPress={getCurrentLocation}
+          >
+            <Text className="text-xl">📍</Text>
+          </TouchableOpacity>
         </View>
-        
+
         {/* Bottom List of Orders */}
         <View className="h-1/3 bg-white border-t border-gray-50">
-           <View className="px-5 py-3 border-b border-gray-50 flex-row justify-between items-center">
-              <Text className="text-gray-900 font-JakartaBold">Đơn hàng khả dụng ({pendingOrders.length})</Text>
-              <TouchableOpacity onPress={fetchPendingOrders}>
-                 <Text className="text-blue-500 text-xs font-JakartaBold">LÀM MỚI</Text>
+          <View className="px-5 py-3 border-b border-gray-50 flex-row justify-between items-center">
+            <Text className="text-gray-900 font-JakartaBold text-lg">Đơn hàng khả dụng ({pendingOrders.length})</Text>
+            <TouchableOpacity onPress={fetchPendingOrders}>
+              <Text className="text-blue-500 text-base font-JakartaBold">LÀM MỚI</Text>
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={pendingOrders}
+            keyExtractor={(item) => item.orderId}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => handleOrderPress(item)}
+                className="flex-row items-center justify-between px-5 py-4 border-b border-gray-50 active:bg-gray-50"
+              >
+                <View className="flex-1 mr-4">
+                  <View className="flex-row items-center mb-1">
+                    <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />
+                    <Text className="text-gray-900 font-JakartaBold text-[13px] flex-1" numberOfLines={1}>
+                      {item.pickup?.address || 'Điểm đón hiện tại'}
+                    </Text>
+                  </View>
+                  <Text className="text-gray-400 text-base font-Jakarta ml-4">Cách bạn {item.distance} km</Text>
+                </View>
+                <Text className="text-green-600 font-JakartaBold text-base">{formatCurrency(item.price)}</Text>
               </TouchableOpacity>
-           </View>
-           
-           <FlatList
-             data={pendingOrders}
-             keyExtractor={(item) => item.orderId}
-             renderItem={({ item }) => (
-               <TouchableOpacity 
-                 onPress={() => handleOrderPress(item)}
-                 className="flex-row items-center justify-between px-5 py-4 border-b border-gray-50 active:bg-gray-50"
-               >
-                 <View className="flex-1 mr-4">
-                    <View className="flex-row items-center mb-1">
-                       <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />
-                       <Text className="text-gray-900 font-JakartaBold text-[13px] flex-1" numberOfLines={1}>
-                          {item.pickup?.address || 'Điểm đón hiện tại'}
-                       </Text>
-                    </View>
-                    <Text className="text-gray-400 text-[11px] font-Jakarta ml-4">Cách bạn {item.distance} km</Text>
-                 </View>
-                 <Text className="text-green-600 font-JakartaBold text-base">{formatCurrency(item.price)}</Text>
-               </TouchableOpacity>
-             )}
-             ListEmptyComponent={() => (
-               <View className="flex-1 items-center justify-center pt-10">
-                  <Text className="text-gray-400 font-Jakarta text-xs">
-                    {isOnline ? 'Chưa tìm thấy đơn hàng nào gần đây' : 'Bật trực tuyến để xem đơn hàng'}
-                  </Text>
-               </View>
-             )}
-             showsVerticalScrollIndicator={false}
-           />
+            )}
+            ListEmptyComponent={() => (
+              <View className="flex-1 items-center justify-center pt-10">
+                <Text className="text-gray-400 font-Jakarta text-base">
+                  {isOnline ? 'Chưa tìm thấy đơn hàng nào gần đây' : 'Bật trực tuyến để xem đơn hàng'}
+                </Text>
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
       </View>
 
@@ -383,25 +395,34 @@ const DriverHome = () => {
         onRequestClose={() => setShowOrderModal(false)}
       >
         <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-[40px] p-6 pb-10 shadow-2xl">
+          <View
+            className="bg-white rounded-t-[40px] p-6 pb-10"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: -10 },
+              shadowOpacity: 0.1,
+              shadowRadius: 20,
+              elevation: 20,
+            }}
+          >
             {selectedOrder && (
               <>
                 <View className="w-12 h-1.5 bg-gray-100 rounded-full self-center mb-6" />
                 <Text className="text-gray-900 text-xl font-JakartaBold text-center mb-6">Chi tiết đơn hàng</Text>
-                
+
                 <View className="space-y-4">
-                    <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
-                        <Text className="text-gray-400 font-Jakarta text-xs">Mã đơn hàng</Text>
-                        <Text className="text-gray-900 font-JakartaBold text-xs">#{selectedOrder.orderId.slice(-8)}</Text>
-                    </View>
-                    <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
-                        <Text className="text-gray-400 font-Jakarta text-xs">Khoảng cách</Text>
-                        <Text className="text-gray-900 font-JakartaBold text-xs">{selectedOrder.distance} km</Text>
-                    </View>
-                    <View className="py-4">
-                        <Text className="text-gray-400 font-Jakarta text-[10px] uppercase mb-1">Giá cước thanh toán</Text>
-                        <Text className="text-green-600 text-3xl font-JakartaBold">{formatCurrency(selectedOrder.price)}</Text>
-                    </View>
+                  <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
+                    <Text className="text-gray-400 font-Jakarta text-base">Mã đơn hàng</Text>
+                    <Text className="text-gray-900 font-JakartaBold text-base">#{selectedOrder.orderId.slice(-8)}</Text>
+                  </View>
+                  <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
+                    <Text className="text-gray-400 font-Jakarta text-base">Khoảng cách</Text>
+                    <Text className="text-gray-900 font-JakartaBold text-base">{selectedOrder.distance} km</Text>
+                  </View>
+                  <View className="py-4">
+                    <Text className="text-gray-400 font-Jakarta text-sm uppercase mb-1">Giá cước thanh toán</Text>
+                    <Text className="text-green-600 text-3xl font-JakartaBold">{formatCurrency(selectedOrder.price)}</Text>
+                  </View>
                 </View>
 
                 <View className="flex-row mt-8 gap-4">
@@ -415,14 +436,21 @@ const DriverHome = () => {
                     <Text className="text-gray-400 font-JakartaBold">BỎ QUA</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    className={`flex-[2] h-14 bg-green-500 rounded-2xl items-center justify-center shadow-sm ${isAccepting ? 'opacity-70' : ''}`}
+                    className={`flex-[2] h-14 bg-green-500 rounded-2xl items-center justify-center ${isAccepting ? 'opacity-70' : ''}`}
+                    style={{
+                      shadowColor: "#000",
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 2,
+                      elevation: 2,
+                    }}
                     onPress={() => handleAcceptOrder(selectedOrder.orderId)}
                     disabled={isAccepting}
                   >
                     {isAccepting ? (
-                        <ActivityIndicator color="white" />
+                      <ActivityIndicator color="white" />
                     ) : (
-                        <Text className="text-white font-JakartaBold text-lg">NHẬN CHUYẾN</Text>
+                      <Text className="text-white font-JakartaBold text-lg">NHẬN CHUYẾN</Text>
                     )}
                   </TouchableOpacity>
                 </View>

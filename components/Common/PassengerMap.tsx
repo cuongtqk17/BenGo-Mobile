@@ -9,7 +9,7 @@ import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { useAuth } from "@/context/AuthContext";
 
@@ -95,7 +95,7 @@ const PassengerMap = () => {
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
-        <Text className="mt-2 text-sm text-gray-600">Đang tải vị trí...</Text>
+        <Text className="mt-2 text-base text-gray-600">Đang tải vị trí...</Text>
       </View>
     );
   }
@@ -104,15 +104,14 @@ const PassengerMap = () => {
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
-        <Text className="mt-2 text-sm text-gray-600">Đang tải tài xế...</Text>
+        <Text className="mt-2 text-base text-gray-600">Đang tải tài xế...</Text>
       </View>
     );
   }
 
   return (
     <MapView
-      provider={PROVIDER_DEFAULT}
-      style={{ height: "100%", width: "100%" }}
+      style={{ flex: 1 }}
       tintColor="black"
       mapType="standard"
       region={region}

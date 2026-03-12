@@ -119,9 +119,8 @@ const PromoCodeInput = ({
               editable={!isValidating}
             />
             <TouchableOpacity
-              className={`rounded-lg px-6 py-3 ${
-                isValidating ? "bg-primary-300" : "bg-primary-500"
-              }`}
+              className={`rounded-lg px-6 py-3 ${isValidating ? "bg-primary-300" : "bg-primary-500"
+                }`}
               onPress={validatePromo}
               disabled={isValidating}
             >
@@ -135,7 +134,7 @@ const PromoCodeInput = ({
             </TouchableOpacity>
           </View>
           {error && (
-            <Text className="mt-2 text-red-500 text-sm font-JakartaMedium">
+            <Text className="mt-2 text-red-500 text-base font-JakartaMedium">
               {error}
             </Text>
           )}
@@ -147,7 +146,7 @@ const PromoCodeInput = ({
               <Text className="text-green-700 font-JakartaSemiBold text-base">
                 {t("promo.code")}: {appliedPromo.code}
               </Text>
-              <Text className="text-green-600 text-sm mt-1 font-JakartaMedium">
+              <Text className="text-green-600 text-base mt-1 font-JakartaMedium">
                 {t("promo.discount")} {formatDiscount(appliedPromo)} •{" "}
                 {t("promo.save")}{" "}
                 {appliedPromo.discount_amount.toLocaleString("vi-VN")} VNĐ

@@ -208,11 +208,11 @@ const SignIn = () => {
             {/* Footer */}
             <View className="flex-row justify-center items-center py-4">
               <TouchableOpacity>
-                <Text className="text-xs text-gray-500 font-JakartaMedium">Điều khoản</Text>
+                <Text className="text-base text-gray-500 font-JakartaMedium">Điều khoản</Text>
               </TouchableOpacity>
               <Text className="mx-2 text-gray-300">|</Text>
               <TouchableOpacity>
-                <Text className="text-xs text-gray-500 font-JakartaMedium">Chính sách</Text>
+                <Text className="text-base text-gray-500 font-JakartaMedium">Chính sách</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

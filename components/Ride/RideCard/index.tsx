@@ -178,7 +178,16 @@ const RideCard = ({
   };
 
   return (
-    <View className="mb-4 bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
+    <View
+      className="mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 3,
+      }}
+    >
       {/* Header with Status Badge and Time */}
       <View className="flex-row justify-between items-center px-4 pt-4 pb-3">
         <View
@@ -192,13 +201,13 @@ const RideCard = ({
             style={{ marginRight: 4 }}
           />
           <Text
-            className="text-sm font-JakartaBold"
+            className="text-base font-JakartaBold"
             style={{ color: statusInfo.color }}
           >
             {statusInfo.text}
           </Text>
         </View>
-        <Text className="text-sm text-gray-500 font-JakartaMedium">
+        <Text className="text-base text-gray-500 font-JakartaMedium">
           {formatDateTimeVN(created_at)} • {formatTime(ride_time)}
         </Text>
       </View>
@@ -226,7 +235,7 @@ const RideCard = ({
                   {origin_address.split(",")[0]}
                 </Text>
                 <Text
-                  className="text-sm text-gray-500 font-JakartaMedium"
+                  className="text-base text-gray-500 font-JakartaMedium"
                   numberOfLines={1}
                 >
                   {origin_address.split(",").slice(1).join(",")}
@@ -245,7 +254,7 @@ const RideCard = ({
                   {destination_address.split(",")[0]}
                 </Text>
                 <Text
-                  className="text-sm text-gray-500 font-JakartaMedium"
+                  className="text-base text-gray-500 font-JakartaMedium"
                   numberOfLines={1}
                 >
                   {destination_address.split(",").slice(1).join(",")}
@@ -276,19 +285,19 @@ const RideCard = ({
               />
             )}
             <View className="flex-1">
-              <Text className="text-sm font-JakartaBold text-gray-900">
+              <Text className="text-base font-JakartaBold text-gray-900">
                 {isDriverView
                   ? t("ride.passengerPrefix") +
-                    (passenger?.name || t("ride.passenger"))
+                  (passenger?.name || t("ride.passenger"))
                   : t("ride.driverPrefix") +
-                    `${driver.first_name} ${driver.last_name}`}
+                  `${driver.first_name} ${driver.last_name}`}
               </Text>
               {!isDriverView ? (
                 <View className="flex-col items-start">
-                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
+                  <Text className="text-base text-gray-500 font-JakartaMedium mr-2">
                     {driver.car_seats} {t("booking.seats")}
                   </Text>
-                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
+                  <Text className="text-base text-gray-500 font-JakartaMedium mr-2">
                     {t("driver.vehicleType")}: {driver.vehicle_type || "Car"}
                   </Text>
                 </View>
@@ -296,7 +305,7 @@ const RideCard = ({
                 passenger?.phone && (
                   <View className="flex-row items-center mt-1">
                     <Ionicons name="call-outline" size={14} color="#10B981" />
-                    <Text className="ml-1 text-sm text-gray-600 font-JakartaMedium">
+                    <Text className="ml-1 text-base text-gray-600 font-JakartaMedium">
                       {passenger.phone.startsWith("+84")
                         ? "0" + passenger.phone.substring(3)
                         : passenger.phone}
@@ -313,19 +322,19 @@ const RideCard = ({
             </Text>
             {payment_status === "paid" && (
               <View className="flex-row items-center mt-0.5">
-                <Text className="text-sm text-green-600 font-JakartaMedium mr-1">
+                <Text className="text-base text-green-600 font-JakartaMedium mr-1">
                   {t("payment.paymentSuccessful")}
                 </Text>
                 <Ionicons name="checkmark-circle" size={12} color="#10B981" />
               </View>
             )}
             {payment_status === "pending" && (
-              <Text className="text-sm text-yellow-600 font-JakartaMedium mt-0.5">
+              <Text className="text-base text-yellow-600 font-JakartaMedium mt-0.5">
                 {t("payment.pending") || "Chờ thanh toán"}
               </Text>
             )}
             {payment_status === "refunded" && (
-              <Text className="text-sm text-blue-600 font-JakartaMedium mt-0.5">
+              <Text className="text-base text-blue-600 font-JakartaMedium mt-0.5">
                 {t("payment.refunded") || "Đã hoàn tiền"}
               </Text>
             )}
@@ -345,14 +354,14 @@ const RideCard = ({
             </View>
 
             <View className="gap-y-1">
-              <Text className="text-sm text-gray-600 font-JakartaMedium">
+              <Text className="text-base text-gray-600 font-JakartaMedium">
                 <Text className="font-JakartaBold">
                   {t("ride.cancelledAt") || "Hủy lúc"}:
                 </Text>{" "}
                 {cancelled_at ? formatDateTimeVN(cancelled_at) : "Vừa xong"}
               </Text>
 
-              <Text className="text-sm text-red-600 font-JakartaMedium">
+              <Text className="text-base text-red-600 font-JakartaMedium">
                 <Text className="font-JakartaBold text-gray-700">
                   {t("ride.cancelReason") || "Lý do"}:
                 </Text>{" "}
@@ -507,7 +516,7 @@ const RideCard = ({
         {!isDriverView && (
           <>
             {onCancel &&
-            (ride_status === "pending" || checkCanCancelRide().canCancel) ? (
+              (ride_status === "pending" || checkCanCancelRide().canCancel) ? (
               <CustomButton
                 title={t("ride.cancelRide")}
                 onPress={handleCancel}
@@ -532,7 +541,7 @@ const RideCard = ({
               <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
                 <View className="flex-row items-center justify-center">
                   <Ionicons name="time-outline" size={16} color="#8B5CF6" />
-                  <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
+                  <Text className="text-base text-purple-700 font-JakartaMedium ml-2">
                     {t("ride.inProgress")} -{" "}
                     {t("ride.arrivingAtDestination") ||
                       "Đang di chuyển đến điểm đến"}
@@ -553,7 +562,7 @@ const RideCard = ({
                   <Text className="text-base font-JakartaBold text-gray-800">
                     {t("rating.yourRating")}
                   </Text>
-                  <Text className="text-sm font-Jakarta text-gray-400">
+                  <Text className="text-base font-Jakarta text-gray-400">
                     {formatDateTimeVN(ride.rating.created_at)}
                   </Text>
                 </View>
@@ -568,12 +577,12 @@ const RideCard = ({
                       color={index < ride.rating!.stars ? "#F59E0B" : "#D1D5DB"}
                     />
                   ))}
-                  <Text className="ml-2 text-sm font-JakartaBold text-gray-700">
+                  <Text className="ml-2 text-base font-JakartaBold text-gray-700">
                     ({ride.rating.stars}/5)
                   </Text>
                 </View>
                 {ride.rating.comment && (
-                  <Text className="text-sm font-JakartaMedium text-gray-600 italic mt-2">
+                  <Text className="text-base font-JakartaMedium text-gray-600 italic mt-2">
                     "{ride.rating.comment}"
                   </Text>
                 )}

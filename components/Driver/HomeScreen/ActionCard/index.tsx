@@ -17,14 +17,21 @@ const ActionCard: React.FC<ActionCardProps> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity 
-      className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 mx-1" 
+    <TouchableOpacity
+      className="bg-white p-4 rounded-2xl border border-gray-100 flex-1 mx-1"
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+      }}
       onPress={onPress}
     >
       <Text className="text-2xl mb-2">{icon}</Text>
-      <Text className="text-gray-500 text-xs font-JakartaMedium mb-1">{title}</Text>
+      <Text className="text-gray-500 text-base font-JakartaMedium mb-1">{title}</Text>
       <Text className="text-gray-900 text-lg font-JakartaBold mb-1">{value}</Text>
-      <Text className="text-gray-400 text-[10px] font-Jakarta">{description}</Text>
+      <Text className="text-gray-400 text-sm font-Jakarta">{description}</Text>
     </TouchableOpacity>
   );
 };

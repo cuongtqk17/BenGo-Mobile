@@ -13,7 +13,16 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ totalEarnings, totalTrips }) 
   };
 
   return (
-    <View className="mx-5 my-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex-row items-center justify-between">
+    <View 
+      className="mx-5 my-3 bg-white p-4 rounded-2xl border border-gray-50 flex-row items-center justify-between"
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+      }}
+    >
       <Text className="text-gray-900 font-Jakarta">
         Thu nhập hôm nay: <Text className="font-JakartaBold">{formatCurrency(totalEarnings)}</Text>
       </Text>

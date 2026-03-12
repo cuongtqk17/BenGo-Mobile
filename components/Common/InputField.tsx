@@ -73,7 +73,7 @@ const InputField = ({
         )}
       </View>
       {error && (
-        <Text className="text-red-500 text-sm mt-1 ml-2 font-JakartaMedium">
+        <Text className="text-red-500 text-base mt-1 ml-2 font-JakartaMedium">
           {error}
         </Text>
       )}

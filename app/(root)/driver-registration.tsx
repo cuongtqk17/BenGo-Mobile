@@ -284,7 +284,7 @@ export default function DriverRegistrationScreen() {
               {t("driver.requirements")}
             </Text>
           </View>
-          <Text className="text-sm font-JakartaMedium text-green-700">
+          <Text className="text-base font-JakartaMedium text-green-700">
             • {t("driver.validLicense")}
             {"\n"}• {t("driver.vehicleRegistration")}
             {"\n"}• {t("driver.cleanRecord")}
@@ -335,11 +335,10 @@ export default function DriverRegistrationScreen() {
                   car_seats: type.seats.toString(),
                 }))
               }
-              className={`flex-1 mx-1 p-4 rounded-2xl border-2 ${
-                form.vehicle_type === type.value
+              className={`flex-1 mx-1 p-4 rounded-2xl border-2 ${form.vehicle_type === type.value
                   ? "border-green-500 bg-green-50"
                   : "border-gray-200 bg-white"
-              }`}
+                }`}
             >
               <Ionicons
                 name={type.icon as any}
@@ -348,20 +347,18 @@ export default function DriverRegistrationScreen() {
                 style={{ alignSelf: "center", marginBottom: 8 }}
               />
               <Text
-                className={`text-center font-JakartaBold ${
-                  form.vehicle_type === type.value
+                className={`text-center font-JakartaBold ${form.vehicle_type === type.value
                     ? "text-green-700"
                     : "text-gray-700"
-                }`}
+                  }`}
               >
                 {type.label}
               </Text>
               <Text
-                className={`text-center text-sm font-JakartaMedium ${
-                  form.vehicle_type === type.value
+                className={`text-center text-base font-JakartaMedium ${form.vehicle_type === type.value
                     ? "text-green-600"
                     : "text-gray-500"
-                }`}
+                  }`}
               >
                 {type.seats} {t("booking.seats")}
               </Text>
@@ -403,7 +400,7 @@ export default function DriverRegistrationScreen() {
               <Text className="mt-2 text-gray-600 font-JakartaBold">
                 {t("driver.uploadLicense")}
               </Text>
-              <Text className="text-sm text-gray-500 font-JakartaMedium">
+              <Text className="text-base text-gray-500 font-JakartaMedium">
                 {t("driver.tapToUpload")}
               </Text>
             </View>
@@ -439,7 +436,7 @@ export default function DriverRegistrationScreen() {
               <Text className="mt-2 text-gray-600 font-JakartaBold">
                 {t("driver.uploadVehicle")}
               </Text>
-              <Text className="text-sm text-gray-500 font-JakartaMedium">
+              <Text className="text-base text-gray-500 font-JakartaMedium">
                 {t("driver.tapToUpload")}
               </Text>
             </View>
@@ -479,7 +476,7 @@ export default function DriverRegistrationScreen() {
               <Text className="mt-2 text-gray-600 font-JakartaBold">
                 {t("driver.uploadProfile")}
               </Text>
-              <Text className="text-sm text-gray-500 font-JakartaMedium">
+              <Text className="text-base text-gray-500 font-JakartaMedium">
                 {t("driver.tapToUpload")}
               </Text>
             </View>
@@ -490,8 +487,8 @@ export default function DriverRegistrationScreen() {
         <CustomButton
           title={
             uploadingImage.license ||
-            uploadingImage.vehicle ||
-            uploadingImage.profile
+              uploadingImage.vehicle ||
+              uploadingImage.profile
               ? "Đang tải ảnh lên..."
               : loading && uploadStatus
                 ? uploadStatus

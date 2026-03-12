@@ -101,7 +101,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
               </Text>
 
               <View className="mb-4 w-full">
-                <Text className="mb-2 text-sm text-gray-700 font-JakartaSemiBold">
+                <Text className="mb-2 text-base text-gray-700 font-JakartaSemiBold">
                   {t("payment.amountToPay")}:{" "}
                   {Number(amount).toLocaleString("vi-VN")} VNĐ
                 </Text>
@@ -118,7 +118,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                     }}
                     className="px-4 py-1 bg-green-500 rounded"
                   >
-                    <Text className="text-sm text-neutral-200 font-JakartaSemiBold">
+                    <Text className="text-base text-neutral-200 font-JakartaSemiBold">
                       +10k
                     </Text>
                   </TouchableOpacity>
@@ -126,7 +126,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
 
                 {/* Quick amount buttons */}
                 <View className="mt-4">
-                  <Text className="mb-2 text-sm text-gray-700 font-JakartaSemiBold">
+                  <Text className="mb-2 text-base text-gray-700 font-JakartaSemiBold">
                     {t("payment.quickAmount")}:
                   </Text>
                   <View className="flex flex-row flex-wrap gap-2">
@@ -140,7 +140,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                         onPress={() => onCashAmountChange(quickAmount)}
                         className="px-4 py-2 bg-gray-100 rounded-lg border border-gray-300"
                       >
-                        <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                        <Text className="text-base text-gray-700 font-JakartaSemiBold">
                           {Number(quickAmount).toLocaleString("vi-VN")} VNĐ
                         </Text>
                       </TouchableOpacity>

@@ -2,7 +2,7 @@ import { icons } from "@/constants";
 import { calculateRegion } from "@/lib/map";
 import { useLocationStore } from "@/store";
 import { ActivityIndicator, Text, View } from "react-native";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { useState } from "react";
 
@@ -40,14 +40,14 @@ const DriverMap = ({
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
-        <Text className="mt-2 text-sm text-gray-600">Đang tải vị trí...</Text>
+        <Text className="mt-2 text-base text-gray-600">Đang tải vị trí...</Text>
       </View>
     );
   }
 
   return (
     <MapView
-      provider={PROVIDER_GOOGLE}
+      provider={PROVIDER_DEFAULT}
       style={{ height: "100%", width: "100%" }}
       tintColor="black"
       mapType="standard"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 export interface MarkerLocation {
@@ -50,7 +50,7 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
           accuracy: Location.Accuracy.Balanced,
         });
         console.log('[MapCard] Position obtained:', location.coords.latitude, location.coords.longitude);
-        
+
         const currentRegion = {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -83,33 +83,50 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
     return (
       <View className="h-[300px] w-full items-center justify-center bg-gray-50 mb-4 rounded-3xl overflow-hidden px-4">
         <ActivityIndicator size="small" color="#22C55E" />
-        <Text className="text-gray-400 mt-2 text-xs font-Jakarta">Đang tải bản đồ...</Text>
+        <Text className="text-gray-400 mt-2 text-base font-Jakarta">Đang tải bản đồ...</Text>
       </View>
     );
   }
 
   return (
-    <View className="h-[400px] w-full mb-4 rounded-3xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
+    <View
+      className="h-[400px] w-full mb-4 rounded-3xl overflow-hidden bg-gray-50 border border-gray-100"
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+      }}
+    >
       <MapView
         ref={mapRef}
-        className="w-full h-full"
-        provider="google"
+        style={{ flex: 1 }}
         initialRegion={region}
-        showsUserLocation={false} 
+        showsUserLocation={false}
         showsMyLocationButton={false}
       >
         {/* Driver/User Marker */}
         {region && (
-           <Marker
-             coordinate={{
-               latitude: region.latitude,
-               longitude: region.longitude,
-             }}
-           >
-             <View className="bg-white p-2 rounded-full shadow-md border border-gray-100">
-                <Text className="text-xl">🚗</Text>
-             </View>
-           </Marker>
+          <Marker
+            coordinate={{
+              latitude: region.latitude,
+              longitude: region.longitude,
+            }}
+          >
+            <View
+              className="bg-white p-2 rounded-full border border-gray-100"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 4,
+              }}
+            >
+              <Text className="text-xl">🚗</Text>
+            </View>
+          </Marker>
         )}
 
         {/* Pending Orders Markers */}
@@ -123,10 +140,28 @@ const MapCard: React.FC<MapCardProps & { orders?: any[], onOrderPress?: (order: 
             onPress={() => onOrderPress && onOrderPress(order)}
           >
             <View className="items-center">
-               <View className="bg-white px-2 py-1 rounded-full shadow-sm border border-gray-100 mb-1">
-                  <Text className="text-[10px] font-JakartaBold text-gray-900">{formatCurrency(order.price)}</Text>
-               </View>
-               <View className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm" />
+              <View
+                className="bg-white px-2 py-1 rounded-full border border-gray-100 mb-1"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              >
+                <Text className="text-sm font-JakartaBold text-gray-900">{formatCurrency(order.price)}</Text>
+              </View>
+              <View
+                className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              />
             </View>
           </Marker>
         ))}

@@ -115,6 +115,7 @@ export interface GoogleInputProps {
   icon?: string;
   initialLocation?: string;
   containerStyle?: string;
+  style?: any;
   textInputBackgroundColor?: string;
   handlePress: ({
     latitude,

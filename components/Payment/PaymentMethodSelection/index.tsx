@@ -41,11 +41,10 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
             <TouchableOpacity
               key={method.id}
               onPress={() => onPaymentMethodSelect(method.id)}
-              className={`flex flex-row items-center justify-center p-4 mb-4 rounded-lg border-2 w-[48%] ${
-                isSelected
+              className={`flex flex-row items-center justify-center p-4 mb-4 rounded-lg border-2 w-[48%] ${isSelected
                   ? "border-green-500 bg-green-50"
                   : "border-gray-200 bg-white"
-              }`}
+                }`}
               activeOpacity={0.7}
             >
               <Text className="mr-2 text-2xl">{method.icon}</Text>
@@ -54,12 +53,11 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
               </Text>
 
               <View
-                className={`absolute top-2 right-2 justify-center items-center w-5 h-5 bg-green-500 !rounded-full ${
-                  isSelected ? "opacity-100" : "opacity-0"
-                }`}
+                className={`absolute top-2 right-2 justify-center items-center w-5 h-5 bg-green-500 !rounded-full ${isSelected ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 {isSelected && (
-                  <Text className="text-sm font-bold text-neutral-200">✓</Text>
+                  <Text className="text-base font-bold text-neutral-200">✓</Text>
                 )}
               </View>
             </TouchableOpacity>

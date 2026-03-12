@@ -75,7 +75,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
         {promos.map((promo) => (
           <TouchableOpacity
             key={promo.id}
-            className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl p-4 mr-3 w-64 shadow-md"
+            className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl p-4 mr-3 w-64"
             style={{
               backgroundColor: "#0286FF",
               shadowColor: "#000",
@@ -89,7 +89,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
             {/* Header */}
             <View className="flex-row items-center justify-between mb-2">
               <View className="bg-white/20 rounded-full px-3 py-1">
-                <Text className="text-neutral-200 font-JakartaBold text-xs">
+                <Text className="text-neutral-200 font-JakartaBold text-base">
                   {promo.discount_type === "percentage"
                     ? `${promo.discount_value}% OFF`
                     : promo.discount_type === "fixed_amount"
@@ -107,7 +107,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
 
             {/* Description */}
             <Text
-              className="text-neutral-200/90 text-sm font-JakartaMedium mb-3"
+              className="text-neutral-200/90 text-base font-JakartaMedium mb-3"
               numberOfLines={2}
             >
               {promo.description}
@@ -117,14 +117,14 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
             <View className="flex-row justify-between items-center border-t border-white/20 pt-2">
               <View>
                 {promo.min_ride_amount > 0 && (
-                  <Text className="text-neutral-200/80 text-xs font-JakartaMedium">
+                  <Text className="text-neutral-200/80 text-base font-JakartaMedium">
                     {t("promo.minOrderAmount")}:{" "}
                     {promo.min_ride_amount.toLocaleString("vi-VN")} VNĐ
                   </Text>
                 )}
               </View>
               {promo.valid_until && (
-                <Text className="text-neutral-200/80 text-xs font-JakartaMedium">
+                <Text className="text-neutral-200/80 text-base font-JakartaMedium">
                   {t("promo.until")}: {formatDate(promo.valid_until)}
                 </Text>
               )}
@@ -133,7 +133,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
             {/* Usage info */}
             {promo.max_uses_per_user > 1 && (
               <View className="mt-2 bg-white/10 rounded px-2 py-1">
-                <Text className="text-neutral-200 text-xs font-JakartaMedium">
+                <Text className="text-neutral-200 text-base font-JakartaMedium">
                   {t("promo.usage")}: {(promo as any).remaining_uses || 0}/
                   {promo.max_uses_per_user}
                 </Text>

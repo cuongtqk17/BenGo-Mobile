@@ -123,7 +123,16 @@ export default function DriverProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Card */}
-        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 overflow-hidden">
+        <View
+          className="mx-4 mt-4 bg-white rounded-3xl overflow-hidden"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
           <LinearGradient
             colors={["#10B981", "#059669"]}
             start={{ x: 0, y: 0 }}
@@ -132,8 +141,15 @@ export default function DriverProfileScreen() {
             className="p-4"
           >
             <View className="flex-row items-center">
-              <View 
-                className="w-20 h-20 rounded-full bg-white flex items-center justify-center border-4 border-white shadow-xl"
+              <View
+                className="w-20 h-20 rounded-full bg-white flex items-center justify-center border-4 border-white"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 10 },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 15,
+                  elevation: 10,
+                }}
               >
                 {driverProfile.profile_image_url ? (
                   <Image
@@ -153,7 +169,7 @@ export default function DriverProfileScreen() {
                   <Text className="ml-1 text-neutral-200 font-JakartaBold">
                     {Number(driverProfile.average_rating || 0).toFixed(1)}
                   </Text>
-                  <Text className="ml-1 text-neutral-200/80 font-JakartaMedium text-sm">
+                  <Text className="ml-1 text-neutral-200/80 font-JakartaMedium text-base">
                     ({driverProfile.rating_count} {t("rating.ratings")})
                   </Text>
                 </View>
@@ -189,7 +205,7 @@ export default function DriverProfileScreen() {
                 <Text className="mt-2 text-xl font-JakartaBold text-blue-900">
                   {driverProfile.completed_rides}
                 </Text>
-                <Text className="text-sm font-JakartaMedium text-blue-700">
+                <Text className="text-base font-JakartaMedium text-blue-700">
                   {t("driver.completedRides")}
                 </Text>
               </View>
@@ -204,7 +220,7 @@ export default function DriverProfileScreen() {
                     i18n.language
                   )}
                 </Text>
-                <Text className="text-sm font-JakartaMedium text-green-700">
+                <Text className="text-base font-JakartaMedium text-green-700">
                   {t("driver.totalEarnings")}
                 </Text>
               </View>
@@ -216,7 +232,7 @@ export default function DriverProfileScreen() {
                 <Text className="mt-2 text-xl font-JakartaBold text-purple-900">
                   {driverProfile.recentRides?.length || 0}
                 </Text>
-                <Text className="text-sm font-JakartaMedium text-purple-700">
+                <Text className="text-base font-JakartaMedium text-purple-700">
                   {t("driver.recentRides")}
                 </Text>
               </View>
@@ -232,7 +248,7 @@ export default function DriverProfileScreen() {
                 <Text className="mt-2 text-xl font-JakartaBold text-orange-900">
                   {driverProfile.recentRatings?.length || 0}
                 </Text>
-                <Text className="text-sm font-JakartaMedium text-orange-700">
+                <Text className="text-base font-JakartaMedium text-orange-700">
                   {t("driver.recentRatings")}
                 </Text>
               </View>
@@ -241,7 +257,16 @@ export default function DriverProfileScreen() {
         </View>
 
         {/* Vehicle Info */}
-        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
+        <View
+          className="mx-4 mt-4 bg-white rounded-3xl p-4"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
           <Text className="text-lg font-JakartaBold mb-4">
             {t("driver.vehicleInfo")}
           </Text>
@@ -260,7 +285,7 @@ export default function DriverProfileScreen() {
                 <Ionicons name="car-sport-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                <Text className="text-base text-gray-500 font-JakartaMedium">
                   {t("driver.vehicleType")}
                 </Text>
                 <Text className="text-base font-JakartaBold text-gray-900 capitalize">
@@ -274,7 +299,7 @@ export default function DriverProfileScreen() {
                 <Ionicons name="people-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                <Text className="text-base text-gray-500 font-JakartaMedium">
                   {t("booking.seats")}
                 </Text>
                 <Text className="text-base font-JakartaBold text-gray-900">
@@ -288,7 +313,7 @@ export default function DriverProfileScreen() {
                 <Ionicons name="card-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                <Text className="text-base text-gray-500 font-JakartaMedium">
                   {t("driver.licenseNumber")}
                 </Text>
                 <Text className="text-base font-JakartaBold text-gray-900">
@@ -300,7 +325,16 @@ export default function DriverProfileScreen() {
         </View>
 
         {/* Contact Info */}
-        <View className="mx-4 mt-4 mb-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
+        <View
+          className="mx-4 mt-4 mb-4 bg-white rounded-3xl p-4"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
           <Text className="text-lg font-JakartaBold mb-4">
             {t("driver.contactInfo")}
           </Text>
@@ -311,7 +345,7 @@ export default function DriverProfileScreen() {
                 <Ionicons name="mail-outline" size={20} color="#10B981" />
               </View>
               <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                <Text className="text-base text-gray-500 font-JakartaMedium">
                   {t("profile.email")}
                 </Text>
                 <Text className="text-base font-JakartaBold text-gray-900">
@@ -325,7 +359,7 @@ export default function DriverProfileScreen() {
                 <Ionicons name="call-outline" size={20} color="#10B981" />
               </View>
               <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                <Text className="text-base text-gray-500 font-JakartaMedium">
                   {t("profile.phone")}
                 </Text>
                 <Text className="text-base font-JakartaBold text-gray-900">

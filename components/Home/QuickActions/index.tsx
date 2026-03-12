@@ -12,12 +12,22 @@ export default function QuickActions() {
       </Text>
       <View className="flex-row justify-between">
         <TouchableOpacity
-          className="relative flex-1 p-4 mr-2 min-h-[100px] overflow-hidden rounded-xl shadow-sm bg-white/20"
+          className="relative flex-1 p-4 mr-2 min-h-[100px] overflow-hidden rounded-xl bg-white/20"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            elevation: 2,
+          }}
           onPress={() => router.push("/(root)/promos")}
         >
           <Image
             source={require("@/assets/images/rent-car.png")}
-            className="absolute bottom-0 top-2/3 -translate-y-1/2 h-[150px] -translate-x-1/4 w-[150px]"
+            className="absolute bottom-0 top-2/3 h-[150px] w-[150px]"
+            style={{
+              transform: [{ translateY: -75 }, { translateX: -37.5 }],
+            }}
             resizeMode="contain"
           />
           <Text className="absolute top-3 right-3 text-lg font-bold text-center text-neutral-200 font-JakartaMedium">
@@ -26,12 +36,22 @@ export default function QuickActions() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="overflow-hidden relative flex-1 p-4 ml-2 rounded-xl shadow-sm bg-white/20"
+          className="overflow-hidden relative flex-1 p-4 ml-2 rounded-xl bg-white/20"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            elevation: 2,
+          }}
           onPress={() => router.push("/(root)/tabs/rides")}
         >
           <Image
             source={require("@/assets/images/history.png")}
-            className="absolute bottom-0 top-2/3 -translate-y-1/2 h-[150px] -translate-x-1/4 w-[150px]"
+            className="absolute bottom-0 top-2/3 h-[150px] w-[150px]"
+            style={{
+              transform: [{ translateY: -75 }, { translateX: -37.5 }],
+            }}
             resizeMode="contain"
           />
           <Text className="absolute top-3 right-3 text-lg font-bold text-center text-neutral-200 font-JakartaMedium">

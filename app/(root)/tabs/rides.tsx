@@ -121,7 +121,7 @@ export default function RidesScreen() {
                   (item.ride_status === "pending" ||
                     item.ride_status === "confirmed" ||
                     item.ride_status === "driver_arrived") &&
-                   item.ride_id
+                    item.ride_id
                     ? () => handleCancelRide(Number(item.ride_id))
                     : undefined
                 }
@@ -150,7 +150,7 @@ export default function RidesScreen() {
                       alt={t("errors.somethingWentWrong")}
                       resizeMode="contain"
                     />
-                    <Text className="mt-4 text-sm text-red-500">{error}</Text>
+                    <Text className="mt-4 text-base text-red-500">{error}</Text>
                   </>
                 ) : (
                   <>

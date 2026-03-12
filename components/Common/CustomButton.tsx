@@ -54,7 +54,17 @@ const CustomButton = ({
   <TouchableOpacity
     onPress={onPress}
     disabled={loading || props.disabled}
-    className={`flex flex-row justify-center items-center p-4 py-3 w-full rounded-full shadow-md shadow-neutral-400/70 ${getBgVariantStyle(bgVariant)} ${className} ${loading ? "opacity-70" : ""}`}
+    className={`flex flex-row justify-center items-center p-4 py-3 w-full rounded-full ${getBgVariantStyle(bgVariant)} ${className} ${loading ? "opacity-70" : ""}`}
+    style={[
+      !className?.includes("shadow-none") && bgVariant !== "outline" && {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 4,
+      },
+      props.style,
+    ]}
     {...props}
   >
     {loading ? (

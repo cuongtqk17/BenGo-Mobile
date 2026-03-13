@@ -3,7 +3,7 @@ import MapView, { Marker, AnimatedRegion, PROVIDER_GOOGLE, PROVIDER_DEFAULT } fr
 import { View, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocationStore } from "@/store";
-import { customerService } from "@/lib/customer";
+import { useNearbyDrivers } from "@/hooks/useCustomer";
 
 
 interface Driver {
@@ -55,26 +55,19 @@ const BackgroundMap = () => {
     });
   };
 
-  const fetchNearbyDrivers = async () => {
-    if (!userLatitude || !userLongitude) return;
-    try {
-      const data = await customerService.getNearbyDrivers(userLatitude, userLongitude);
-      // If API fails or returns no data, use mock data for demo
-      const finalData = data && data.length > 0 ? data : [
-        { id: 'm1', vehicleType: 'VAN', location: { lat: userLatitude + 0.002, lng: userLongitude + 0.002 } },
-        { id: 'm2', vehicleType: 'BIKE', location: { lat: userLatitude - 0.002, lng: userLongitude + 0.003 } },
-      ];
-      updateDrivers(finalData);
-    } catch (error) {
-      console.error("Error updating drivers:", error);
-    }
-  };
+  const { data: nearbyDrivers } = useNearbyDrivers(userLatitude, userLongitude);
 
   useEffect(() => {
-    fetchNearbyDrivers();
-    const interval = setInterval(fetchNearbyDrivers, 10000); // 10-15s polling
-    return () => clearInterval(interval);
-  }, [userLatitude, userLongitude]);
+    if (nearbyDrivers) {
+      // If API returns no data, we could potentially keep mock data, 
+      // but for "real" application we use what API provides.
+      const finalData = nearbyDrivers.length > 0 ? nearbyDrivers : [
+        { id: 'm1', vehicleType: 'VAN', location: { lat: (userLatitude || 21.0379) + 0.002, lng: (userLongitude || 105.8342) + 0.002 } },
+        { id: 'm2', vehicleType: 'BIKE', location: { lat: (userLatitude || 21.0379) - 0.002, lng: (userLongitude || 105.8342) + 0.003 } },
+      ];
+      updateDrivers(finalData);
+    }
+  }, [nearbyDrivers, userLatitude, userLongitude]);
 
   const region = {
     latitude: userLatitude || 21.0379,

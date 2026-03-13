@@ -11,7 +11,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { driverService, OrderHistoryItem } from '@/lib/driver';
+import { OrderHistoryItem } from '@/lib/driver';
+import { useDriverOrders } from '@/hooks/useDriver';
 import TripCard from '@/components/Driver/ActivityScreen/TripCard';
 import InputField from '@/components/Common/InputField';
 
@@ -29,73 +30,50 @@ const TIME_FILTERS = [
 
 const DriverHistory = () => {
   const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [timeFilter, setTimeFilter] = useState('today');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  const { data, isLoading: loading, isFetching: loadingMore, refetch } = useDriverOrders({
+    page,
+    limit: 10,
+    status: statusFilter,
+    search,
+    time: timeFilter
+  });
+
   useEffect(() => {
     console.log('[DriverHistory] filter state changed:', { statusFilter, timeFilter, search });
   }, [statusFilter, timeFilter, search]);
 
-  const fetchOrders = useCallback(async (pageNum: number, isRefresh = false) => {
-    try {
-      if (pageNum === 1) setLoading(true);
-      else setLoadingMore(true);
-
-      console.log('[DriverHistory] Calling API with:', { pageNum, statusFilter, timeFilter, search });
-      const response = await driverService.getOrders({
-        page: pageNum,
-        limit: 10,
-        status: statusFilter,
-        search: search,
-        time: timeFilter // Added time filter here
-      });
-
-      // API returns { data: { data: [], meta: {} }, ... }
-      const actualData = response.data?.data;
-      const meta = response.data?.meta;
-
-      if (!Array.isArray(actualData)) {
-        console.error('[DriverHistory] actualData is not an array:', response);
-        if (isRefresh) setOrders([]);
-        return;
-      }
-
-      if (isRefresh) {
-        setOrders(actualData);
+  useEffect(() => {
+    if (data?.data?.data) {
+      if (page === 1) {
+        setOrders(data.data.data);
       } else {
-        setOrders(prev => [...prev, ...actualData]);
+        setOrders(prev => [...prev, ...data.data.data]);
       }
-
-      setHasMore(actualData.length === 10);
-      setPage(pageNum);
-    } catch (error) {
-      console.error('[DriverHistory] Fetch orders error:', JSON.stringify(error, null, 2) || error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-      setLoadingMore(false);
+      setHasMore(data.data.data.length === 10);
     }
-  }, [statusFilter, timeFilter, search]);
+  }, [data, page]);
 
   useEffect(() => {
-    fetchOrders(1, true);
+    setPage(1);
+    setOrders([]);
   }, [statusFilter, timeFilter, search]);
 
+
+
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchOrders(1, true);
+    setPage(1);
+    refetch();
   };
 
   const onEndReached = () => {
-    console.log('[DriverHistory] onEndReached triggered', { loading, loadingMore, hasMore, page });
     if (!loading && !loadingMore && hasMore) {
-      fetchOrders(page + 1);
+      setPage(prev => prev + 1);
     }
   };
 
@@ -166,7 +144,7 @@ const DriverHistory = () => {
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#22C55E']} />
+          <RefreshControl refreshing={loading && page === 1} onRefresh={onRefresh} colors={['#22C55E']} />
         }
         ListEmptyComponent={() => (
           !loading ? (

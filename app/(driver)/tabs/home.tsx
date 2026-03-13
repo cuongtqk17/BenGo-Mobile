@@ -10,7 +10,8 @@ import {
   type MarkerLocation,
 } from '@/components/Driver/HomeScreen';
 import { useAuth } from '@/context/AuthContext';
-import { driverService, DriverStats, PendingOrder } from '@/lib/driver';
+import { driverService, PendingOrder } from '@/lib/driver';
+import { useDriverPendingOrders, useDriverStats, useDriverToggleStatus, useDriverAcceptOrder, useDriverUpdateLocation } from '@/hooks/useDriver';
 
 interface LocationState {
   address: string;
@@ -23,19 +24,10 @@ interface LocationState {
 
 const DriverHome = () => {
   const [isOnline, setIsOnline] = useState(false);
-  const [isTogglingStatus, setIsTogglingStatus] = useState(false);
-  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
-  const [isLoadingStats, setIsLoadingStats] = useState(false);
-  const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
-  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<PendingOrder | null>(null);
-  const [isAccepting, setIsAccepting] = useState(false);
-  const [driverStats, setDriverStats] = useState<DriverStats>({
-    totalEarnings: 0,
-    totalTrips: 0,
-    rating: 5,
-  });
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+  
   const [currentLocation, setCurrentLocation] = useState<LocationState>({
     address: 'Đang tải vị trí...',
     city: 'Đà Nẵng',
@@ -44,29 +36,30 @@ const DriverHome = () => {
     longitude: 108.206230,
     heading: null,
   });
+
   const { user } = useAuth();
   const mapRef = useRef<any>(null);
 
-  // Fetch pending orders nearby
-  const fetchPendingOrders = useCallback(async () => {
-    if (currentLocation.latitude === 0) return;
+  const today = new Date().toISOString().split('T')[0];
 
-    setIsLoadingOrders(true);
-    try {
-      console.log('[DriverHome] Fetching pending orders at:', currentLocation.latitude, currentLocation.longitude);
-      const orders = await driverService.getPendingOrders(
-        currentLocation.latitude,
-        currentLocation.longitude,
-        5,
-      );
-      console.log('[DriverHome] Pending orders received:', orders?.length || 0);
-      setPendingOrders(orders || []);
-    } catch (error) {
-      console.error('Fetch pending orders error:', error);
-    } finally {
-      setIsLoadingOrders(false);
-    }
-  }, [currentLocation.latitude, currentLocation.longitude]);
+  // Queries
+  const { data: pendingOrders = [], refetch: refetchOrders, isLoading: isLoadingOrders } = useDriverPendingOrders(
+    currentLocation.latitude,
+    currentLocation.longitude,
+    5
+  );
+
+  const { data: driverStats = { totalEarnings: 0, totalTrips: 0, rating: 5 }, isLoading: isLoadingStats } = useDriverStats(
+    today, 
+    today
+  );
+
+  // Mutations
+  const { mutateAsync: toggleStatus, isPending: isTogglingStatus } = useDriverToggleStatus();
+  const { mutateAsync: acceptOrder, isPending: isAccepting } = useDriverAcceptOrder();
+  const { mutate: updateLocation } = useDriverUpdateLocation();
+
+
 
   // Toggle online/offline status via API
   const toggleOnlineStatus = async () => {
@@ -77,80 +70,37 @@ const DriverHome = () => {
 
     const newStatus = !isOnline;
 
-    // Optimistic update
-    setIsOnline(newStatus);
-    setIsTogglingStatus(true);
-
     try {
-      console.log('[DriverHome] Toggling status to:', newStatus);
-      await driverService.toggleStatus({
+      await toggleStatus({
         isOnline: newStatus,
         location: {
           lat: currentLocation.latitude,
           lng: currentLocation.longitude,
         },
       });
-
-      if (newStatus) {
-        fetchPendingOrders();
-      } else {
-        setPendingOrders([]);
-      }
+      setIsOnline(newStatus);
     } catch (error: any) {
       console.error('Toggle status error:', error);
-      // Revert state if API fails
-      setIsOnline(!newStatus);
       Alert.alert('Lỗi', 'Không thể cập nhật trạng thái hoạt động');
-    } finally {
-      setIsTogglingStatus(false);
     }
   };
 
   // Accept order
   const handleAcceptOrder = async (orderId: string) => {
-    setIsAccepting(true);
     try {
-      const result = await driverService.acceptOrder(orderId);
-      if (result) {
-        Alert.alert('Thành công', 'Bạn đã nhận chuyến thành công!');
-        setShowOrderModal(false);
-        setSelectedOrder(null);
-        fetchPendingOrders();
-      }
+      await acceptOrder(orderId);
+      Alert.alert('Thành công', 'Bạn đã nhận chuyến thành công!');
+      setShowOrderModal(false);
+      setSelectedOrder(null);
     } catch (error: any) {
       console.error('Accept order error:', error);
       Alert.alert('Lỗi', 'Không thể nhận chuyến vào lúc này');
-    } finally {
-      setIsAccepting(false);
     }
   };
 
-  // Fetch driver stats
-  const fetchDriverStats = useCallback(async () => {
-    setIsLoadingStats(true);
-    try {
-      const today = new Date();
-      const dateString = today.toISOString().split('T')[0];
 
-      console.log('[DriverHome] Fetching stats for:', dateString);
-      const stats = await driverService.getStats(dateString, dateString);
-      console.log('[DriverHome] Stats received:', stats);
-      setDriverStats(stats);
-    } catch (error) {
-      console.error('Fetch stats error:', error);
-    } finally {
-      setIsLoadingStats(false);
-    }
-  }, []);
 
-  // Update location to backend periodically
-  const updateLocationToServer = useCallback(async (lat: number, lng: number, heading?: number) => {
-    try {
-      await driverService.updateLocation({ lat, lng, heading });
-    } catch (error) {
-      console.warn('Update location error:', error);
-    }
-  }, []);
+
 
   const reverseGeocode = async (latitude: number, longitude: number): Promise<{ address: string; city: string }> => {
     try {
@@ -246,7 +196,7 @@ const DriverHome = () => {
       });
 
       if (isOnline) {
-        updateLocationToServer(latitude, longitude, location.coords.heading || undefined);
+        updateLocation({ lat: latitude, lng: longitude, heading: location.coords.heading ?? undefined });
       }
     } catch (error: any) {
       console.warn('[DriverHome] Location error logic handled:', error.message);
@@ -261,33 +211,26 @@ const DriverHome = () => {
     } finally {
       setIsLoadingLocation(false);
     }
-  }, [isOnline, updateLocationToServer]);
+  }, [isOnline, updateLocation]);
 
   useEffect(() => {
     getCurrentLocation();
-    fetchDriverStats();
-  }, [getCurrentLocation, fetchDriverStats]);
+  }, [getCurrentLocation]);
 
-  useEffect(() => {
-    if (isOnline && currentLocation.latitude !== 0) {
-      fetchPendingOrders();
-      const interval = setInterval(fetchPendingOrders, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [isOnline, fetchPendingOrders, currentLocation.latitude]);
+
 
   useEffect(() => {
     if (isOnline && currentLocation.latitude !== 0) {
       const interval = setInterval(() => {
-        updateLocationToServer(
-          currentLocation.latitude,
-          currentLocation.longitude,
-          currentLocation.heading || undefined
-        );
+        updateLocation({
+          lat: currentLocation.latitude,
+          lng: currentLocation.longitude,
+          heading: currentLocation.heading || undefined
+        } as any);
       }, 10000);
       return () => clearInterval(interval);
     }
-  }, [isOnline, currentLocation.latitude, currentLocation.longitude, updateLocationToServer]);
+  }, [isOnline, currentLocation.latitude, currentLocation.longitude, updateLocation]);
 
   const formatCurrency = (amount?: number): string => {
     if (amount == null || isNaN(amount)) return '0 ₫';
@@ -352,7 +295,7 @@ const DriverHome = () => {
         <View className="h-1/3 bg-white border-t border-gray-50">
           <View className="px-5 py-3 border-b border-gray-50 flex-row justify-between items-center">
             <Text className="text-gray-900 font-JakartaBold text-lg">Đơn hàng khả dụng ({pendingOrders.length})</Text>
-            <TouchableOpacity onPress={fetchPendingOrders}>
+            <TouchableOpacity onPress={() => refetchOrders()}>
               <Text className="text-blue-500 text-base font-JakartaBold">LÀM MỚI</Text>
             </TouchableOpacity>
           </View>

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 interface AddressShortcutsProps {
   onPress: (type: string) => void;
-  savedAddresses?: Array<{ type: string; address: string }>;
+  savedAddresses?: Array<{ type: string; fullAddress: string; lat: number; lng: number }>;
 }
 
 const AddressShortcuts = ({ onPress, savedAddresses }: AddressShortcutsProps) => {

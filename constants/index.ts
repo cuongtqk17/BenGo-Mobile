@@ -1,4 +1,3 @@
-import aichat from "@/assets/icons/aichat.jpg";
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowUp from "@/assets/icons/arrow-up.png";
 import backArrow from "@/assets/icons/back-arrow.png";
@@ -26,7 +25,6 @@ import selectedMarker2 from "@/assets/icons/selected-marker2.png";
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
-import userchat from "@/assets/icons/userchat.jpg";
 import check from "@/assets/images/check.png";
 import getStarted from "@/assets/images/get-started.png";
 import message from "@/assets/images/message.png";
@@ -48,7 +46,6 @@ export const images = {
 };
 
 export const icons = {
-    aichat,
     arrowDown,
     arrowUp,
     backArrow,
@@ -76,7 +73,6 @@ export const icons = {
     star,
     target,
     to,
-    userchat,
 };
 
 export const onboarding = [

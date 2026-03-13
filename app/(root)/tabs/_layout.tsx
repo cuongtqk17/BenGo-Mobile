@@ -36,16 +36,6 @@ const Layout = () => {
                 }}
             />
             <Tabs.Screen
-                name="history"
-                options={{
-                    title: "Hoạt động",
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color }) => (
-                        <Ionicons name={focused ? "receipt" : "receipt-outline"} size={24} color={color} />
-                    )
-                }}
-            />
-            <Tabs.Screen
                 name="notifications"
                 options={{
                     title: "Thông báo",

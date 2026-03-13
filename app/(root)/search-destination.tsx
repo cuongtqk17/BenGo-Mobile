@@ -133,6 +133,7 @@ const SearchDestinationScreen = () => {
             }}
             renderDescription={(row: any) => row.description}
             styles={customAutocompleteStyles}
+            enablePoweredByContainer={false}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
             renderRow={((data: any) => (

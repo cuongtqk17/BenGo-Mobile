@@ -20,6 +20,7 @@
     "@react-navigation/native": "^7.1.6",
     "@react-navigation/native-stack": "^7.14.5",
     "@stripe/stripe-react-native": "0.50.3",
+    "@tanstack/react-query": "^5.90.21",
     "bufferutil": "^4.1.0",
     "cloudinary": "^2.8.0",
     "date-fns": "^4.1.0",

@@ -12,28 +12,14 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import { driverService, OrderDetail } from '@/lib/driver';
+import { OrderDetail } from '@/lib/driver';
+import { useOrderDetail } from '@/hooks/useDriver';
 
 const { width } = Dimensions.get('window');
 
 const TripDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [order, setOrder] = useState<OrderDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const data = await driverService.getOrderDetails(id);
-        setOrder(data);
-      } catch (error) {
-        console.error('Fetch order detail error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDetail();
-  }, [id]);
+  const { data: order, isLoading: loading } = useOrderDetail(id || null);
 
   if (loading) {
     return (

@@ -3,7 +3,22 @@
     <Ionicons name={item.icon} size={20} color="#10B981" />
 </View>
 
-2. NativeWind Known Issues & Alternatives (Tailwind classes to avoid):
-- Translate classes (e.g., translate-x, translate-y): Use native React Native inline `style={{ transform: [{ translateX: ... }] }}`.
-- Animation classes (e.g., animate-spin, animate-pulse): Use `react-native-reanimated` instead for complex animations.
-- Box Shadow classes (e.g., shadow-md, shadow-lg): Use native React Native shadows (`elevation` on Android, `shadowColor`/`shadowOffset`/`shadowOpacity`/`shadowRadius` on iOS) in `style` objects.
+2. Mẫu TextInput
+<View className="mb-4">
+              <Text className="text-neutral-600 mb-2 font-JakartaMedium">Khối lượng (kg)</Text>
+              <TextInput
+                placeholder="Nhập cân nặng dự kiến"
+                value={goodsWeight}
+                onChangeText={setGoodsWeight}
+                keyboardType="numeric"
+                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-14"
+                placeholderTextColor="#9CA3AF"
+                style={[
+                  {
+                    fontFamily: "Jakarta-Medium",
+                    fontSize: 16,
+                    color: "#1F2937", // text-neutral-800
+                  },
+                ]}
+              />
+            </View>

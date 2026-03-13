@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
 import { useAuthStore } from "@/store";
+import { useQuery } from "@tanstack/react-query";
 
 export const fetchAPI = async (url: string, options?: RequestInit) => {
     try {
@@ -16,11 +16,16 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             }
         }
 
-        const headers = {
-            'Content-Type': 'application/json',
+        const isFormData = options?.body instanceof FormData;
+
+        const headers: Record<string, string> = {
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-            ...options?.headers,
+            ...options?.headers as Record<string, string>,
         };
+
+        if (!isFormData && !headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
 
         const response = await fetch(finalUrl, {
             ...options,
@@ -49,28 +54,22 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
     }
 };
 
+
+
 export const useFetch = <T>(url: string, options?: RequestInit) => {
-    const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchData = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
+    const { data, error, isLoading, refetch } = useQuery<T, Error>({
+        queryKey: [url, options],
+        queryFn: async () => {
             const result = await fetchAPI(url, options);
-            setData(result.data);
-        } catch (err) {
-            setError((err as Error).message);
-        } finally {
-            setLoading(false);
-        }
-    }, [url, options]);
+            // Handling the structure { data: T } which fetchAPI seems to return
+            return result.data ?? result;
+        },
+    });
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    return {data, loading, error, refetch: fetchData};
+    return {
+        data,
+        loading: isLoading,
+        error: error?.message || null,
+        refetch
+    };
 };

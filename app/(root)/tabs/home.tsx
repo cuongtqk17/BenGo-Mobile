@@ -2,11 +2,12 @@ import React, { useEffect, useState, useCallback } from "react";
 import { View, Alert, Dimensions } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 import { useLocationStore } from "@/store";
-import { customerService } from "@/lib/customer";
 import { router } from "expo-router";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { useCustomerProfile } from "@/hooks/useCustomer";
 
 import BackgroundMap from "@/components/Customer/HomeScreen/BackgroundMap";
 import FloatingSearchBar from "@/components/Customer/HomeScreen/FloatingSearchBar";
@@ -17,8 +18,7 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { setUserLocation, setDestinationLocation } = useLocationStore();
 
-  const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: userData } = useCustomerProfile(user?.id || null);
 
   const handleSearchPress = () => {
     router.push("/(root)/search-destination");
@@ -42,22 +42,7 @@ export default function HomeScreen() {
 
 
 
-  const fetchInitialData = async () => {
-    if (!user?.id) return;
-    try {
-      // API A3: GET /auth/profile
-      const userData = await customerService.getProfile(user.id);
-      if (userData) {
-        setUserData(userData);
-      }
 
-
-    } catch (error) {
-      console.error("Error fetching initial data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const requestLocation = async () => {
     try {
@@ -86,7 +71,6 @@ export default function HomeScreen() {
 
   useEffect(() => {
     requestLocation();
-    fetchInitialData();
   }, [user]);
 
   return (

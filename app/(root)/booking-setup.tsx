@@ -20,6 +20,8 @@ import { useTranslation } from "react-i18next";
 import { useLocationStore } from "@/store";
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
+import TextArea from "@/components/Common/TextArea";
+import { useUpload } from "@/hooks/useUpload";
 
 const VEHICLE_TYPES = [
   { id: "BIKE", title: "Motorbike", icon: "bicycle", basePrice: 15000 },
@@ -51,6 +53,7 @@ const BookingSetupScreen = () => {
   } | null>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { uploadImage, isUploading } = useUpload();
 
   // C3: API Estimate Trigger
   const fetchEstimate = async (vehicleType: string) => {
@@ -103,12 +106,19 @@ const BookingSetupScreen = () => {
     });
 
     if (!result.canceled) {
-      setImages([...images, result.assets[0].uri]);
+      const uri = result.assets[0].uri;
+      try {
+        const uploadRes = await uploadImage(uri);
+        if (uploadRes && uploadRes.url) {
+          setImages([...images, uploadRes.url]);
+        }
+      } catch (error) {
+        Alert.alert("Lỗi upload", "Không thể tải ảnh lên. Vui lòng thử lại.");
+      }
     }
   };
 
   const handleCreateOrder = async () => {
-    // Validation
     if (!goodsName || !goodsWeight || images.length === 0) {
       Alert.alert("Thiếu thông tin", "Vui lòng nhập tên hàng, khối lượng và thêm ít nhất 1 ảnh hàng hóa.");
       return;
@@ -116,15 +126,13 @@ const BookingSetupScreen = () => {
 
     setIsSubmitting(true);
     try {
-      // In a real app, you'd upload images to Cloudinary here first
-      // For this demo/requirement, we'll send the URIs or mock Cloudinary URLs
       const response = await fetchAPI("/(api)/orders", {
         method: "POST",
         body: JSON.stringify({
           origin: { lat: userLatitude, lng: userLongitude, address: userAddress },
           destination: { lat: destinationLatitude, lng: destinationLongitude, address: destinationAddress },
           vehicleType: selectedVehicle,
-          goodsImages: ["http://res.cloudinary.com/demo/image/upload/v1/goods/img1.jpg"], // Mocked
+          goodsImages: images,
           note: `${goodsName} (${goodsWeight}kg). ${note}`,
         }),
       });
@@ -159,40 +167,66 @@ const BookingSetupScreen = () => {
         </View>
 
         <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-          {/* C1: Address Card */}
-          <View className="bg-neutral-50 rounded-2xl p-4 mt-4 border border-neutral-200">
-            <View className="flex-row items-center mb-4">
-              <View className="w-12 h-12 rounded-full bg-green-50 justify-center items-center mr-3">
-                <Ionicons name="pin" size={20} color="#10B981" />
+          {/* C1: New Address Card Design */}
+          <View style={{ backgroundColor: '#F0FDF4', borderRadius: 24, padding: 20, marginTop: 16 }}>
+            {/* Pickup Row */}
+            <View className="flex-row">
+              <View className="items-center mr-4">
+                <Ionicons name="location-sharp" size={24} color="#10B981" />
+                <View
+                  style={{
+                    width: 2,
+                    height: 40,
+                    borderStyle: 'dashed',
+                    borderWidth: 1,
+                    borderColor: '#10B981',
+                    borderRadius: 1,
+                    marginVertical: 4
+                  }}
+                />
               </View>
               <View className="flex-1">
-                <Text className="text-neutral-500 text-sm font-JakartaMedium">Điểm lấy hàng</Text>
-                <Text className="text-black font-JakartaSemiBold" numberOfLines={1}>{userAddress}</Text>
+                <Text style={{ color: '#10B981', fontSize: 13, fontWeight: '700', letterSpacing: 1 }}>ĐIỂM LẤY HÀNG</Text>
+                <Text className="text-gray-800 text-base font-JakartaSemiBold mt-1" numberOfLines={2}>
+                  {userAddress}
+                </Text>
               </View>
             </View>
 
-            <View className="flex-row items-center">
-              <View className="w-12 h-12 rounded-full bg-green-100 justify-center items-center mr-3">
-                <Ionicons name="flag" size={20} color="#10B981" />
+            {/* Dropoff Row */}
+            <View className="flex-row">
+              <View className="items-center mr-4">
+                <Ionicons name="flag" size={24} color="#EF4444" />
               </View>
               <View className="flex-1">
-                <Text className="text-neutral-500 text-sm font-JakartaMedium">Điểm giao hàng</Text>
-                <Text className="text-black font-JakartaSemiBold" numberOfLines={1}>{destinationAddress}</Text>
+                <Text style={{ color: '#EF4444', fontSize: 13, fontWeight: '700', letterSpacing: 1 }}>ĐIỂM GIAO HÀNG</Text>
+                <Text className="text-gray-800 text-base font-JakartaSemiBold mt-1" numberOfLines={2}>
+                  {destinationAddress}
+                </Text>
               </View>
             </View>
           </View>
 
           {/* C2: Goods Info Card */}
-          <View className="bg-white rounded-2xl p-5 mt-4 border border-neutral-200 shadow-sm">
-            <Text className="text-lg font-JakartaBold mb-4">Thông tin hàng hóa</Text>
+          <View className="mt-4">
+            <Text className="text-lg font-JakartaBold mb-4 text-green-600">Thông tin hàng hóa</Text>
 
             <View className="mb-4">
               <Text className="text-neutral-600 mb-2 font-JakartaMedium">Tên hàng hóa</Text>
               <TextInput
                 placeholder="Ví dụ: Tủ lạnh, Quần áo..."
+
                 value={goodsName}
                 onChangeText={setGoodsName}
-                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-12"
+                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-14"
+                placeholderTextColor="#9CA3AF"
+                style={[
+                  {
+                    fontFamily: "Jakarta-Medium",
+                    fontSize: 16,
+                    color: "#1F2937", // text-neutral-800
+                  },
+                ]}
               />
             </View>
 
@@ -203,20 +237,25 @@ const BookingSetupScreen = () => {
                 value={goodsWeight}
                 onChangeText={setGoodsWeight}
                 keyboardType="numeric"
-                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-12"
+                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-14"
+                placeholderTextColor="#9CA3AF"
+                style={[
+                  {
+                    fontFamily: "Jakarta-Medium",
+                    fontSize: 16,
+                    color: "#1F2937", // text-neutral-800
+                  },
+                ]}
               />
             </View>
 
             <View className="mb-4">
               <Text className="text-neutral-600 mb-2 font-JakartaMedium">Ghi chú thêm</Text>
-              <TextInput
+              <TextArea
                 placeholder="Ví dụ: Hàng dễ vỡ, giao lên tầng 2..."
                 value={note}
                 onChangeText={setNote}
-                multiline
                 numberOfLines={3}
-                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-12 h-24 text-top"
-                textAlignVertical="top"
               />
             </View>
 
@@ -235,9 +274,14 @@ const BookingSetupScreen = () => {
               ))}
               <TouchableOpacity
                 onPress={pickImage}
+                disabled={isUploading}
                 className="w-20 h-20 rounded-xl bg-neutral-100 border-2 border-dashed border-neutral-300 justify-center items-center"
               >
-                <Ionicons name="camera" size={30} color="#9CA3AF" />
+                {isUploading ? (
+                  <ActivityIndicator color="#10B981" />
+                ) : (
+                  <Ionicons name="camera" size={30} color="#9CA3AF" />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -250,7 +294,7 @@ const BookingSetupScreen = () => {
                 <TouchableOpacity
                   key={v.id}
                   onPress={() => setSelectedVehicle(v.id)}
-                  className={`mr-4 p-4 rounded-2xl border-2 w-32 items-center ${selectedVehicle === v.id ? "border-green-600 bg-blue-50" : "border-neutral-100 bg-white"
+                  className={`mr-4 p-4 rounded-2xl border-2 w-32 items-center ${selectedVehicle === v.id ? "border-green-600 bg-green-50" : "border-neutral-100 bg-white"
                     }`}
                 >
                   <Ionicons

@@ -1,19 +1,15 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import {
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   View,
   Text,
   Image,
   TextInput,
-  Platform,
-  Keyboard,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { InputFieldProps } from "@/types/type";
 
-const InputField = ({
+const InputField = forwardRef<TextInput, InputFieldProps>(({
   label,
   labelStyle,
   icon,
@@ -25,7 +21,7 @@ const InputField = ({
   className,
   error,
   ...props
-}: InputFieldProps) => {
+}, ref) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -57,7 +53,15 @@ const InputField = ({
             />
           ))}
         <TextInput
-          className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
+          ref={ref}
+          style={{
+            borderRadius: 9999,
+            padding: 16,
+            fontFamily: "JakartaSemiBold",
+            fontSize: 15,
+            flex: 1,
+            textAlign: "left",
+          }}
           secureTextEntry={secureTextEntry && !showPassword}
           {...props}
           placeholderTextColor={"#AAAAAA"}
@@ -87,6 +91,6 @@ const InputField = ({
       )}
     </View>
   );
-};
+});
 
 export default InputField;

@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-export default function RidesScreen() {
+export default function HistoryScreen() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const userId = user?.id;

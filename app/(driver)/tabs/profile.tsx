@@ -1,11 +1,30 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const ProfileScreen = () => {
   const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Đăng xuất",
+      "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel"
+        },
+        { 
+          text: "Đăng xuất", 
+          onPress: logout,
+          style: "destructive"
+        }
+      ]
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -74,7 +93,7 @@ const ProfileScreen = () => {
            </TouchableOpacity>
 
            <TouchableOpacity 
-             onPress={logout}
+             onPress={handleLogout}
              className="flex-row items-center p-4 bg-red-50 rounded-2xl mt-4"
            >
               <View 

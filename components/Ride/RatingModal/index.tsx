@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   Text,
-  TextInput,
   Image,
   Keyboard,
   Platform,
   TouchableWithoutFeedback,
   Alert,
 } from "react-native";
+import InputField from "../../Common/InputField";
 import { StarRating } from "../../Common/StarRating";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -212,8 +212,9 @@ export const RatingModal: React.FC<RatingModalProps> = ({
             <Text className="text-base font-JakartaBold text-gray-700 mb-2">
               {t("rating.leaveComment")}
             </Text>
-            <TextInput
-              className="border border-gray-300 rounded-xl p-4 text-base font-Jakarta text-gray-800 min-h-[100px]"
+            <InputField
+              containerStyle="rounded-xl p-0 border border-gray-300 min-h-[100px] items-start"
+              inputStyle="p-4 text-base font-Jakarta text-gray-800"
               placeholder={t("rating.shareExperience")}
               placeholderTextColor="#9CA3AF"
               multiline

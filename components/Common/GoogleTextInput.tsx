@@ -1,7 +1,7 @@
-import { Image, View, ActivityIndicator } from "react-native";
+import { Image, View, ActivityIndicator, TextInput } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { icons } from "@/constants";
 import { GoogleInputProps } from "@/types/type";
@@ -18,12 +18,14 @@ const GoogleTextInput = ({
 }: GoogleInputProps) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const textInputRef = useRef<TextInput>(null);
   return (
     <View
       className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-neutral-100 ${containerStyle}`}
       style={style}
     >
       <GooglePlacesAutocomplete
+        ref={textInputRef as any}
         fetchDetails={true}
         placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
@@ -112,6 +114,7 @@ const GoogleTextInput = ({
           numberOfLines: 1,
           editable: !isLoading,
           scrollEnabled: false,
+          ref: textInputRef,
         }}
       />
     </View>

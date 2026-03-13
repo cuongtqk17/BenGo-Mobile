@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import InputField from "../../Common/InputField";
 import { fetchAPI } from "@/lib/fetch";
 import { usePromoStore } from "@/store/promoStore";
 import { useTranslation } from "react-i18next";
@@ -107,8 +107,9 @@ const PromoCodeInput = ({
             {t("promo.availablePromoCodes")}
           </Text>
           <View className="flex-row items-center">
-            <TextInput
-              className="flex-1 bg-neutral-100 rounded-lg px-4 py-3 mr-2 font-JakartaMedium"
+            <InputField
+              containerStyle="flex-1 bg-neutral-100 rounded-lg px-0 py-0 mr-2 font-JakartaMedium mb-0 my-0 border-none"
+              inputStyle="px-4 py-3"
               placeholder={t("promo.enterPromoCode")}
               value={code}
               onChangeText={(text) => {

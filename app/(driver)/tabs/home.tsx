@@ -368,7 +368,7 @@ const DriverHome = () => {
                 <View className="flex-1 mr-4">
                   <View className="flex-row items-center mb-1">
                     <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />
-                    <Text className="text-gray-900 font-JakartaBold text-[13px] flex-1" numberOfLines={1}>
+                    <Text className="text-gray-900 font-JakartaBold text-base flex-1" numberOfLines={1}>
                       {item.pickup?.address || 'Điểm đón hiện tại'}
                     </Text>
                   </View>

@@ -20,7 +20,7 @@ const Home = () => {
           router.replace('/(root)/tabs/home');
         }
       } else {
-        router.replace('/(auth)/welcome');
+        router.replace('/(auth)/sign-in');
       }
     }, 0);
 

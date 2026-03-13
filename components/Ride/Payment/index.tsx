@@ -266,7 +266,7 @@ const Payment = ({
 
   const handleGoHome = () => {
     setSuccess(false);
-    router.push("/(root)/tabs/rides");
+    router.push("/(root)/tabs/history");
   };
 
   const handleBackToCashStep1 = () => {

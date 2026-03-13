@@ -44,7 +44,7 @@ export default function QuickActions() {
             shadowRadius: 2,
             elevation: 2,
           }}
-          onPress={() => router.push("/(root)/tabs/rides")}
+          onPress={() => router.push("/(root)/tabs/history")}
         >
           <Image
             source={require("@/assets/images/history.png")}

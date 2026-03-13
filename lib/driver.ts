@@ -78,9 +78,9 @@ export const driverService = {
     });
   },
 
-  getOrders: async (params: { page?: number; limit?: number; status?: string; search?: string }): Promise<{ data: { data: OrderHistoryItem[], meta: { total: number, page: number, limit: number } } }> => {
-    const { page = 1, limit = 10, status = 'ALL', search = '' } = params;
-    const response = await fetchAPI(`/(api)/driver/orders?page=${page}&limit=${limit}&status=${status}&search=${search}`);
+  getOrders: async (params: { page?: number; limit?: number; status?: string; search?: string; time?: string }): Promise<{ data: { data: OrderHistoryItem[], meta: { total: number, page: number, limit: number } } }> => {
+    const { page = 1, limit = 10, status = 'ALL', search = '', time = 'today' } = params;
+    const response = await fetchAPI(`/(api)/driver/orders?page=${page}&limit=${limit}&status=${status}&search=${search}&time=${time}`);
     return response || { data: { data: [], meta: { total: 0, page: 1, limit: 10 } } };
   },
 

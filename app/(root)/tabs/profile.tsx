@@ -6,6 +6,7 @@ import {
   View,
   ImageBackground,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { Switch } from "react-native-switch";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -160,8 +161,21 @@ export default function ProfileScreen() {
   const userId = user?.id || "default";
   const backgroundImageUrl = `https://picsum.photos/seed/${userId}/800/400`;
   const handleSignOut = () => {
-    logout();
-    router.replace("/(auth)/sign-in");
+    Alert.alert(
+      "Đăng xuất",
+      "Bạn có chắc chắn muốn đăng xuất?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel"
+        },
+        {
+          text: "Đăng xuất",
+          onPress: logout,
+          style: "destructive"
+        }
+      ]
+    );
   };
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -38,16 +38,22 @@ const DriverHistory = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  useEffect(() => {
+    console.log('[DriverHistory] filter state changed:', { statusFilter, timeFilter, search });
+  }, [statusFilter, timeFilter, search]);
+
   const fetchOrders = useCallback(async (pageNum: number, isRefresh = false) => {
     try {
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
 
+      console.log('[DriverHistory] Calling API with:', { pageNum, statusFilter, timeFilter, search });
       const response = await driverService.getOrders({
         page: pageNum,
         limit: 10,
         status: statusFilter,
-        search: search
+        search: search,
+        time: timeFilter // Added time filter here
       });
 
       // API returns { data: { data: [], meta: {} }, ... }
@@ -69,17 +75,17 @@ const DriverHistory = () => {
       setHasMore(actualData.length === 10);
       setPage(pageNum);
     } catch (error) {
-      console.error('Fetch orders error:', error);
+      console.error('[DriverHistory] Fetch orders error:', JSON.stringify(error, null, 2) || error);
     } finally {
       setLoading(false);
       setRefreshing(false);
       setLoadingMore(false);
     }
-  }, [statusFilter, search]);
+  }, [statusFilter, timeFilter, search]);
 
   useEffect(() => {
     fetchOrders(1, true);
-  }, [statusFilter, search]);
+  }, [statusFilter, timeFilter, search]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -87,7 +93,8 @@ const DriverHistory = () => {
   };
 
   const onEndReached = () => {
-    if (!loadingMore && hasMore) {
+    console.log('[DriverHistory] onEndReached triggered', { loading, loadingMore, hasMore, page });
+    if (!loading && !loadingMore && hasMore) {
       fetchOrders(page + 1);
     }
   };

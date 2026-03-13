@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Order } from "@/api/orders";
@@ -27,16 +27,26 @@ const OrderItemCard = ({ order }: { order: Order }) => {
     };
 
     const handlePress = () => {
+        console.log("[OrderItemCard] handlePress called, ID:", order?.id);
         if (order?.id) {
-            router.push(`/(root)/order-detail/${order.id}` as any);
+            router.push(`/order-detail/${order.id}` as any);
+        } else {
+            console.warn("[OrderItemCard] No ID found in order object");
         }
     };
 
     return (
-        <TouchableOpacity
+        <Pressable
             onPress={handlePress}
-            className="bg-white m-4 mb-2 p-4 rounded-xl border border-neutral-100 shadow-sm"
-            style={{ borderRadius: 12 }}
+            className="bg-white p-4 mb-3 rounded-2xl border border-neutral-100"
+            style={({ pressed }) => ({
+                backgroundColor: pressed ? "#F9FAFB" : "white",
+                elevation: 3,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.05,
+                shadowRadius: 4,
+            })}
         >
             <View className="flex-row justify-between items-center mb-4">
                 <View className="flex-row items-center">
@@ -88,7 +98,7 @@ const OrderItemCard = ({ order }: { order: Order }) => {
                     <Text className="text-white font-JakartaBold text-sm">Đặt lại</Text>
                 </TouchableOpacity>
             )}
-        </TouchableOpacity>
+        </Pressable>
     );
 };
 

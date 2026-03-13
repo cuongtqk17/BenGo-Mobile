@@ -19,6 +19,10 @@ const Layout = () => {
         name="payment/[id]"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="order-detail/[id]"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

@@ -49,8 +49,8 @@ const CustomerOrderDetailScreen = () => {
             "Bạn có chắc chắn muốn hủy đơn hàng này không?",
             [
                 { text: "Bỏ qua", style: "cancel" },
-                { 
-                    text: "Đồng ý", 
+                {
+                    text: "Đồng ý",
                     style: "destructive",
                     onPress: async () => {
                         try {
@@ -85,13 +85,13 @@ const CustomerOrderDetailScreen = () => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
-            {/* CD1: Header */}
-            <View className="flex-row items-center px-6 py-4 border-b border-neutral-50">
-                <TouchableOpacity onPress={() => router.back()} className="mr-4">
-                    <Ionicons name="arrow-back" size={24} color="#1F2937" />
+        <SafeAreaView className="flex-1 bg-white">
+            {/* Header */}
+            <View className="flex-row items-center px-5 py-4 border-b border-neutral-100">
+                <TouchableOpacity onPress={() => router.back()}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity>
-                <Text className="text-lg font-JakartaBold text-neutral-800">Chi tiết đơn hàng</Text>
+                <Text className="ml-4 text-xl font-JakartaBold">Chi tiết đơn hàng</Text>
             </View>
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
@@ -165,13 +165,13 @@ const CustomerOrderDetailScreen = () => {
                         <Ionicons name="cube-outline" size={20} color="#16A34A" />
                         <Text className="ml-2 text-base font-JakartaBold text-neutral-800">Thông tin hàng hóa</Text>
                     </View>
-                    
+
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
                         {order.goodsImages?.map((img, index) => (
-                            <Image 
-                                key={index} 
-                                source={{ uri: img }} 
-                                className="w-24 h-24 rounded-xl mr-3 bg-neutral-100" 
+                            <Image
+                                key={index}
+                                source={{ uri: img }}
+                                className="w-24 h-24 rounded-xl mr-3 bg-neutral-100"
                                 resizeMode="cover"
                             />
                         ))}
@@ -193,9 +193,9 @@ const CustomerOrderDetailScreen = () => {
                     <View className="mx-6 mt-6 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
                         <Text className="text-base font-JakartaBold text-neutral-800 mb-4">Tài xế nhận đơn</Text>
                         <View className="flex-row items-center">
-                            <Image 
-                                source={{ uri: order.driver?.avatar || order.driverId?.avatar || "https://avatar.iran.liara.run/public/boy" }} 
-                                className="w-14 h-14 rounded-full bg-neutral-100" 
+                            <Image
+                                source={{ uri: order.driver?.avatar || order.driverId?.avatar || "https://avatar.iran.liara.run/public/boy" }}
+                                className="w-14 h-14 rounded-full bg-neutral-100"
                             />
                             <View className="ml-4 flex-1">
                                 <Text className="text-base font-JakartaBold text-neutral-800">
@@ -206,13 +206,13 @@ const CustomerOrderDetailScreen = () => {
                                 </Text>
                             </View>
                             <View className="flex-row">
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => handleChat((order.driver?._id || order.driverId?._id)!)}
                                     className="w-10 h-10 bg-green-50 rounded-full items-center justify-center mr-2"
                                 >
                                     <Ionicons name="chatbubble-ellipses" size={20} color="#16A34A" />
                                 </TouchableOpacity>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => handleCall((order.driver?.phone || order.driverId?.phone)!)}
                                     className="w-10 h-10 bg-blue-50 rounded-full items-center justify-center"
                                 >
@@ -229,7 +229,7 @@ const CustomerOrderDetailScreen = () => {
                         <Ionicons name="receipt-outline" size={20} color="#16A34A" />
                         <Text className="ml-2 text-base font-JakartaBold text-neutral-800">Chi tiết thanh toán</Text>
                     </View>
-                    
+
                     <View className="space-y-3">
                         <View className="flex-row justify-between">
                             <Text className="text-sm font-JakartaMedium text-neutral-500">Giá cước ({order.distanceKm}km)</Text>
@@ -247,10 +247,10 @@ const CustomerOrderDetailScreen = () => {
                             </Text>
                         </View>
                         <View className="mt-2 flex-row items-center">
-                            <Ionicons 
-                                name={order.paymentMethod === "CASH" ? "cash-outline" : "wallet-outline"} 
-                                size={16} 
-                                color="#6B7280" 
+                            <Ionicons
+                                name={order.paymentMethod === "CASH" ? "cash-outline" : "wallet-outline"}
+                                size={16}
+                                color="#6B7280"
                             />
                             <Text className="ml-2 text-sm font-JakartaMedium text-neutral-500">
                                 Thanh toán bằng {order.paymentMethod === "CASH" ? "Tiền mặt" : "Ví BenGo"}
@@ -261,9 +261,9 @@ const CustomerOrderDetailScreen = () => {
             </ScrollView>
 
             {/* CD8: Action Button Group */}
-            <View className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-neutral-50 flex-row gap-3">
+            <View className="p-5 border-t border-neutral-100 bg-white flex-row gap-3">
                 {(order.status === "PENDING" || order.status === "ACCEPTED") && (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={handleCancel}
                         disabled={isCancelling}
                         className="flex-1 py-4 rounded-2xl border border-red-500 items-center justify-center"
@@ -277,7 +277,7 @@ const CustomerOrderDetailScreen = () => {
                 )}
 
                 {order.status === "DELIVERED" && (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={handleRate}
                         className="flex-1 py-4 rounded-2xl bg-amber-500 items-center justify-center"
                     >
@@ -286,16 +286,16 @@ const CustomerOrderDetailScreen = () => {
                 )}
 
                 {(order.status === "DELIVERED" || order.status === "CANCELLED") && (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={handleReorder}
                         className="flex-1 py-4 rounded-2xl bg-green-600 items-center justify-center"
                     >
                         <Text className="text-white font-JakartaBold text-sm">Đặt lại chuyến</Text>
                     </TouchableOpacity>
                 )}
-                
+
                 {order.status === "PICKED_UP" && (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={() => router.push(`/(root)/track-order/${id}`)}
                         className="flex-1 py-4 rounded-2xl bg-blue-600 items-center justify-center"
                     >

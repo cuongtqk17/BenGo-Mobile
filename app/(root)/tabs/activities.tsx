@@ -38,7 +38,7 @@ const ActivitiesScreen = () => {
     };
 
     const orderData = Array.isArray(data) ? data : [];
-    
+
     // Log để debug trạng thái PENDING theo yêu cầu
     console.log(`[Activities] Tab: ${selectedTab} | Total Orders fetched:`, orderData.length);
     if (orderData.length > 0) {
@@ -86,12 +86,19 @@ const ActivitiesScreen = () => {
             ) : (
                 <FlatList
                     data={filteredData}
+                    className="flex-1"
                     keyExtractor={(item) => item?.id || Math.random().toString()}
                     renderItem={({ item }) => <OrderItemCard order={item} />}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#16a34a"]} />
                     }
-                    contentContainerStyle={{ flexGrow: 1, backgroundColor: "#F9FAFB", paddingBottom: 20 }}
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        backgroundColor: "#F9FAFB",
+                        paddingBottom: 100,
+                        paddingHorizontal: 20,
+                        paddingTop: 16
+                    }}
                     ListEmptyComponent={EmptyState}
                 />
             )}

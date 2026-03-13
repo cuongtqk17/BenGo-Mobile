@@ -120,7 +120,7 @@ const SignIn = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
-            className="px-5 pb-5"
+            className="px-4 pb-5"
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >

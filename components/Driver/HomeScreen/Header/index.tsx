@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <View
-      className="flex-row items-center justify-between px-5 py-3 bg-white"
+      className="flex-row items-center justify-between px-4 py-3 bg-white"
       style={{
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },

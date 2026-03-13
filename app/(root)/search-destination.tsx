@@ -94,7 +94,7 @@ const SearchDestinationScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* S1: Search Input Box Header */}
-      <View className="flex-row items-center z-[1000] px-5 py-4 border-b border-neutral-100">
+      <View className="flex-row items-center z-[1000] px-4 py-4 border-b border-neutral-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-2">
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
@@ -144,7 +144,7 @@ const SearchDestinationScreen = () => {
 
       <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         {/* S2: Quick Buttons */}
-        <View className="px-5 pb-4 border-b border-neutral-100">
+        <View className="px-4 pb-4 border-b border-neutral-100">
           <TouchableOpacity
             onPress={handleCurrentLocation}
             className="flex-row items-center py-3"
@@ -168,7 +168,7 @@ const SearchDestinationScreen = () => {
         </View>
 
         {/* S3: Saved Places */}
-        <View className="px-5 py-4">
+        <View className="px-4 py-4">
           <Text className="font-JakartaBold mb-4 text-lg text-green-600">
             Địa điểm đã lưu
           </Text>

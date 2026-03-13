@@ -9,7 +9,7 @@ const NotificationsScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="px-5 py-4">
+      <View className="px-4 py-4">
         <Text className="text-2xl font-JakartaBold">{t("home.notifications") || "Thông báo"}</Text>
       </View>
       <View className="flex-1 justify-center items-center">

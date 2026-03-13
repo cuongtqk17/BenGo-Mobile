@@ -8,7 +8,7 @@ import OrderItemCard from "@/components/Customer/ActivitiesScreen/OrderItemCard"
 
 const EmptyState = () => (
     <View className="flex-1 justify-center items-center p-10 bg-white">
-        <View className="w-24 h-24 bg-neutral-50 rounded-full items-center justify-center mb-6">
+        <View className="w-24 h-24 bg-neutral-50 rounded-full items-center justify-center mb-4">
             <Ionicons name="document-text-outline" size={48} color="#9CA3AF" />
         </View>
         <Text className="text-lg font-JakartaBold text-neutral-800 text-center">
@@ -55,11 +55,12 @@ const ActivitiesScreen = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
-            <View className="px-6 py-4 border-b border-neutral-50 mb-2">
-                <Text className="text-2xl font-JakartaExtraBold text-neutral-800">Hoạt động</Text>
+            {/* Header */}
+            <View className="flex-row items-center px-4 py-4 border-b border-neutral-100">
+                <Text className="ml-4 text-xl font-JakartaBold">Hoạt động</Text>
             </View>
 
-            <View className="flex-row px-6 mb-4">
+            <View className="flex-row px-4 mb-4">
                 <TouchableOpacity
                     onPress={() => setSelectedTab("ONGOING")}
                     className={`flex-1 py-3 items-center border-b-2 ${selectedTab === "ONGOING" ? "border-green-600" : "border-transparent"}`}

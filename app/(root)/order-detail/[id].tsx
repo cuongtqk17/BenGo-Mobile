@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert, Linking, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert, Linking, ActivityIndicator, Dimensions } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,7 +34,7 @@ const CustomerOrderDetailScreen = () => {
         return (
             <View className="flex-1 justify-center items-center bg-white p-6">
                 <Text className="text-lg font-JakartaBold text-neutral-800">Không tìm thấy đơn hàng</Text>
-                <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-600 px-6 py-3 rounded-full">
+                <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-600 px-4 py-3 rounded-full">
                     <Text className="text-white font-JakartaBold">Quay lại</Text>
                 </TouchableOpacity>
             </View>
@@ -87,53 +87,60 @@ const CustomerOrderDetailScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center px-5 py-4 border-b border-neutral-100">
+            <View className="flex-row items-center px-4 py-3 border-b border-neutral-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity>
-                <Text className="ml-4 text-xl font-JakartaBold">Chi tiết đơn hàng</Text>
+                <Text className="ml-4 text-lg font-JakartaBold">Chi tiết đơn hàng</Text>
             </View>
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
                 {/* CD2: Status Banner */}
-                <View className="px-6 py-4" style={{ backgroundColor: currentStatus.bgColor }}>
+                <View className="px-4 py-2" style={{ backgroundColor: currentStatus.bgColor }}>
                     <View className="flex-row justify-between items-center">
                         <View className="flex-row items-center">
-                            <Ionicons name={currentStatus.icon} size={24} color={currentStatus.color} />
-                            <Text className="ml-2 text-base font-JakartaBold" style={{ color: currentStatus.color }}>
+                            <Ionicons name={currentStatus.icon} size={18} color={currentStatus.color} />
+                            <Text className="ml-2 text-base font-JakartaSemiBold" style={{ color: currentStatus.color }}>
                                 {currentStatus.label}
                             </Text>
                         </View>
-                        <Text className="text-sm font-JakartaMedium text-neutral-500">
+                        <Text className="text-[10px] font-JakartaMedium text-neutral-400">
                             #{id.slice(-8).toUpperCase()}
                         </Text>
                     </View>
                 </View>
 
                 {/* CD3: Route Map Summary */}
-                <View className="h-48 w-full">
+                <View style={{ height: Dimensions.get('window').height * 0.45, width: '100%' }}>
                     <MapView
-                        provider={PROVIDER_GOOGLE}
-                        className="w-full h-full"
+                        style={{ flex: 1 }}
                         initialRegion={{
-                            latitude: (order.pickup.lat + order.dropoff.lat) / 2,
-                            longitude: (order.pickup.lng + order.dropoff.lng) / 2,
-                            latitudeDelta: Math.abs(order.pickup.lat - order.dropoff.lat) * 1.5,
-                            longitudeDelta: Math.abs(order.pickup.lng - order.dropoff.lng) * 1.5,
+                            latitude: (Number(order.pickup.lat) + Number(order.dropoff.lat)) / 2 || 10.762622,
+                            longitude: (Number(order.pickup.lng) + Number(order.dropoff.lng)) / 2 || 106.660172,
+                            latitudeDelta: Math.max(Math.abs(Number(order.pickup.lat) - Number(order.dropoff.lat)) * 2, 0.05),
+                            longitudeDelta: Math.max(Math.abs(Number(order.pickup.lng) - Number(order.dropoff.lng)) * 2, 0.05),
                         }}
-                        scrollEnabled={false}
-                        zoomEnabled={false}
                     >
-                        <Marker coordinate={{ latitude: order.pickup.lat, longitude: order.pickup.lng }}>
-                            <Ionicons name="radio-button-on" size={24} color="#3B82F6" />
+                        <Marker
+                            coordinate={{ latitude: Number(order.pickup.lat), longitude: Number(order.pickup.lng) }}
+                            title="Điểm lấy hàng"
+                        >
+                            <View className="bg-blue-100 p-2 rounded-full border border-blue-500">
+                                <Ionicons name="radio-button-on" size={16} color="#3B82F6" />
+                            </View>
                         </Marker>
-                        <Marker coordinate={{ latitude: order.dropoff.lat, longitude: order.dropoff.lng }}>
-                            <Ionicons name="location" size={24} color="#EF4444" />
+                        <Marker
+                            coordinate={{ latitude: Number(order.dropoff.lat), longitude: Number(order.dropoff.lng) }}
+                            title="Điểm giao hàng"
+                        >
+                            <View className="bg-red-100 p-2 rounded-full border border-red-500">
+                                <Ionicons name="location" size={16} color="#EF4444" />
+                            </View>
                         </Marker>
                         <Polyline
                             coordinates={[
-                                { latitude: order.pickup.lat, longitude: order.pickup.lng },
-                                { latitude: order.dropoff.lat, longitude: order.dropoff.lng }
+                                { latitude: Number(order.pickup.lat), longitude: Number(order.pickup.lng) },
+                                { latitude: Number(order.dropoff.lat), longitude: Number(order.dropoff.lng) }
                             ]}
                             strokeColor="#16A34A"
                             strokeWidth={3}
@@ -142,28 +149,27 @@ const CustomerOrderDetailScreen = () => {
                 </View>
 
                 {/* CD4: Address Info Card */}
-                <View className="mx-6 mt-6 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+                <View className="mx-5 mt-3 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
                     <View className="flex-row items-center mb-4">
                         <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
                         <View className="ml-3 flex-1">
-                            <Text className="text-sm text-neutral-400 font-JakartaMedium">Điểm lấy hàng</Text>
-                            <Text className="text-sm font-JakartaSemiBold text-neutral-800">{order.pickup.address}</Text>
+                            <Text className="text-neutral-400 font-JakartaMedium">Điểm lấy hàng</Text>
+                            <Text className="font-JakartaSemiBold text-neutral-800">{order.pickup.address}</Text>
                         </View>
                     </View>
                     <View className="flex-row items-center">
                         <Ionicons name="location" size={20} color="#EF4444" />
                         <View className="ml-3 flex-1">
-                            <Text className="text-sm text-neutral-400 font-JakartaMedium">Điểm giao hàng</Text>
-                            <Text className="text-sm font-JakartaSemiBold text-neutral-800">{order.dropoff.address}</Text>
+                            <Text className="text-neutral-400 font-JakartaMedium">Điểm giao hàng</Text>
+                            <Text className="font-JakartaSemiBold text-neutral-800">{order.dropoff.address}</Text>
                         </View>
                     </View>
                 </View>
 
                 {/* CD5: Goods Section */}
-                <View className="mx-6 mt-6">
+                <View className="mx-4 mt-4">
                     <View className="flex-row items-center mb-4">
-                        <Ionicons name="cube-outline" size={20} color="#16A34A" />
-                        <Text className="ml-2 text-base font-JakartaBold text-neutral-800">Thông tin hàng hóa</Text>
+                        <Text className="text-lg font-JakartaBold text-primary-600">Thông tin hàng hóa</Text>
                     </View>
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
@@ -177,7 +183,7 @@ const CustomerOrderDetailScreen = () => {
                         ))}
                     </ScrollView>
 
-                    <View className="p-4 bg-neutral-50 rounded-xl">
+                    <View className="mt-4 p-4 bg-white rounded-2xl border border-neutral-100">
                         <Text className="text-sm text-neutral-500 font-JakartaBold mb-1">Ghi chú:</Text>
                         <Text className="text-sm text-neutral-700 font-JakartaMedium">
                             {order.specialNote || "Không có ghi chú"}
@@ -190,7 +196,7 @@ const CustomerOrderDetailScreen = () => {
 
                 {/* CD6: Driver Info Card */}
                 {(order.driver || order.driverId) && (
-                    <View className="mx-6 mt-6 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+                    <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-neutral-100">
                         <Text className="text-base font-JakartaBold text-neutral-800 mb-4">Tài xế nhận đơn</Text>
                         <View className="flex-row items-center">
                             <Image
@@ -224,7 +230,7 @@ const CustomerOrderDetailScreen = () => {
                 )}
 
                 {/* CD7: Payment Summary */}
-                <View className="mx-6 mt-6 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+                <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
                     <View className="flex-row items-center mb-4">
                         <Ionicons name="receipt-outline" size={20} color="#16A34A" />
                         <Text className="ml-2 text-base font-JakartaBold text-neutral-800">Chi tiết thanh toán</Text>

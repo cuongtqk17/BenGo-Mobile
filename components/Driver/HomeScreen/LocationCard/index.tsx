@@ -18,7 +18,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
   isLoading = false,
 }) => {
   return (
-    <View className="px-5 py-4">
+    <View className="px-4 py-4">
       <View className="flex-row items-center mb-3">
         <Ionicons name="location" size={18} color="#22C55E" />
         <Text className="text-gray-800 text-base font-JakartaBold ml-2">Vị trí hiện tại</Text>

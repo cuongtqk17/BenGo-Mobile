@@ -161,14 +161,14 @@ const BookingSetupScreen = () => {
         className="flex-1"
       >
         {/* Header */}
-        <View className="flex-row items-center px-5 py-4 border-b border-neutral-100">
+        <View className="flex-row items-center px-4 py-4 border-b border-neutral-100">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <Text className="ml-4 text-xl font-JakartaBold">Thông tin đơn hàng</Text>
         </View>
 
-        <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+        <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
           {/* C1: New Address Card Design */}
           <View style={{ backgroundColor: '#F0FDF4', borderRadius: 24, padding: 20, marginTop: 16 }}>
             {/* Pickup Row */}
@@ -289,7 +289,7 @@ const BookingSetupScreen = () => {
           </View>
 
           {/* C3: Vehicle Selector */}
-          <View className="mt-6 mb-10">
+          <View className="mt-4 mb-10">
             <Text className="text-lg font-JakartaBold mb-4">Chọn loại xe</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
               {VEHICLE_TYPES.map((v) => (

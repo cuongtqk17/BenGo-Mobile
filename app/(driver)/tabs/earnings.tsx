@@ -5,11 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const EarningsScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-5 pt-4">
+      <ScrollView className="flex-1 px-4 pt-4">
         <Text className="text-2xl font-JakartaBold text-gray-900">Thu nhập</Text>
         <Text className="text-gray-500 mt-1 font-Jakarta">Xem thống kê và số dư của bạn</Text>
-        
-        <View 
+
+        <View
           className="mt-8 bg-green-500 p-6 rounded-3xl"
           style={{
             shadowColor: "#000",

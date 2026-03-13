@@ -75,7 +75,7 @@ const TrackOrderScreen = () => {
     const currentStatusIndex = statuses.findIndex(s => s.key.includes(order?.status || "PENDING"));
 
     return (
-      <View className="flex-row items-center justify-between px-6 py-4 bg-white border-b border-neutral-100">
+      <View className="flex-row items-center justify-between px-4 py-4 bg-white border-b border-neutral-100">
         {statuses.map((step, index) => (
           <View key={index} className="flex-1 items-center">
             <View className="flex-row items-center w-full">
@@ -116,7 +116,7 @@ const TrackOrderScreen = () => {
     return (
       <View className="flex-1 justify-center items-center bg-white p-6">
         <Text className="text-lg font-JakartaBold text-neutral-800">Không tìm thấy đơn hàng</Text>
-        <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-500 px-6 py-3 rounded-xl">
+        <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-500 px-4 py-3 rounded-xl">
           <Text className="text-white font-JakartaBold">Quay lại</Text>
         </TouchableOpacity>
       </View>
@@ -126,7 +126,7 @@ const TrackOrderScreen = () => {
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <SafeAreaView className="absolute top-0 left-0 right-0 z-10 px-5 pt-2">
+      <SafeAreaView className="absolute top-0 left-0 right-0 z-10 px-4 pt-2">
         <View className="flex-row items-center">
           <TouchableOpacity
             onPress={() => router.back()}
@@ -214,7 +214,7 @@ const TrackOrderScreen = () => {
         snapPoints={snapPoints}
         handleIndicatorStyle={{ backgroundColor: "#D1D5DB" }}
       >
-        <BottomSheetView className="flex-1 px-6 pt-2">
+        <BottomSheetView className="flex-1 px-4 pt-2">
           <View className="flex-row items-center justify-between border-b border-neutral-100 pb-4">
             <View className="flex-row items-center">
               <Image
@@ -249,7 +249,7 @@ const TrackOrderScreen = () => {
             )}
           </View>
 
-          <View className="mt-6">
+          <View className="mt-4">
             <Text className="text font-JakartaBold mb-4">Thông tin hành trình</Text>
 
             <View className="flex-row items-start mb-4">

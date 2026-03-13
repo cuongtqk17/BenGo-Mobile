@@ -246,7 +246,7 @@ const DriverHome = () => {
           totalTrips={driverStats.totalTrips}
         />
 
-        <View className="px-5 mb-2">
+        <View className="px-4 mb-2">
           {isOnline ? (
             <Text className="text-green-600 text-base font-JakartaMedium italic">
               Đang tìm đơn hàng mới xung quanh bạn...
@@ -282,7 +282,7 @@ const DriverHome = () => {
 
         {/* Bottom List of Orders */}
         <View className="h-1/3 bg-white border-t border-gray-50">
-          <View className="px-5 py-3 border-b border-gray-50 flex-row justify-between items-center">
+          <View className="px-4 py-3 border-b border-gray-50 flex-row justify-between items-center">
             <Text className="text-gray-900 font-JakartaBold text-lg">Đơn hàng khả dụng ({pendingOrders.length})</Text>
             <TouchableOpacity onPress={() => refetchOrders()}>
               <Text className="text-blue-500 text-base font-JakartaBold">LÀM MỚI</Text>
@@ -295,7 +295,7 @@ const DriverHome = () => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => handleOrderPress(item)}
-                className="flex-row items-center justify-between px-5 py-4 border-b border-gray-50 active:bg-gray-50"
+                className="flex-row items-center justify-between px-4 py-4 border-b border-gray-50 active:bg-gray-50"
               >
                 <View className="flex-1 mr-4">
                   <View className="flex-row items-center mb-1">

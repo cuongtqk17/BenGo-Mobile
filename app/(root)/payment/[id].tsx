@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    ScrollView,
+    Alert,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
 } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,7 +23,7 @@ const PaymentScreen = () => {
     const { data: order, isLoading: loading } = useOrderDetails(id as string);
     const [paymentMethod, setPaymentMethod] = useState<"CASH" | "WALLET">("CASH");
     const [isPaymentDone, setIsPaymentDone] = useState(false);
-    
+
     // Rating state
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState("");
@@ -81,11 +81,11 @@ const PaymentScreen = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <KeyboardAvoidingView 
+            <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 className="flex-1"
             >
-                <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
+                <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
                     {/* Header */}
                     <View className="py-6 items-center">
                         <Text className="text-2xl font-JakartaBold text-neutral-800">Hoàn tất dịch vụ</Text>
@@ -101,7 +101,7 @@ const PaymentScreen = () => {
                         <Text className="text-4xl font-JakartaExtraBold text-green-600 mt-2">
                             {(order?.totalPrice || 0).toLocaleString("vi-VN")} VND
                         </Text>
-                        <View className="w-full border-t border-green-200 border-dashed mt-6 pt-4">
+                        <View className="w-full border-t border-green-200 border-dashed mt-4 pt-4">
                             <View className="flex-row justify-between mb-2">
                                 <Text className="text-neutral-500 font-JakartaMedium">Mã đơn hàng</Text>
                                 <Text className="font-JakartaSemiBold">#{id?.toString().slice(-8).toUpperCase()}</Text>
@@ -117,7 +117,7 @@ const PaymentScreen = () => {
                         <>
                             {/* E2: Payment Selector */}
                             <Text className="text-lg font-JakartaBold mb-4">Phương thức thanh toán</Text>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 onPress={() => setPaymentMethod("CASH")}
                                 className={`flex-row items-center p-4 rounded-2xl mb-3 border-2 ${paymentMethod === "CASH" ? "border-green-500 bg-green-50" : "border-neutral-100"}`}
                             >
@@ -128,7 +128,7 @@ const PaymentScreen = () => {
                                 {paymentMethod === "CASH" && <Ionicons name="checkmark-circle" size={24} color="#10B981" />}
                             </TouchableOpacity>
 
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 onPress={() => setPaymentMethod("WALLET")}
                                 className={`flex-row items-center p-4 rounded-2xl mb-8 border-2 ${paymentMethod === "WALLET" ? "border-green-500 bg-green-50" : "border-neutral-100"}`}
                             >
@@ -142,7 +142,7 @@ const PaymentScreen = () => {
                                 {paymentMethod === "WALLET" && <Ionicons name="checkmark-circle" size={24} color="#10B981" />}
                             </TouchableOpacity>
 
-                            <CustomButton 
+                            <CustomButton
                                 title={isPaying ? "Đang xử lý..." : "Thanh toán ngay"}
                                 onPress={handlePayment}
                                 disabled={isPaying}
@@ -154,15 +154,15 @@ const PaymentScreen = () => {
                             {/* E3: Rating & Review Form */}
                             <View className="items-center">
                                 <Text className="text-lg font-JakartaBold mb-2">Đánh giá tài xế</Text>
-                                <Text className="text-neutral-400 text-center mb-6">Trải nghiệm của bạn với tài xế {order?.driverId?.name} thế nào?</Text>
-                                
-                                <StarRating 
+                                <Text className="text-neutral-400 text-center mb-4">Trải nghiệm của bạn với tài xế {order?.driverId?.name} thế nào?</Text>
+
+                                <StarRating
                                     rating={rating}
                                     onRatingChange={setRating}
                                     size={40}
                                 />
 
-                                <TextInput 
+                                <TextInput
                                     placeholder="Nhận xét của bạn (không bắt buộc)"
                                     value={comment}
                                     onChangeText={setComment}
@@ -172,7 +172,7 @@ const PaymentScreen = () => {
                                     textAlignVertical="top"
                                 />
 
-                                <CustomButton 
+                                <CustomButton
                                     title={isSubmittingRating ? "Đang gửi..." : "Gửi đánh giá"}
                                     onPress={handleSubmitRating}
                                     disabled={isSubmittingRating}

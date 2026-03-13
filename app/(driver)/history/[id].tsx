@@ -30,7 +30,7 @@ const TripDetailScreen = () => {
         <Text className="text-gray-500 font-JakartaMedium text-center">Không tìm thấy thông tin chuyến đi</Text>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="mt-4 bg-green-500 px-6 py-2 rounded-full"
+          className="mt-4 bg-green-500 px-4 py-2 rounded-full"
         >
           <Text className="text-white font-JakartaBold">Quay lại</Text>
         </TouchableOpacity>

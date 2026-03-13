@@ -28,8 +28,7 @@ const OrderItemCard = ({ order }: { order: Order }) => {
 
     const handlePress = () => {
         if (order?.id) {
-            console.log("Press order:", order.id);
-            // router.push(`/(root)/order-detail/${order.id}` as any);
+            router.push(`/(root)/order-detail/${order.id}` as any);
         }
     };
 

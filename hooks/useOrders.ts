@@ -50,3 +50,15 @@ export const useRateOrder = () => {
         },
     });
 };
+
+export const useCancelOrder = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ orderId, reason }: { orderId: string; reason: string }) =>
+            OrderApi.cancelOrder(orderId, reason),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["order-details", variables.orderId] });
+            queryClient.invalidateQueries({ queryKey: ["orders-history"] });
+        },
+    });
+};

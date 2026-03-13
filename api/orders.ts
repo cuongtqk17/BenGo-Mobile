@@ -23,6 +23,9 @@ export interface Order {
     paymentStatus: "PAID" | "UNPAID";
     goodsImages: string[];
     createdAt: string;
+    specialNote?: string;
+    priority?: "NORMAL" | "VIP" | "URGENT" | "FRAGILE";
+    tags?: string[];
     driverId?: {
         _id: string;
         name: string;
@@ -31,6 +34,13 @@ export interface Order {
         currentLocation?: { lat: number; lng: number };
         licensePlate?: string;
     };
+    driver?: {
+        _id: string;
+        name: string;
+        phone: string;
+        avatar?: string;
+        licensePlate?: string;
+    } | null;
 }
 
 export const getOrderHistory = async (params: { status?: string; page?: number; limit?: number }): Promise<Order[]> => {
@@ -66,5 +76,12 @@ export const rateOrder = async (orderId: string, rating: { star: number; comment
     return fetchAPI(`/(api)/orders/${orderId}/rate`, {
         method: "POST",
         body: JSON.stringify(rating),
+    });
+};
+
+export const cancelOrder = async (orderId: string, reason: string) => {
+    return fetchAPI(`/(api)/orders/${orderId}/cancel`, {
+        method: "PUT",
+        body: JSON.stringify({ reason }),
     });
 };

@@ -12,17 +12,17 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'DELIVERED':
-        return { label: 'Thành công', color: 'text-green-600', bg: 'bg-green-50' };
+        return { label: 'Thành công', color: 'text-green-600', bg: 'bg-green-100', icon: 'checkmark-circle' as const };
       case 'CANCELLED':
-        return { label: 'Đã hủy', color: 'text-red-600', bg: 'bg-red-50' };
+        return { label: 'Đã hủy', color: 'text-red-600', bg: 'bg-red-100', icon: 'close-circle' as const };
       case 'PENDING':
-        return { label: 'Đang chờ', color: 'text-yellow-600', bg: 'bg-yellow-50' };
+        return { label: 'Đang chờ', color: 'text-yellow-600', bg: 'bg-yellow-100', icon: 'time-outline' as const };
       case 'ACCEPTED':
-        return { label: 'Đã nhận', color: 'text-blue-600', bg: 'bg-blue-50' };
+        return { label: 'Đã nhận', color: 'text-blue-600', bg: 'bg-blue-100', icon: 'car-outline' as const };
       case 'PICKED_UP':
-        return { label: 'Đã lấy hàng', color: 'text-purple-600', bg: 'bg-purple-50' };
+        return { label: 'Đã lấy hàng', color: 'text-purple-600', bg: 'bg-purple-100', icon: 'archive-outline' as const };
       default:
-        return { label: status, color: 'text-gray-600', bg: 'bg-gray-50' };
+        return { label: status, color: 'text-gray-600', bg: 'bg-gray-100', icon: 'help-circle-outline' as const };
     }
   };
 
@@ -44,68 +44,73 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
   return (
     <TouchableOpacity
       onPress={() => onPress(item.id)}
-      className="bg-white mx-4 my-2 p-4 rounded-2xl border border-gray-100"
-      style={{
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 2,
-      }}
+      activeOpacity={0.7}
+      className="bg-white mx-4 my-3 p-5 rounded-[28px] border border-gray-100 shadow-sm"
     >
-      {/* Header */}
-      <View className="flex-row justify-between items-center mb-3">
-        <Text className="text-gray-900 font-JakartaBold text-sm">#{item.id.slice(-6).toUpperCase()}</Text>
-        <View className={`${statusInfo.bg} px-3 py-1 rounded-full`}>
-          <Text className={`${statusInfo.color} font-JakartaBold text-[10px]`}>{statusInfo.label}</Text>
+      {/* Header: ID and Status */}
+      <View className="flex-row justify-between items-center mb-5">
+        <View className="flex-row items-center">
+          <View className="bg-green-50 w-11 h-11 rounded-2xl items-center justify-center mr-3">
+            <Ionicons name="receipt-outline" size={22} color="#10B981" />
+          </View>
+          <View>
+            <Text className="text-gray-400 font-JakartaMedium text-sm">Mã đơn hàng</Text>
+            <Text className="text-gray-900 font-JakartaBold text-base">#{item.id.slice(-6).toUpperCase()}</Text>
+          </View>
+        </View>
+        <View className={`${statusInfo.bg} px-3 py-1.5 rounded-xl flex-row items-center`}>
+          <Ionicons name={statusInfo.icon} size={14} color={statusInfo.color === 'text-green-600' ? '#16a34a' : statusInfo.color === 'text-red-600' ? '#dc2626' : '#4b5563'} />
+          <Text className={`${statusInfo.color} font-JakartaBold text-sm ml-1.5`}>{statusInfo.label}</Text>
         </View>
       </View>
 
-      {/* Body */}
-      <View className="space-y-3">
-        <View className="flex-row items-center">
-          <Ionicons name="time-outline" size={14} color="#94A3B8" />
-          <Text className="text-gray-500 font-JakartaMedium text-sm ml-2">
+      {/* Body: Timeline */}
+      <View className="mb-4 px-1">
+        <View className="flex-row items-start">
+          <View className="items-center mr-4 pt-1.5">
+            <View className="w-4 h-4 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+              <View className="w-1.5 h-1.5 rounded-full bg-green-500" />
+            </View>
+            <View className="w-[1px] h-10 bg-gray-200 my-1 border-dashed" />
+            <View className="w-4 h-4 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+              <View className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            </View>
+          </View>
+
+          <View className="flex-1">
+            <View className="mb-5">
+              <Text className="text-gray-400 font-JakartaMedium text-sm mb-1">Điểm đón</Text>
+              <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.pickupAddress}</Text>
+            </View>
+            <View>
+              <Text className="text-gray-400 font-JakartaMedium text-sm mb-1">Điểm giao</Text>
+              <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.dropoffAddress}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* Footer: Time and Price */}
+      <View className="flex-row justify-between items-end pt-5 border-t border-gray-50">
+        <View>
+          <View className="flex-row items-center mb-1">
+            <Ionicons name="time-outline" size={16} color="#94A3B8" />
+            <Text className="text-gray-400 font-JakartaMedium text-sm ml-1.5">Thời gian</Text>
+          </View>
+          <Text className="text-gray-700 font-JakartaBold text-sm">
             {formatDateTime(item.createdAt)}
           </Text>
         </View>
-
-        <View className="relative pl-6 py-1">
-          {/* Vertical Line */}
-          <View className="absolute left-[7px] top-[14px] bottom-[14px] w-[1px] bg-gray-200" />
-
-          {/* Pickup */}
-          <View className="flex-row items-center mb-3">
-            <View className="absolute left-[-23px] w-4 h-4 rounded-full border-2 border-green-500 bg-white items-center justify-center">
-              <View className="w-1.5 h-1.5 rounded-full bg-green-500" />
-            </View>
-            <Text className="text-gray-700 font-JakartaMedium text-sm flex-1" numberOfLines={1}>
-              {item.pickupAddress}
-            </Text>
-          </View>
-
-          {/* Dropoff */}
-          <View className="flex-row items-center">
-            <View className="absolute left-[-23px] w-4 h-4 rounded-full border-2 border-red-500 bg-white items-center justify-center">
-              <View className="w-1.5 h-1.5 rounded-full bg-red-500" />
-            </View>
-            <Text className="text-gray-700 font-JakartaMedium text-sm flex-1" numberOfLines={1}>
-              {item.dropoffAddress}
-            </Text>
-          </View>
+        <View className="items-end">
+          <Text className="text-gray-400 font-JakartaMedium text-sm mb-1">Bạn nhận được</Text>
+          <Text className="text-green-600 font-JakartaBold text-2xl">{formatCurrency(item.totalPrice)}</Text>
         </View>
+      </View>
 
-        <View className="flex-row justify-between items-end mt-2 pt-2 border-t border-gray-50">
-          <View>
-            <Text className="text-gray-400 font-Jakarta text-[10px] uppercase">Tổng tiền</Text>
-            <Text className="text-green-600 font-JakartaBold text-lg">{formatCurrency(item.totalPrice)}</Text>
-          </View>
-
-          <View className="flex-row items-center bg-gray-50 px-3 py-1.5 rounded-xl">
-            <Text className="text-gray-400 font-JakartaBold text-sm mr-1">Chi tiết</Text>
-            <Ionicons name="chevron-forward" size={14} color="#94A3B8" />
-          </View>
-        </View>
+      {/* Detail hint indicator */}
+      <View className="mt-4 pt-2 flex-row justify-center items-center opacity-40">
+        <Text className="text-gray-400 font-JakartaBold text-sm mr-2">Nhấn để xem chi tiết</Text>
+        <Ionicons name="chevron-forward" size={14} color="#94A3B8" />
       </View>
     </TouchableOpacity>
   );

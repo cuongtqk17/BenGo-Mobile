@@ -408,8 +408,8 @@ const DriverHome = () => {
           >
             {selectedOrder && (
               <>
-                <View className="w-12 h-1.5 bg-gray-100 rounded-full self-center mb-6" />
-                <Text className="text-gray-900 text-xl font-JakartaBold text-center mb-6">Chi tiết đơn hàng</Text>
+                <View className="w-12 h-1.5 bg-gray-100 rounded-full self-center mb-4" />
+                <Text className="text-gray-900 text-xl font-JakartaBold text-center mb-4">Chi tiết đơn hàng</Text>
 
                 <View className="space-y-4">
                   <View className="flex-row justify-between items-center py-3 border-b border-gray-50">

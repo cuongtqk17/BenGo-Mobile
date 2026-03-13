@@ -97,7 +97,7 @@ const DriverHistory = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={['top']}>
       {/* Header & Search */}
       <View className="px-4 py-2">
         <Text className="text-2xl font-JakartaBold text-gray-900 mb-4">Hoạt động</Text>
@@ -107,7 +107,7 @@ const DriverHistory = () => {
           placeholder="Tìm theo mã đơn hoặc địa chỉ..."
           value={search}
           onChangeText={setSearch}
-          containerStyle="bg-gray-100 border-none mb-4"
+          containerStyle="bg-white border-none mb-2"
           inputStyle="text-base font-JakartaMedium"
           iconRight={
             search.length > 0 && (
@@ -119,12 +119,12 @@ const DriverHistory = () => {
         />
 
         {/* Status Tabs */}
-        <View className="flex-row bg-gray-100 p-1 rounded-xl mb-4">
+        <View className="flex-row border-b border-gray-200 mb-4">
           {FILTERS.map((f) => (
             <TouchableOpacity
               key={f.value}
               onPress={() => setStatusFilter(f.value)}
-              className={`flex-1 py-2.5 rounded-lg items-center ${statusFilter === f.value ? 'bg-white shadow-sm' : ''}`}
+              className={`flex-1 py-3 items-center ${statusFilter === f.value ? 'border-b-2 border-green-600' : ''}`}
             >
               <Text className={`text-base font-JakartaBold ${statusFilter === f.value ? 'text-green-600' : 'text-gray-500'}`}>
                 {f.label}

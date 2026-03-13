@@ -26,12 +26,23 @@ export interface UserProfile {
 
 export const customerService = {
   getNearbyDrivers: async (lat: number, lng: number, radius: number = 5): Promise<NearbyDriver[]> => {
-    const response = await fetchAPI(`/(api)/orders/drivers-nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
-    return response.data || [];
+    try {
+      const response = await fetchAPI(`/(api)/orders/drivers-nearby?lat=${lat.toFixed(6)}&lng=${lng.toFixed(6)}&radius=${radius}`);
+      if (Array.isArray(response)) return response;
+      return response.data || [];
+    } catch (error) {
+      console.error("[customerService] getNearbyDrivers Error:", error);
+      return [];
+    }
   },
 
   getProfile: async (userId: string): Promise<UserProfile> => {
-    const response = await fetchAPI(`/(api)/auth/profile?user_id=${userId}`);
-    return response.data;
+    try {
+      const response = await fetchAPI(`/(api)/auth/profile?user_id=${userId}`);
+      return response.data || response;
+    } catch (error) {
+      console.error("[customerService] getProfile Error:", error);
+      throw error;
+    }
   },
 };

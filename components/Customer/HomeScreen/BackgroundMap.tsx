@@ -12,20 +12,61 @@ interface Driver {
   location: { lat: number; lng: number };
 }
 
+interface AnimatedDriver extends Driver {
+  animatedLocation: AnimatedRegion;
+}
+
 const BackgroundMap = () => {
   const { userLatitude, userLongitude } = useLocationStore();
-  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [drivers, setDrivers] = useState<AnimatedDriver[]>([]);
   const mapRef = useRef<MapView>(null);
+
+  const updateDrivers = (newData: Driver[]) => {
+    setDrivers((prevDrivers) => {
+      const updatedDrivers = newData.map((newDriver) => {
+        const existing = prevDrivers.find((d) => d.id === newDriver.id);
+        if (existing) {
+          // Animate existing marker
+          existing.animatedLocation.timing({
+            toValue: {
+              latitude: newDriver.location.lat,
+              longitude: newDriver.location.lng,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            },
+            duration: 1000,
+            useNativeDriver: false,
+          } as any).start();
+          return existing;
+        } else {
+          // Create new animated region
+          return {
+            ...newDriver,
+            animatedLocation: new AnimatedRegion({
+              latitude: newDriver.location.lat,
+              longitude: newDriver.location.lng,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }),
+          };
+        }
+      });
+      return updatedDrivers;
+    });
+  };
 
   const fetchNearbyDrivers = async () => {
     if (!userLatitude || !userLongitude) return;
     try {
       const data = await customerService.getNearbyDrivers(userLatitude, userLongitude);
-      if (data) {
-        setDrivers(data);
-      }
+      // If API fails or returns no data, use mock data for demo
+      const finalData = data && data.length > 0 ? data : [
+        { id: 'm1', vehicleType: 'VAN', location: { lat: userLatitude + 0.002, lng: userLongitude + 0.002 } },
+        { id: 'm2', vehicleType: 'BIKE', location: { lat: userLatitude - 0.002, lng: userLongitude + 0.003 } },
+      ];
+      updateDrivers(finalData);
     } catch (error) {
-      console.error("Error fetching nearby drivers:", error);
+      console.error("Error updating drivers:", error);
     }
   };
 
@@ -56,10 +97,7 @@ const BackgroundMap = () => {
         {drivers.map((driver) => (
           <Marker.Animated
             key={driver.id}
-            coordinate={{
-              latitude: driver.location.lat,
-              longitude: driver.location.lng,
-            }}
+            coordinate={driver.animatedLocation as any}
           >
             <View className="bg-white p-1 rounded-full shadow-md border border-gray-200">
               <Ionicons

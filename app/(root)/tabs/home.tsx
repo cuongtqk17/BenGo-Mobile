@@ -3,16 +3,14 @@ import { View, Alert, Dimensions } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 import { useLocationStore } from "@/store";
 import { customerService } from "@/lib/customer";
-import { promotionService } from "@/lib/promotion";
 import { router } from "expo-router";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import BackgroundMap from "@/components/Home/BackgroundMap";
-import FloatingSearchBar from "@/components/Home/FloatingSearchBar";
-import AddressShortcuts from "@/components/Home/AddressShortcuts";
-import PromotionCarousel from "@/components/Home/PromotionCarousel";
+import BackgroundMap from "@/components/Customer/HomeScreen/BackgroundMap";
+import FloatingSearchBar from "@/components/Customer/HomeScreen/FloatingSearchBar";
+import AddressShortcuts from "@/components/Customer/HomeScreen/AddressShortcuts";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -20,11 +18,10 @@ export default function HomeScreen() {
   const { setUserLocation, setDestinationLocation } = useLocationStore();
 
   const [userData, setUserData] = useState<any>(null);
-  const [promotions, setPromotions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleSearchPress = () => {
-    router.push("/(root)/find-ride");
+    router.push("/(root)/search-destination");
   };
 
   const handleShortcutPress = (type: string) => {
@@ -43,9 +40,7 @@ export default function HomeScreen() {
     Alert.alert("Thông báo", "Địa chỉ này chưa được thiết lập trong hồ sơ.");
   };
 
-  const handlePromotionPress = (promo: any) => {
-    router.push(`/(root)/promo-detail?id=${promo._id || promo.id}`);
-  };
+
 
   const fetchInitialData = async () => {
     if (!user?.id) return;
@@ -56,11 +51,7 @@ export default function HomeScreen() {
         setUserData(userData);
       }
 
-      // API A4: GET /admin/promotions
-      const promotions = await promotionService.getPromotions();
-      if (promotions) {
-        setPromotions(promotions);
-      }
+
     } catch (error) {
       console.error("Error fetching initial data:", error);
     } finally {
@@ -101,22 +92,11 @@ export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
-        {/* A1: Background Map */}
         <BackgroundMap />
-
-        {/* A2: Floating Search Bar */}
         <FloatingSearchBar onPress={handleSearchPress} />
-
-        {/* A3: Address Shortcuts */}
         <AddressShortcuts
           onPress={handleShortcutPress}
           savedAddresses={userData?.savedAddresses}
-        />
-
-        {/* A4: Promotion Carousel */}
-        <PromotionCarousel
-          data={promotions}
-          onPress={handlePromotionPress}
         />
       </View>
     </GestureHandlerRootView>

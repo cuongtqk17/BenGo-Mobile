@@ -107,7 +107,7 @@ export default function PromoCard({ promo, mode = "view" }: PromoCardProps) {
 
         {/* Code */}
         <View className="bg-white/20 px-3 py-1.5 rounded-full self-start mb-2">
-          <Text className="text-neutral-200 font-JakartaBold text-base tracking-wider">
+          <Text className="text-neutral-200 font-JakartaBold text-base">
             {promo.code}
           </Text>
         </View>

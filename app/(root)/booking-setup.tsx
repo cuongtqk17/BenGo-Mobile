@@ -109,10 +109,12 @@ const BookingSetupScreen = () => {
       const uri = result.assets[0].uri;
       try {
         const uploadRes = await uploadImage(uri);
+
         if (uploadRes && uploadRes.url) {
-          setImages([...images, uploadRes.url]);
+          setImages(prev => [...prev, uploadRes.url]);
         }
       } catch (error) {
+        console.error("[BookingSetup] Upload Error:", error);
         Alert.alert("Lỗi upload", "Không thể tải ảnh lên. Vui lòng thử lại.");
       }
     }
@@ -139,7 +141,7 @@ const BookingSetupScreen = () => {
 
       if (response && response.data) {
         Alert.alert("Thành công", "Đơn hàng của bạn đã được tạo.");
-        router.push("/(root)/tabs/history"); // Or a success screen
+        router.push("/(root)/tabs/home");
       } else {
         // Fallback for demo
         Alert.alert("Đặt đơn thành công", "Đơn hàng của bạn đang được tìm tài xế.");

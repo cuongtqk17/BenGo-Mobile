@@ -31,6 +31,11 @@ export const useUpload = () => {
         body: formData,
       });
 
+      // The API returns { data: { data: { url: ... }, ... }, ... }
+      if (response && response.data && response.data.data) {
+        return response.data.data;
+      }
+      
       if (response && response.data) {
         return response.data;
       }

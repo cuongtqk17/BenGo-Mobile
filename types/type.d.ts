@@ -401,10 +401,16 @@ export interface RideStatusSyncData {
 
 export interface User {
   id: string;
+  _id?: string;
   phone: string;
   name: string;
   role: string;
   email?: string;
+  avatar?: string;
+  walletBalance?: number;
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AuthStore {

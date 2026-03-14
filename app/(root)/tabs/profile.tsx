@@ -1,519 +1,196 @@
-import { useAuth } from "@/context/AuthContext";
+import React, { useState } from "react";
 import {
-  Image,
-  ScrollView,
-  Text,
-  View,
-  ImageBackground,
-  RefreshControl,
-  Alert,
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    Image,
+    Alert,
+    ActivityIndicator,
+    RefreshControl,
+    Dimensions,
+    Linking,
 } from "react-native";
-import { Switch } from "react-native-switch";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router, useFocusEffect } from "expo-router";
-import { useState, useEffect, useCallback } from "react";
-import { LanguageSwitcher } from "@/components/Common/LanguageSwitcher";
-import CustomButton from "@/components/Common/CustomButton";
-import { fetchAPI } from "@/lib/fetch";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { router } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 
-export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+const MenuItem = ({ icon, label, onPress }: { icon: any; label: string; onPress: () => void }) => (
+    <TouchableOpacity
+        onPress={onPress}
+        className="flex-row items-center py-4 border-b border-neutral-50 px-2"
+    >
+        <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-xl mr-4">
+            <Ionicons name={icon} size={22} color="#16A34A" />
+        </View>
+        <Text className="flex-1 text-base font-JakartaMedium text-neutral-700">{label}</Text>
+        <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+    </TouchableOpacity>
+);
 
-  const { t } = useTranslation();
-  const [isDriver, setIsDriver] = useState(false);
-  const [driverId, setDriverId] = useState<number | null>(null);
-  const [driverApprovalStatus, setDriverApprovalStatus] = useState<
-    string | null
-  >(null);
-  const [isOnline, setIsOnline] = useState(false);
-  const [checkingDriver, setCheckingDriver] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [updatingStatus, setUpdatingStatus] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
+const CustomerProfileScreen = () => {
+    const { logout } = useAuth();
+    const { data: profile, isLoading, refetch } = useProfile();
+    const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await checkDriverStatus();
-    if (!isDriver && user?.id) {
-      await fetchUserData();
-    }
-    setRefreshing(false);
-  };
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refetch();
+        setRefreshing(false);
+    };
 
-  useFocusEffect(
-    useCallback(() => {
-      const initProfile = async () => {
-        const isDriverUser = await checkDriverStatus();
-        if (!isDriverUser && user?.id) {
-          await fetchUserData();
-        }
-      };
+    const handleSignOut = () => {
+        Alert.alert(
+            "Đăng xuất",
+            "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này?",
+            [
+                { text: "Bỏ qua", style: "cancel" },
+                {
+                    text: "Đồng ý",
+                    style: "destructive",
+                    onPress: () => {
+                        logout();
+                        router.replace("/(auth)/sign-in");
+                    },
+                },
+            ]
+        );
+    };
 
-      initProfile();
-      const intervalId = setInterval(() => {
-        initProfile();
-      }, 4000);
-
-      return () => {
-        clearInterval(intervalId);
-      };
-    }, [user?.id])
-  );
-
-  const fetchUserData = async () => {
-    if (!user?.id) return;
-
-    try {
-      const response = await fetchAPI(`/(api)/user/${user.id}`, {
-        method: "GET",
-      });
-
-      if (response.success && response.data) {
-        setUserData(response.data);
-      }
-    } catch (error) { }
-  };
-
-  const toggleOnlineStatus = async () => {
-    if (!driverId || updatingStatus) return;
-
-    const oldStatus = isOnline;
-    const newStatus = !isOnline;
-    setIsOnline(newStatus);
-    setUpdatingStatus(true);
-
-    try {
-      const res = await fetchAPI("/(api)/driver/update-status", {
-        method: "PATCH",
-        body: JSON.stringify({
-          driver_id: driverId,
-          new_status: newStatus ? "online" : "offline",
-        }),
-      });
-
-      if (!res.success) {
-        // Rollback on failure
-        setIsOnline(oldStatus);
-      }
-    } catch (error) {
-      setIsOnline(oldStatus);
-    } finally {
-      setUpdatingStatus(false);
-    }
-  };
-
-  const checkDriverStatus = async () => {
-    if (!user?.id) {
-      setCheckingDriver(false);
-      setIsDriver(false);
-      return false;
+    if (isLoading && !refreshing) {
+        return (
+            <View className="flex-1 justify-center items-center bg-white">
+                <ActivityIndicator size="large" color="#16A34A" />
+            </View>
+        );
     }
 
-    try {
-      const response = await fetchAPI(
-        `/(api)/driver/profile?user_id=${user.id}`,
-        { method: "GET" }
-      );
-
-      if (response.success && response.data?.id) {
-        setIsDriver(true);
-        setDriverId(response.data.id);
-        setDriverApprovalStatus(response.data.approval_status);
-        setIsOnline(response.data.status === "online");
-        return true;
-      } else {
-        setIsDriver(false);
-        setDriverId(null);
-        setDriverApprovalStatus(null);
-        return false;
-      }
-    } catch (error) {
-      setIsDriver(false);
-      setDriverId(null);
-      setDriverApprovalStatus(null);
-      return false;
-    } finally {
-      setCheckingDriver(false);
-    }
-  };
-
-  const handleDriverAction = () => {
-    if (isDriver) {
-      router.push("/(root)/driver-profile");
-    } else {
-      router.push("/(root)/driver-registration");
-    }
-  };
-
-  const formatPhoneNumber = (phone: string | null | undefined) => {
-    if (!phone) return t("common.notProvided");
-    // Chuyển +84 thành 0
-    if (phone.startsWith("+84")) {
-      return "0" + phone.substring(3);
-    }
-    return phone;
-  };
-
-  const userId = user?.id || "default";
-  const backgroundImageUrl = `https://picsum.photos/seed/${userId}/800/400`;
-  const handleSignOut = () => {
-    Alert.alert(
-      "Đăng xuất",
-      "Bạn có chắc chắn muốn đăng xuất?",
-      [
-        {
-          text: "Hủy",
-          style: "cancel"
-        },
-        {
-          text: "Đăng xuất",
-          onPress: logout,
-          style: "destructive"
-        }
-      ]
-    );
-  };
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="flex-1 bg-general-500">
-        <ScrollView
-          className="flex-1 px-4"
-          contentContainerStyle={{ paddingBottom: 120 }}
-          alwaysBounceVertical={true}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <Text className="my-4 text-xl font-JakartaBold">
-            {t("profile.profile")}
-          </Text>
-
-          <View
-            className="relative mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.07,
-              shadowRadius: 10,
-              elevation: 4,
-            }}
-          >
-            <ImageBackground
-              source={{ uri: backgroundImageUrl }}
-              style={{ width: "100%", height: 200 }}
-              imageStyle={{ borderRadius: 24 }}
+    return (
+        <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+            <ScrollView
+                className="flex-1"
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#16A34A"]} />
+                }
             >
-              <LinearGradient
-                colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.6)"]}
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  borderRadius: 24,
-                }}
-              />
-              <View className="flex justify-center items-center h-full">
-                <View
-                  className="w-[110px] h-[110px] rounded-full bg-green-100 flex items-center justify-center border-4 border-white"
-                  style={{
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 8 },
-                    shadowOpacity: 0.15,
-                    shadowRadius: 12,
-                    elevation: 8,
-                  }}
-                >
-                  <Ionicons name="person" size={60} color="#16a34a" />
-                </View>
-                <Text className="mt-3 text-xl font-JakartaBold text-neutral-200">
-                  {userData?.name || user?.name}
-                </Text>
-                <Text className="mt-1 text-base font-JakartaMedium text-neutral-200/80">
-                  {user?.email || ""}
-                </Text>
-              </View>
-            </ImageBackground>
-          </View>
-          {/* Profile Info Section */}
-          {isDriver && !checkingDriver ? (
-            <>
-              <Text className="mb-4 text-xl font-JakartaBold">
-                {t("driver.driverDetails")}
-              </Text>
-              <View
-                className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
-              >
-                <View className="flex-row items-center mb-4">
-                  <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
-                    <Ionicons name="car-sport" size={20} color="white" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-lg font-JakartaBold text-gray-900">
-                      {t("driver.viewProfile")}
-                    </Text>
-                    <Text className="text-base font-JakartaMedium text-gray-600">
-                      {t("driver.manageDriverAccount")}
-                    </Text>
-                  </View>
-                </View>
-
-                {driverApprovalStatus && (
-                  <View className="mb-4 px-4 py-2 bg-gray-100 rounded-xl">
-                    <View className="flex-row items-center">
-                      <Ionicons
-                        name={
-                          driverApprovalStatus === "approved"
-                            ? "checkmark-circle"
-                            : driverApprovalStatus === "pending"
-                              ? "time"
-                              : "close-circle"
-                        }
-                        size={20}
-                        color={
-                          driverApprovalStatus === "approved"
-                            ? "#10B981"
-                            : driverApprovalStatus === "pending"
-                              ? "#F59E0B"
-                              : "#EF4444"
-                        }
-                      />
-                      <Text className="ml-2 text-base font-JakartaBold text-gray-700">
-                        {t("common.status")}:{" "}
-                        <Text
-                          className={
-                            driverApprovalStatus === "approved"
-                              ? "text-green-600"
-                              : driverApprovalStatus === "pending"
-                                ? "text-yellow-600"
-                                : "text-red-600"
-                          }
-                        >
-                          {driverApprovalStatus === "approved"
-                            ? t("driver.approved")
-                            : driverApprovalStatus === "pending"
-                              ? t("driver.pending")
-                              : t("driver.rejected")}
-                        </Text>
-                      </Text>
+                {/* P1: User Identity Header */}
+                <View className="px-6 py-6 flex-row items-center justify-between">
+                    <View className="flex-row items-center flex-1">
+                        <View className="relative">
+                            <Image
+                                source={{ uri: profile?.avatar || "https://avatar.iran.liara.run/public/boy" }}
+                                className="w-20 h-20 rounded-full border-2 border-white shadow-sm bg-neutral-100"
+                            />
+                            <TouchableOpacity
+                                onPress={() => Alert.alert("Chỉnh sửa", "Tính năng đổi ảnh đang cập nhật")}
+                                className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-md border border-neutral-100"
+                            >
+                                <Ionicons name="brush" size={12} color="#16A34A" />
+                            </TouchableOpacity>
+                        </View>
+                        <View className="ml-4 flex-1">
+                            <Text className="text-[20px] font-JakartaBold text-neutral-800" numberOfLines={1}>
+                                {profile?.name || "Người dùng BenGo"}
+                            </Text>
+                            <View className="flex-row items-center mt-1">
+                                <View className="bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100 flex-row items-center">
+                                    <Ionicons name="ribbon" size={12} color="#D97706" />
+                                    <Text className="ml-1 text-xs font-JakartaBold text-amber-600">
+                                        Thành viên Vàng
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                  </View>
-                )}
-
-                <View className="flex-row items-center justify-between mb-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                  <View className="flex-row items-center">
-                    <View
-                      className={`w-3 h-3 rounded-full mr-2 ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
-                    />
-                    <Text className="text-base font-JakartaBold text-gray-800">
-                      {isOnline ? t("driver.online") : t("driver.offline")}
-                    </Text>
-                  </View>
-                  <Switch
-                    value={isOnline}
-                    onValueChange={toggleOnlineStatus}
-                    disabled={updatingStatus}
-                    activeText={t("driver.online")}
-                    inActiveText={t("driver.offline")}
-                    circleSize={24}
-                    barHeight={28}
-                    circleBorderWidth={0}
-                    backgroundActive={"#10B981"}
-                    backgroundInactive={"#D1D5DB"}
-                    circleActiveColor={"#FFFFFF"}
-                    circleInActiveColor={"#FFFFFF"}
-                    changeValueImmediately={true}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2}
-                  />
                 </View>
 
-                {driverApprovalStatus === "rejected" ? (
-                  <CustomButton
-                    title={t("driver.editRegistration")}
-                    onPress={() => router.push("/(root)/driver-registration")}
-                    bgVariant="danger"
-                    IconRight={() => (
-                      <Ionicons
-                        name="create-outline"
-                        size={20}
-                        color="white"
-                        style={{ marginLeft: 8 }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <CustomButton
-                    title={t("driver.viewProfile")}
-                    onPress={handleDriverAction}
-                    bgVariant="primary"
-                    IconRight={() => (
-                      <Ionicons
-                        name="person-outline"
-                        size={20}
-                        color="white"
-                        style={{ marginLeft: 8 }}
-                      />
-                    )}
-                  />
-                )}
-              </View>
-            </>
-          ) : (
-            <>
-              <Text className="mb-4 text-xl font-JakartaBold">
-                {t("profile.profileInfo")}
-              </Text>
-              <View
-                className="flex flex-col mb-4 p-2 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
-              >
-                {/* Name Item */}
-                <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
-                  <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-                    <Ionicons name="person-outline" size={20} color="#10B981" />
-                  </View>
-                  <View className="flex flex-col flex-1">
-                    <Text className="text-base text-neutral-400 font-JakartaMedium">
-                      {t("profile.name")}
-                    </Text>
-                    <Text className="text-base font-JakartaBold text-neutral-800">
-                      {userData?.name || user?.name}
-                    </Text>
-                  </View>
+                {/* P2: BenGo Wallet Card */}
+                <View className="px-6 mb-8">
+                    <LinearGradient
+                        colors={["#0047AB", "#002B66"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        className="rounded-[24px] p-6 shadow-xl overflow-hidden"
+                    >
+                        <View className="flex-row justify-between items-start mb-6">
+                            <View>
+                                <Text className="text-white/70 text-sm font-JakartaMedium mb-1">Số dư ví BenGo</Text>
+                                <Text className="text-white text-3xl font-JakartaBold">
+                                    {(profile?.walletBalance || 0).toLocaleString("vi-VN")}
+                                    <Text className="text-lg"> VND</Text>
+                                </Text>
+                            </View>
+                            <View className="p-2 bg-white/10 rounded-xl">
+                                <Ionicons name="card" size={24} color="white" />
+                            </View>
+                        </View>
+
+                        <View className="flex-row justify-between items-center">
+                            <View>
+                                <Text className="text-white/50 text-[10px] font-JakartaMedium uppercase tracking-widest">
+                                    Mã định danh ví
+                                </Text>
+                                <Text className="text-white/80 text-sm font-JakartaBold">
+                                    **** **** **** {profile?.id?.slice(-4) || "8888"}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => Alert.alert("Nạp tiền", "Tính năng nạp tiền qua cổng thanh toán đang được tích hợp.")}
+                                className="bg-white px-6 py-2.5 rounded-full items-center justify-center flex-row shadow-lg"
+                            >
+                                <Ionicons name="add-circle" size={18} color="#0047AB" />
+                                <Text className="ml-2 font-JakartaBold text-[#0047AB] text-sm">Nạp tiền</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </LinearGradient>
                 </View>
 
-                {/* Email Item */}
-                <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
-                  <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-                    <Ionicons name="mail-outline" size={20} color="#10B981" />
-                  </View>
-                  <View className="flex flex-col flex-1">
-                    <Text className="text-base text-neutral-400 font-JakartaMedium">
-                      {t("profile.email")}
-                    </Text>
-                    <Text className="text-base font-JakartaBold text-neutral-800">
-                      {user?.email || t("common.notProvided")}
-                    </Text>
-                  </View>
+                {/* P3: Settings & Actions Menu List */}
+                <View className="px-6 mb-6">
+                    <Text className="text-lg font-JakartaBold text-neutral-800 mb-4 px-2">Cài đặt tài khoản</Text>
+                    <View className="bg-white rounded-2xl border border-neutral-50 shadow-sm p-2">
+                        <MenuItem
+                            icon="location"
+                            label="Địa chỉ đã lưu"
+                            onPress={() => router.push("/search-destination")}
+                        />
+                        <MenuItem
+                            icon="notifications"
+                            label="Thông báo"
+                            onPress={() => router.push("/(root)/tabs/notifications")}
+                        />
+                        <MenuItem
+                            icon="shield-checkmark"
+                            label="Bảo mật & Mật khẩu"
+                            onPress={() => Alert.alert("Bảo mật", "Tính năng đổi mật khẩu đang cập nhật")}
+                        />
+                        <MenuItem
+                            icon="help-circle-outline"
+                            label="Hỗ trợ khách hàng"
+                            onPress={() => Linking.openURL('tel:19001234')}
+                        />
+                    </View>
                 </View>
 
-                {/* Phone Item */}
-                <View className="flex flex-row items-center px-4 py-3">
-                  <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-                    <Ionicons name="call-outline" size={20} color="#10B981" />
-                  </View>
-                  <View className="flex flex-col flex-1">
-                    <Text className="text-base text-neutral-400 font-JakartaMedium">
-                      {t("profile.phone")}
-                    </Text>
-                    <Text className="text-base font-JakartaBold text-neutral-800">
-                      {formatPhoneNumber(userData?.phone || user?.phone)}
-                    </Text>
-                  </View>
+
+                {/* P4: Logout Action */}
+                <View className="px-6 pb-10 items-center">
+                    <TouchableOpacity
+                        onPress={handleSignOut}
+                        className="w-[90%] flex-row items-center justify-center py-4 rounded-2xl border border-red-100 bg-red-50"
+                    >
+                        <Ionicons name="log-out-outline" size={20} color="#EF4444" />
+                        <Text className="ml-3 font-JakartaBold text-red-500 text-sm">Đăng xuất</Text>
+                    </TouchableOpacity>
+                    <Text className="mt-4 text-xs font-JakartaMedium text-neutral-400">Phiên bản 1.0.24 (Stable)</Text>
                 </View>
-              </View>
-            </>
-          )}
+            </ScrollView>
+        </SafeAreaView>
+    );
+};
 
-          <Text className="mb-4 text-xl font-JakartaBold">
-            {t("profile.settings")}
-          </Text>
-          <View
-            className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.05,
-              shadowRadius: 4,
-              elevation: 2,
-            }}
-          >
-            <LanguageSwitcher />
-          </View>
-
-          {!isDriver && !checkingDriver && (
-            <>
-              <Text className="mb-4 text-xl font-JakartaBold">
-                {t("driver.driverMode")}
-              </Text>
-              <View
-                className="flex flex-col p-4 mb-4 bg-white rounded-[24px] border border-gray-200 overflow-hidden"
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
-              >
-                <View className="flex-row items-center mb-4">
-                  <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
-                    <Ionicons name="car-sport" size={20} color="white" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-lg font-JakartaBold text-gray-900">
-                      {t("driver.becomeDriver")}
-                    </Text>
-                    <Text className="text-base font-JakartaMedium text-gray-600">
-                      {t("driver.earnMoney")}
-                    </Text>
-                  </View>
-                </View>
-
-                <CustomButton
-                  title={t("driver.registerNow")}
-                  onPress={handleDriverAction}
-                  bgVariant="success"
-                  IconRight={() => (
-                    <Ionicons
-                      name="add-circle-outline"
-                      size={20}
-                      color="white"
-                      style={{ marginLeft: 8 }}
-                    />
-                  )}
-                />
-              </View>
-            </>
-          )}
-
-          <CustomButton
-            title={t("profile.logout")}
-            bgVariant="danger"
-            onPress={handleSignOut}
-            IconRight={() => (
-              <Ionicons
-                name="log-out-outline"
-                size={20}
-                color="white"
-                style={{ marginLeft: 8 }}
-              />
-            )}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </GestureHandlerRootView>
-  );
-}
+export default CustomerProfileScreen;

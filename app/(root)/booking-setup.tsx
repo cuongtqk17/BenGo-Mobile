@@ -141,11 +141,11 @@ const BookingSetupScreen = () => {
 
       if (response && response.data) {
         Alert.alert("Thành công", "Đơn hàng của bạn đã được tạo.");
-        router.push(`/(root)/track-order/${response.data._id}` as any);
+        router.push("/(root)/tabs/activities");
       } else {
         // Fallback for demo
         Alert.alert("Đặt đơn thành công", "Đơn hàng của bạn đang được tìm tài xế.");
-        router.push(`/(root)/track-order/mock-order-id` as any);
+        router.push("/(root)/tabs/activities");
       }
     } catch (error) {
       Alert.alert("Lỗi", "Không thể tạo đơn hàng lúc này. Vui lòng thử lại.");

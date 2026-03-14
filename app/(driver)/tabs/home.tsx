@@ -285,7 +285,7 @@ const DriverHome = () => {
           <View className="px-4 py-3 border-b border-gray-50 flex-row justify-between items-center">
             <Text className="text-gray-900 font-JakartaBold text-lg">Đơn hàng khả dụng ({pendingOrders.length})</Text>
             <TouchableOpacity onPress={() => refetchOrders()}>
-              <Text className="text-blue-500 text-base font-JakartaBold">LÀM MỚI</Text>
+              <Ionicons name="refresh" size={24} color="#10B981" />
             </TouchableOpacity>
           </View>
 

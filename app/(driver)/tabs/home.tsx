@@ -281,8 +281,8 @@ const DriverHome = () => {
         </View>
 
         {/* Bottom List of Orders */}
-        <View className="h-1/3 bg-white border-t border-gray-50">
-          <View className="px-4 py-3 border-b border-gray-50 flex-row justify-between items-center">
+        <View className="h-1/3 bg-white border-t border-gray-100">
+          <View className="px-4 py-3 border-b border-gray-100 flex-row justify-between items-center">
             <Text className="text-gray-900 font-JakartaBold text-lg">Đơn hàng khả dụng ({pendingOrders.length})</Text>
             <TouchableOpacity onPress={() => refetchOrders()}>
               <Ionicons name="refresh" size={24} color="#10B981" />
@@ -295,7 +295,7 @@ const DriverHome = () => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => handleOrderPress(item)}
-                className="flex-row items-center justify-between px-4 py-4 border-b border-gray-50 active:bg-gray-50"
+                className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50"
               >
                 <View className="flex-1 mr-4">
                   <View className="flex-row items-center mb-1">
@@ -344,11 +344,11 @@ const DriverHome = () => {
                 <Text className="text-gray-900 text-xl font-JakartaBold text-center mb-4">Chi tiết đơn hàng</Text>
 
                 <View className="space-y-4">
-                  <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
+                  <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
                     <Text className="text-gray-500 font-Jakarta text-base">Mã đơn hàng</Text>
                     <Text className="text-gray-900 font-JakartaBold text-base">#{selectedOrder.orderId.slice(-8)}</Text>
                   </View>
-                  <View className="flex-row justify-between items-center py-3 border-b border-gray-50">
+                  <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
                     <Text className="text-gray-500 font-Jakarta text-base">Khoảng cách</Text>
                     <Text className="text-gray-900 font-JakartaBold text-base">{selectedOrder.distance} km</Text>
                   </View>

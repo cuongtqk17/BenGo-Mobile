@@ -40,7 +40,7 @@ const DriverMap = ({
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
-        <Text className="mt-2 text-base text-gray-600">Đang tải vị trí...</Text>
+        <Text className="mt-2 text-base text-gray-500">Đang tải vị trí...</Text>
       </View>
     );
   }

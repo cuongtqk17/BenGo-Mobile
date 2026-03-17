@@ -42,7 +42,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         </Text>
         {city ? <Text className="text-gray-500 text-base font-JakartaMedium mb-3">{city}</Text> : null}
 
-        <View className="flex-row justify-between items-center pt-3 border-t border-gray-50">
+        <View className="flex-row justify-between items-center pt-3 border-t border-gray-100">
           <Text className="text-gray-500 text-sm font-Jakarta">
             {coordinates || 'Đang xác định...'}
           </Text>

@@ -22,7 +22,7 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
       case 'PICKED_UP':
         return { label: 'Đã lấy hàng', color: 'text-purple-600', bg: 'bg-purple-100', icon: 'archive-outline' as const };
       default:
-        return { label: status, color: 'text-gray-600', bg: 'bg-gray-100', icon: 'help-circle-outline' as const };
+        return { label: status, color: 'text-gray-500', bg: 'bg-gray-100', icon: 'help-circle-outline' as const };
     }
   };
 
@@ -91,7 +91,7 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
       </View>
 
       {/* Footer: Time and Price */}
-      <View className="flex-row justify-between items-end pt-5 border-t border-gray-50">
+      <View className="flex-row justify-between items-end pt-5 border-t border-gray-100">
         <View>
           <View className="flex-row items-center mb-1">
             <Ionicons name="time-outline" size={20} color="#94A3B8" />

@@ -336,8 +336,8 @@ export default function DriverRegistrationScreen() {
                 }))
               }
               className={`flex-1 mx-1 p-4 rounded-2xl border-2 ${form.vehicle_type === type.value
-                  ? "border-green-500 bg-green-50"
-                  : "border-gray-200 bg-white"
+                ? "border-green-500 bg-green-50"
+                : "border-gray-200 bg-white"
                 }`}
             >
               <Ionicons
@@ -348,16 +348,16 @@ export default function DriverRegistrationScreen() {
               />
               <Text
                 className={`text-center font-JakartaBold ${form.vehicle_type === type.value
-                    ? "text-green-700"
-                    : "text-gray-700"
+                  ? "text-green-700"
+                  : "text-gray-700"
                   }`}
               >
                 {type.label}
               </Text>
               <Text
                 className={`text-center text-base font-JakartaMedium ${form.vehicle_type === type.value
-                    ? "text-green-600"
-                    : "text-gray-500"
+                  ? "text-green-600"
+                  : "text-gray-500"
                   }`}
               >
                 {type.seats} {t("booking.seats")}
@@ -397,7 +397,7 @@ export default function DriverRegistrationScreen() {
           ) : (
             <View className="items-center py-3">
               <Ionicons name="card-outline" size={48} color="#9CA3AF" />
-              <Text className="mt-2 text-gray-600 font-JakartaBold">
+              <Text className="mt-2 text-gray-500 font-JakartaBold">
                 {t("driver.uploadLicense")}
               </Text>
               <Text className="text-base text-gray-500 font-JakartaMedium">
@@ -433,7 +433,7 @@ export default function DriverRegistrationScreen() {
           ) : (
             <View className="items-center py-3">
               <Ionicons name="car-outline" size={48} color="#9CA3AF" />
-              <Text className="mt-2 text-gray-600 font-JakartaBold">
+              <Text className="mt-2 text-gray-500 font-JakartaBold">
                 {t("driver.uploadVehicle")}
               </Text>
               <Text className="text-base text-gray-500 font-JakartaMedium">
@@ -473,7 +473,7 @@ export default function DriverRegistrationScreen() {
                 size={48}
                 color="#9CA3AF"
               />
-              <Text className="mt-2 text-gray-600 font-JakartaBold">
+              <Text className="mt-2 text-gray-500 font-JakartaBold">
                 {t("driver.uploadProfile")}
               </Text>
               <Text className="text-base text-gray-500 font-JakartaMedium">

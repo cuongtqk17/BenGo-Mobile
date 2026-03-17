@@ -20,7 +20,7 @@ const TextArea = React.forwardRef<TextInput, TextAreaProps>(
           </Text>
         )}
         <View
-          className={`bg-neutral-50 rounded-xl border ${error ? "border-red-500" : "border-neutral-100"
+          className={`bg-neutral-50 rounded-xl border ${error ? "border-red-500" : "border-gray-100"
             } focus:border-green-500 ${className}`}
         >
           <TextInput

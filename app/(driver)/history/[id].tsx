@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
-} from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { useDriverOrderDetail } from '@/hooks/useDriver';
+} from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import { useDriverOrderDetail } from "@/hooks/useDriver";
+import VehicleBadge from "@/components/Common/VehicleBadge";
+
 const TripDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: order, isLoading: loading } = useDriverOrderDetail(id || null);
@@ -27,7 +29,9 @@ const TripDetailScreen = () => {
   if (!order) {
     return (
       <View className="flex-1 bg-white justify-center items-center p-6">
-        <Text className="text-gray-500 font-JakartaMedium text-center">Không tìm thấy thông tin chuyến đi</Text>
+        <Text className="text-gray-500 font-JakartaMedium text-center">
+          Không tìm thấy thông tin chuyến đi
+        </Text>
         <TouchableOpacity
           onPress={() => router.back()}
           className="mt-4 bg-green-500 px-4 py-2 rounded-full"
@@ -39,14 +43,21 @@ const TripDetailScreen = () => {
   }
 
   const formatCurrency = (amount: number = 0) => {
-    return (amount || 0).toLocaleString('vi-VN') + ' VNĐ';
+    return (amount || 0).toLocaleString("vi-VN") + " VNĐ";
   };
 
   const formatDateTime = (dateStr: string) => {
     try {
-      if (!dateStr) return 'N/A';
+      if (!dateStr) return "Không rõ";
       const date = new Date(dateStr);
-      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} - ${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+      return `${date.getHours().toString().padStart(2, "0")}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")} - ${date.getDate().toString().padStart(2, "0")}/${(
+          date.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, "0")}/${date.getFullYear()}`;
     } catch (e) {
       return dateStr;
     }
@@ -59,20 +70,21 @@ const TripDetailScreen = () => {
   const dropoffLng = order?.dropoff?.lng || 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
       {/* Header */}
-      <View className="bg-white px-4 py-3 flex-row items-center border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="p-2">
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+      <View className="flex-row items-center px-4 py-4 border-b border-gray-100 bg-white">
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-900 mr-8">
-          Chi tiết đơn #{order?.id?.slice(-6).toUpperCase() || "N/A"}
+        <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-900">
+          {" "}
+          Chi tiết đơn #{order?.id?.slice(-6).toUpperCase() || "KHÔNG RÕ"}
         </Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Map Summary */}
-        <View style={{ height: 240, width: '100%', backgroundColor: '#eee' }}>
+        <View style={{ height: 240, width: "100%", backgroundColor: "#eee" }}>
           {pickupLat !== 0 && (
             <MapView
               style={{ flex: 1 }}
@@ -104,7 +116,7 @@ const TripDetailScreen = () => {
               <Polyline
                 coordinates={[
                   { latitude: pickupLat, longitude: pickupLng },
-                  { latitude: dropoffLat, longitude: dropoffLng }
+                  { latitude: dropoffLat, longitude: dropoffLng },
                 ]}
                 strokeColor="#10B981"
                 strokeWidth={3}
@@ -113,103 +125,172 @@ const TripDetailScreen = () => {
             </MapView>
           )}
 
-          <View className="absolute bottom-4 left-4 bg-white/90 px-3 py-1.5 rounded-full border border-gray-100">
-            <Text className="text-gray-900 font-JakartaBold text-sm">{order?.distanceKm || 0} km</Text>
+          <View className="absolute bottom-4 left-4 bg-white/90 px-3 py-1.5 rounded-full border border-gray-100 shadow-sm">
+            <Text className="text-gray-900 font-JakartaBold text-sm">
+              {order?.distanceKm || 0} km
+            </Text>
           </View>
         </View>
 
         {/* Info Content */}
         <View className="p-4">
-          {/* Trip Summary */}
-          <View className="bg-white p-5 rounded-3xl border border-gray-100 mb-4">
-            <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">Thông tin chuyến đi</Text>
+          {/* Trip Summary Card */}
+          <View className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-4">
+            <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">
+              Thông tin chuyến đi
+            </Text>
 
-            <View className="space-y-4">
-              <View className="flex-row items-center border-l-2 border-green-500 pl-4 py-1">
-                <View className="flex-1">
-                  <Text className="text-gray-500 font-Jakarta text-sm">ĐIỂM ĐÓN</Text>
-                  <Text className="text-gray-900 font-JakartaBold text-sm">{order?.pickup?.address || order?.pickupAddress}</Text>
+            {/* Timeline View */}
+            <View className="mb-4">
+              <View className="flex-row items-start">
+                <View className="items-center mr-4 pt-1.5">
+                  <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+                    <View className="w-2 h-2 rounded-full bg-green-500" />
+                  </View>
+                  <View className="w-[1px] h-10 bg-gray-200 my-1 border-dashed" />
+                  <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+                    <View className="w-2 h-2 rounded-full bg-red-500" />
+                  </View>
                 </View>
-              </View>
 
-              <View className="flex-row items-center border-l-2 border-red-500 pl-4 py-1">
                 <View className="flex-1">
-                  <Text className="text-gray-500 font-Jakarta text-sm">ĐIỂM GIAO</Text>
-                  <Text className="text-gray-900 font-JakartaBold text-sm">{order?.dropoff?.address || order?.dropoffAddress}</Text>
-                </View>
-              </View>
-
-              <View className="h-[1px] bg-gray-50 my-2" />
-
-              <View className="flex-row justify-between">
-                <View className="flex-1">
-                  <Text className="text-gray-500 font-Jakarta text-sm">LOẠI XE</Text>
-                  <Text className="text-gray-900 font-JakartaBold text-sm">{order?.vehicleType}</Text>
-                </View>
-                <View className="flex-1 items-end">
-                  <Text className="text-gray-500 font-Jakarta text-sm">THỜI GIAN</Text>
-                  <Text className="text-gray-900 font-JakartaBold text-sm">{formatDateTime(order?.createdAt || "")}</Text>
+                  <View className="mb-4">
+                    <Text className="text-gray-500 font-JakartaBold text-sm mb-1">
+                      ĐIỂM ĐÓN
+                    </Text>
+                    <Text
+                      className="text-gray-900 font-JakartaBold text-sm"
+                      numberOfLines={2}
+                    >
+                      {order?.pickup?.address ||
+                        order?.pickupAddress ||
+                        "Không xác định"}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text className="text-gray-500 font-JakartaBold text-sm mb-1">
+                      ĐIỂM GIAO
+                    </Text>
+                    <Text
+                      className="text-gray-900 font-JakartaBold text-sm"
+                      numberOfLines={2}
+                    >
+                      {order?.dropoff?.address ||
+                        order?.dropoffAddress ||
+                        "Không xác định"}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
 
-          {/* Customer Detail */}
-          <View className="bg-white p-5 rounded-3xl border border-gray-100 mb-4">
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-gray-500 font-JakartaBold text-sm uppercase">Khách hàng</Text>
-              {(order?.status === 'ACCEPTED' || order?.status === 'PICKED_UP') && (
-                <TouchableOpacity className="flex-row items-center bg-green-50 px-3 py-1 rounded-full">
-                  <Ionicons name="call" size={12} color="#10B981" />
-                  <Text className="text-green-600 font-JakartaBold text-sm ml-1">GỌI NGAY</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            <View className="h-[1px] bg-gray-50 my-2" />
 
-            <View className="flex-row items-center">
-              <View className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center">
-                <Ionicons name="person" size={24} color="#CBD5E1" />
+            <View className="flex-row justify-between pt-2">
+              <View>
+                <Text className="text-gray-500 font-JakartaBold text-sm mb-1">
+                  LOẠI XE
+                </Text>
+                <VehicleBadge vehicleType={order?.vehicleType} />
               </View>
-              <View className="ml-4">
-                <Text className="text-gray-900 font-JakartaBold text-base">{order?.customerId?.name || "Khách hàng BenGo"}</Text>
-                <Text className="text-gray-500 font-JakartaMedium text-sm">
-                  {(order?.status === 'ACCEPTED' || order?.status === 'PICKED_UP') ? (order?.customerId?.phone || "N/A") : '********'}
+              <View className="items-end">
+                <Text className="text-gray-500 font-JakartaBold text-sm mb-1">
+                  THỜI GIAN
+                </Text>
+                <Text className="text-gray-900 font-JakartaBold text-sm">
+                  {formatDateTime(order?.createdAt || "")}
                 </Text>
               </View>
             </View>
           </View>
 
-          {/* Financial Detail */}
-          <View className="bg-white p-5 rounded-3xl border border-gray-100 mb-4">
-            <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">Kê khai tài chính</Text>
+          {/* Customer Detail Card */}
+          <View className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-4">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-gray-500 font-JakartaBold text-sm uppercase">
+                Khách hàng
+              </Text>
+              {(order?.status === "ACCEPTED" ||
+                order?.status === "PICKED_UP") && (
+                  <TouchableOpacity className="flex-row items-center bg-green-50 px-3 py-1 rounded-full">
+                    <Ionicons name="call" size={12} color="#10B981" />
+                    <Text className="text-green-600 font-JakartaBold text-sm ml-1">
+                      GỌI NGAY
+                    </Text>
+                  </TouchableOpacity>
+                )}
+            </View>
 
-            <View className="space-y-3">
-              <View className="flex-row justify-between">
-                <Text className="text-gray-500 font-JakartaMedium text-sm">Giá cước gốc</Text>
-                <Text className="text-gray-900 font-JakartaBold text-sm">{formatCurrency(order?.totalPrice || 0)}</Text>
+            <View className="flex-row items-center">
+              <View className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
+                <Image
+                  source={{
+                    uri: `https://api.dicebear.com/9.x/bottts/png?seed=${order?.customerId?.name || "Client"
+                      }`,
+                  }}
+                  className="w-full h-full"
+                />
               </View>
-              <View className="flex-row justify-between">
-                <Text className="text-gray-500 font-JakartaMedium text-sm">Phí dịch vụ (15%)</Text>
-                <Text className="text-red-500 font-JakartaBold text-sm">-{formatCurrency((order?.totalPrice || 0) * 0.15)}</Text>
-              </View>
-              <View className="h-[1px] bg-gray-100 my-2" />
-              <View className="flex-row justify-between items-center">
-                <Text className="text-gray-900 font-JakartaBold text-base">Thu nhập thực nhận</Text>
-                <Text className="text-green-600 font-JakartaBold text-2xl">{formatCurrency((order?.totalPrice || 0) * 0.85)}</Text>
+              <View className="ml-4">
+                <Text className="text-gray-900 font-JakartaBold text-base">
+                  {order?.customerId?.name || "Khách hàng BenGo"}
+                </Text>
+                <Text className="text-gray-500 font-JakartaMedium text-sm">
+                  {order?.status === "ACCEPTED" || order?.status === "PICKED_UP"
+                    ? order?.customerId?.phone || "Chưa có SĐT"
+                    : "SĐT đã ẩn"}
+                </Text>
               </View>
             </View>
           </View>
 
-          {/* Evidence Photos */}
+          {/* Financial Detail Card */}
+          <View className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-4">
+            <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">
+              Kê khai tài chính
+            </Text>
+
+            <View className="space-y-3">
+              <View className="flex-row justify-between">
+                <Text className="text-gray-500 font-JakartaMedium text-base">
+                  Giá cước đơn hàng
+                </Text>
+                <Text className="text-gray-900 font-JakartaBold text-base">
+                  {formatCurrency(order?.totalPrice || 0)}
+                </Text>
+              </View>
+              <View className="flex-row justify-between">
+                <Text className="text-gray-500 font-JakartaMedium text-base">
+                  Phí dịch vụ (15%)
+                </Text>
+                <Text className="text-red-500 font-JakartaBold text-base">
+                  -{formatCurrency((order?.totalPrice || 0) * 0.15)}
+                </Text>
+              </View>
+              <View className="h-[1px] bg-gray-100 my-2" />
+              <View className="flex-row justify-between items-center pt-1">
+                <Text className="text-gray-900 font-JakartaBold text-base">
+                  Thu nhập thực nhận
+                </Text>
+                <Text className="text-green-600 font-JakartaBold text-2xl">
+                  {formatCurrency((order?.totalPrice || 0) * 0.85)}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Evidence Photos Card */}
           {order?.goodsImages && order.goodsImages.length > 0 && (
-            <View className="bg-white p-5 rounded-3xl border border-gray-100 mb-4">
-              <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">Hình ảnh minh chứng</Text>
+            <View className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-4">
+              <Text className="text-gray-500 font-JakartaBold text-sm uppercase mb-4">
+                Hình ảnh minh chứng
+              </Text>
               <View className="flex-row flex-wrap gap-2">
                 {order.goodsImages.map((img: string, idx: number) => (
                   <Image
                     key={idx}
                     source={{ uri: img }}
-                    className="w-[100px] h-[100px] rounded-lg bg-gray-100"
+                    className="w-[100px] h-[100px] rounded-2xl bg-gray-50 border border-gray-100"
                     resizeMode="cover"
                   />
                 ))}

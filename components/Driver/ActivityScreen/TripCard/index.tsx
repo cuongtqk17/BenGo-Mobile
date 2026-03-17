@@ -54,7 +54,7 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
             <Ionicons name="receipt-outline" size={22} color="#10B981" />
           </View>
           <View>
-            <Text className="text-gray-500 font-JakartaMedium text-sm">Mã đơn hàng</Text>
+            <Text className="text-gray-500 font-JakartaBold text-sm">Mã đơn hàng</Text>
             <Text className="text-gray-900 font-JakartaBold text-base">#{item.id.slice(-6).toUpperCase()}</Text>
           </View>
         </View>
@@ -68,22 +68,22 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
       <View className="mb-4 px-1">
         <View className="flex-row items-start">
           <View className="items-center mr-4 pt-1.5">
-            <View className="w-4 h-4 rounded-full border-2 border-green-500 bg-white items-center justify-center">
-              <View className="w-1.5 h-1.5 rounded-full bg-green-500" />
+            <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+              <View className="w-2 h-2 rounded-full bg-green-500" />
             </View>
             <View className="w-[1px] h-10 bg-gray-200 my-1 border-dashed" />
-            <View className="w-4 h-4 rounded-full border-2 border-red-500 bg-white items-center justify-center">
-              <View className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+              <View className="w-2 h-2 rounded-full bg-red-500" />
             </View>
           </View>
 
           <View className="flex-1">
             <View className="mb-4">
-              <Text className="text-gray-500 font-JakartaMedium text-sm mb-1">Điểm đón</Text>
+              <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Điểm đón</Text>
               <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.pickupAddress}</Text>
             </View>
             <View>
-              <Text className="text-gray-500 font-JakartaMedium text-sm mb-1">Điểm giao</Text>
+              <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Điểm giao</Text>
               <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.dropoffAddress}</Text>
             </View>
           </View>
@@ -94,22 +94,22 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
       <View className="flex-row justify-between items-end pt-5 border-t border-gray-50">
         <View>
           <View className="flex-row items-center mb-1">
-            <Ionicons name="time-outline" size={16} color="#94A3B8" />
-            <Text className="text-gray-500 font-JakartaMedium text-sm ml-1.5">Thời gian</Text>
+            <Ionicons name="time-outline" size={20} color="#94A3B8" />
+            <Text className="text-gray-500 font-JakartaBold text-sm ml-1.5">Thời gian</Text>
           </View>
           <Text className="text-gray-700 font-JakartaBold text-sm">
             {formatDateTime(item.createdAt)}
           </Text>
         </View>
         <View className="items-end">
-          <Text className="text-gray-500 font-JakartaMedium text-sm mb-1">Bạn nhận được</Text>
+          <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Bạn nhận được</Text>
           <Text className="text-green-600 font-JakartaBold text-2xl">{formatCurrency(item.totalPrice)}</Text>
         </View>
       </View>
 
       {/* Detail hint indicator */}
       <View className="mt-4 pt-2 flex-row justify-center items-center opacity-40">
-        <Text className="text-gray-500 font-JakartaBold text-sm mr-2">Nhấn để xem chi tiết</Text>
+        <Text className="text-primary font-JakartaBold text-base mr-2">Nhấn để xem chi tiết</Text>
         <Ionicons name="chevron-forward" size={14} color="#94A3B8" />
       </View>
     </TouchableOpacity>

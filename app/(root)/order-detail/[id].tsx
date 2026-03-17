@@ -87,7 +87,7 @@ const CustomerOrderDetailScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center px-4 py-3 border-b border-neutral-100">
+            <View className="flex-row items-center px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity>
@@ -149,7 +149,7 @@ const CustomerOrderDetailScreen = () => {
                 </View>
 
                 {/* CD4: Address Info Card */}
-                <View className="mx-5 mt-3 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+                <View className="mx-5 mt-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
                     <View className="flex-row items-center mb-4">
                         <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
                         <View className="ml-3 flex-1">
@@ -177,13 +177,13 @@ const CustomerOrderDetailScreen = () => {
                             <Image
                                 key={index}
                                 source={{ uri: img }}
-                                className="w-24 h-24 rounded-xl mr-3 bg-neutral-100"
+                                className="w-24 h-24 rounded-xl mr-3 bg-gray-100"
                                 resizeMode="cover"
                             />
                         ))}
                     </ScrollView>
 
-                    <View className="mt-4 p-4 bg-white rounded-2xl border border-neutral-100">
+                    <View className="mt-4 p-4 bg-white rounded-2xl border border-gray-100">
                         <Text className="text-sm text-neutral-500 font-JakartaBold mb-1">Ghi chú:</Text>
                         <Text className="text-sm text-neutral-700 font-JakartaMedium">
                             {order.specialNote || "Không có ghi chú"}
@@ -196,12 +196,12 @@ const CustomerOrderDetailScreen = () => {
 
                 {/* CD6: Driver Info Card */}
                 {(order.driver || order.driverId) && (
-                    <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-neutral-100">
+                    <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-gray-100">
                         <Text className="text-base font-JakartaBold text-neutral-800 mb-4">Tài xế nhận đơn</Text>
                         <View className="flex-row items-center">
                             <Image
                                 source={{ uri: order.driver?.avatar || order.driverId?.avatar || "https://avatar.iran.liara.run/public/boy" }}
-                                className="w-14 h-14 rounded-full bg-neutral-100"
+                                className="w-14 h-14 rounded-full bg-gray-100"
                             />
                             <View className="ml-4 flex-1">
                                 <Text className="text-base font-JakartaBold text-neutral-800">
@@ -230,7 +230,7 @@ const CustomerOrderDetailScreen = () => {
                 )}
 
                 {/* CD7: Payment Summary */}
-                <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+                <View className="mx-4 mt-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
                     <View className="flex-row items-center mb-4">
                         <Ionicons name="receipt-outline" size={20} color="#16A34A" />
                         <Text className="ml-2 text-base font-JakartaBold text-neutral-800">Chi tiết thanh toán</Text>
@@ -267,7 +267,7 @@ const CustomerOrderDetailScreen = () => {
             </ScrollView>
 
             {/* CD8: Action Button Group */}
-            <View className="p-5 border-t border-neutral-100 bg-white flex-row gap-3">
+            <View className="p-5 border-t border-gray-100 bg-white flex-row gap-3">
                 {(order.status === "PENDING" || order.status === "ACCEPTED") && (
                     <TouchableOpacity
                         onPress={handleCancel}

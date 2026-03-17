@@ -83,11 +83,11 @@ const CustomerProfileScreen = () => {
                         <View className="relative">
                             <Image
                                 source={{ uri: profile?.avatar || "https://avatar.iran.liara.run/public/boy" }}
-                                className="w-20 h-20 rounded-full border-2 border-white shadow-sm bg-neutral-100"
+                                className="w-20 h-20 rounded-full border-2 border-white shadow-sm bg-gray-100"
                             />
                             <TouchableOpacity
                                 onPress={() => Alert.alert("Chỉnh sửa", "Tính năng đổi ảnh đang cập nhật")}
-                                className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-md border border-neutral-100"
+                                className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-md border border-gray-100"
                             >
                                 <Ionicons name="brush" size={12} color="#16A34A" />
                             </TouchableOpacity>

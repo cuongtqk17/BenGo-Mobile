@@ -232,7 +232,7 @@ const DriverHome = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={['top']}>
       <Header
         isOnline={isOnline}
         onToggleStatus={toggleOnlineStatus}

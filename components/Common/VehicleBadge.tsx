@@ -1,34 +1,60 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { vehicleTypes } from "@/constants";
+import React from 'react';
+import { View, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface VehicleBadgeProps {
-    type: string;
-    showIcon?: boolean;
-    containerStyle?: string;
+  vehicleType: string;
 }
 
-const VehicleBadge = ({ type, showIcon = true, containerStyle = "" }: VehicleBadgeProps) => {
-    const config = (vehicleTypes as any)[type] || vehicleTypes.VAN;
+const VehicleBadge = ({ vehicleType }: VehicleBadgeProps) => {
+  const getVehicleConfig = (type: string) => {
+    const normalizedType = type?.toUpperCase();
+    switch (normalizedType) {
+      case 'BIKE':
+        return {
+          label: 'Xe máy',
+          icon: 'bicycle-outline' as const,
+          bgColor: 'bg-emerald-50',
+          textColor: 'text-emerald-700',
+          iconColor: '#10B981',
+        };
+      case 'VAN':
+        return {
+          label: 'Xe tải van',
+          icon: 'car-sport-outline' as const,
+          bgColor: 'bg-blue-50',
+          textColor: 'text-blue-700',
+          iconColor: '#3B82F6',
+        };
+      case 'TRUCK':
+        return {
+          label: 'Xe tải',
+          icon: 'bus-outline' as const,
+          bgColor: 'bg-red-50',
+          textColor: 'text-red-700',
+          iconColor: '#EF4444',
+        };
+      default:
+        return {
+          label: type || 'Không xác định',
+          icon: 'help-circle-outline' as const,
+          bgColor: 'bg-gray-100',
+          textColor: 'text-gray-700',
+          iconColor: '#374151',
+        };
+    }
+  };
 
-    return (
-        <View className={`flex-row items-center ${containerStyle}`}>
-            {showIcon && (
-                <Ionicons 
-                    name={config.icon as any} 
-                    size={20} 
-                    color={config.color} 
-                />
-            )}
-            <Text 
-                className="ml-2 text-sm font-JakartaBold" 
-                style={{ color: config.color }}
-            >
-                {config.label}
-            </Text>
-        </View>
-    );
+  const config = getVehicleConfig(vehicleType);
+
+  return (
+    <View className={`flex-row items-center px-3 py-1 rounded-full ${config.bgColor}`}>
+      <Ionicons name={config.icon} size={14} color={config.iconColor} />
+      <Text className={`ml-1.5 font-JakartaBold text-xs ${config.textColor}`}>
+        {config.label}
+      </Text>
+    </View>
+  );
 };
 
 export default VehicleBadge;

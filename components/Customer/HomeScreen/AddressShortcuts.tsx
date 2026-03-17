@@ -25,7 +25,7 @@ const AddressShortcuts = ({ onPress, savedAddresses }: AddressShortcutsProps) =>
           <TouchableOpacity
             key={item.id}
             onPress={() => onPress(item.id)}
-            className="flex-row items-center bg-white px-4 py-2 rounded-full mr-3 shadow-sm border border-neutral-100"
+            className="flex-row items-center bg-white px-4 py-2 rounded-full mr-3 shadow-sm border border-gray-100"
             style={{ elevation: 2 }}
           >
             <Ionicons name={item.icon} size={18} color="black" />

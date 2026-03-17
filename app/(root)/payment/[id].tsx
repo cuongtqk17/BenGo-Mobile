@@ -119,9 +119,9 @@ const PaymentScreen = () => {
                             <Text className="text-lg font-JakartaBold mb-4">Phương thức thanh toán</Text>
                             <TouchableOpacity
                                 onPress={() => setPaymentMethod("CASH")}
-                                className={`flex-row items-center p-4 rounded-2xl mb-3 border-2 ${paymentMethod === "CASH" ? "border-green-500 bg-green-50" : "border-neutral-100"}`}
+                                className={`flex-row items-center p-4 rounded-2xl mb-3 border-2 ${paymentMethod === "CASH" ? "border-green-500 bg-green-50" : "border-gray-100"}`}
                             >
-                                <View className={`w-10 h-10 rounded-full items-center justify-center ${paymentMethod === "CASH" ? "bg-green-500" : "bg-neutral-100"}`}>
+                                <View className={`w-10 h-10 rounded-full items-center justify-center ${paymentMethod === "CASH" ? "bg-green-500" : "bg-gray-100"}`}>
                                     <Ionicons name="cash" size={20} color={paymentMethod === "CASH" ? "white" : "#9CA3AF"} />
                                 </View>
                                 <Text className={`ml-4 flex-1 font-JakartaBold ${paymentMethod === "CASH" ? "text-green-600" : "text-neutral-500"}`}>Tiền mặt</Text>
@@ -130,9 +130,9 @@ const PaymentScreen = () => {
 
                             <TouchableOpacity
                                 onPress={() => setPaymentMethod("WALLET")}
-                                className={`flex-row items-center p-4 rounded-2xl mb-8 border-2 ${paymentMethod === "WALLET" ? "border-green-500 bg-green-50" : "border-neutral-100"}`}
+                                className={`flex-row items-center p-4 rounded-2xl mb-8 border-2 ${paymentMethod === "WALLET" ? "border-green-500 bg-green-50" : "border-gray-100"}`}
                             >
-                                <View className={`w-10 h-10 rounded-full items-center justify-center ${paymentMethod === "WALLET" ? "bg-green-500" : "bg-neutral-100"}`}>
+                                <View className={`w-10 h-10 rounded-full items-center justify-center ${paymentMethod === "WALLET" ? "bg-green-500" : "bg-gray-100"}`}>
                                     <Ionicons name="wallet" size={20} color={paymentMethod === "WALLET" ? "white" : "#9CA3AF"} />
                                 </View>
                                 <View className="ml-4 flex-1">
@@ -168,7 +168,7 @@ const PaymentScreen = () => {
                                     onChangeText={setComment}
                                     multiline
                                     numberOfLines={4}
-                                    className="w-full bg-neutral-50 mt-8 p-4 rounded-2xl border border-neutral-100 text-neutral-800 font-JakartaMedium h-32"
+                                    className="w-full bg-neutral-50 mt-8 p-4 rounded-2xl border border-gray-100 text-neutral-800 font-JakartaMedium h-32"
                                     textAlignVertical="top"
                                 />
 

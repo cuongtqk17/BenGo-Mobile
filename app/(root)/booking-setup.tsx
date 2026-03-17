@@ -161,11 +161,11 @@ const BookingSetupScreen = () => {
         className="flex-1"
       >
         {/* Header */}
-        <View className="flex-row items-center px-4 py-4 border-b border-neutral-100">
+        <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <Text className="ml-4 text-xl font-JakartaBold">Thông tin đơn hàng</Text>
+          <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-900">Thông tin đơn hàng</Text>
         </View>
 
         <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
@@ -220,7 +220,7 @@ const BookingSetupScreen = () => {
 
                 value={goodsName}
                 onChangeText={setGoodsName}
-                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-14"
+                className="bg-neutral-50 px-4 py-3 rounded-xl border border-gray-100 h-14"
                 placeholderTextColor="#9CA3AF"
                 style={[
                   {
@@ -239,7 +239,7 @@ const BookingSetupScreen = () => {
                 value={goodsWeight}
                 onChangeText={setGoodsWeight}
                 keyboardType="numeric"
-                className="bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100 h-14"
+                className="bg-neutral-50 px-4 py-3 rounded-xl border border-gray-100 h-14"
                 placeholderTextColor="#9CA3AF"
                 style={[
                   {
@@ -277,7 +277,7 @@ const BookingSetupScreen = () => {
               <TouchableOpacity
                 onPress={pickImage}
                 disabled={isUploading}
-                className="w-20 h-20 rounded-xl bg-neutral-100 border-2 border-dashed border-neutral-300 justify-center items-center"
+                className="w-20 h-20 rounded-xl bg-gray-100 border-2 border-dashed border-neutral-300 justify-center items-center"
               >
                 {isUploading ? (
                   <ActivityIndicator color="#10B981" />
@@ -296,7 +296,7 @@ const BookingSetupScreen = () => {
                 <TouchableOpacity
                   key={v.id}
                   onPress={() => setSelectedVehicle(v.id)}
-                  className={`mr-4 p-4 rounded-2xl border-2 w-32 items-center ${selectedVehicle === v.id ? "border-green-600 bg-green-50" : "border-neutral-100 bg-white"
+                  className={`mr-4 p-4 rounded-2xl border-2 w-32 items-center ${selectedVehicle === v.id ? "border-green-600 bg-green-50" : "border-gray-100 bg-white"
                     }`}
                 >
                   <Ionicons
@@ -317,7 +317,7 @@ const BookingSetupScreen = () => {
         </ScrollView>
 
         {/* C4: Action Button Footer */}
-        <View className="p-5 border-t border-neutral-100 bg-white shadow-2xl">
+        <View className="p-5 border-t border-gray-100 bg-white shadow-2xl">
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="text-neutral-500 font-JakartaMedium">Tổng thanh toán</Text>

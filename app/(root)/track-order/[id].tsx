@@ -75,7 +75,7 @@ const TrackOrderScreen = () => {
     const currentStatusIndex = statuses.findIndex(s => s.key.includes(order?.status || "PENDING"));
 
     return (
-      <View className="flex-row items-center justify-between px-4 py-4 bg-white border-b border-neutral-100">
+      <View className="flex-row items-center justify-between px-4 py-4 bg-white border-b border-gray-100">
         {statuses.map((step, index) => (
           <View key={index} className="flex-1 items-center">
             <View className="flex-row items-center w-full">
@@ -215,11 +215,11 @@ const TrackOrderScreen = () => {
         handleIndicatorStyle={{ backgroundColor: "#D1D5DB" }}
       >
         <BottomSheetView className="flex-1 px-4 pt-2">
-          <View className="flex-row items-center justify-between border-b border-neutral-100 pb-4">
+          <View className="flex-row items-center justify-between border-b border-gray-100 pb-4">
             <View className="flex-row items-center">
               <Image
                 source={{ uri: order.driverId?.avatar || "https://ui-avatars.com/api/?name=" + order.driverId?.name }}
-                className="w-16 h-16 rounded-full bg-neutral-100"
+                className="w-16 h-16 rounded-full bg-gray-100"
               />
               <View className="ml-4">
                 <Text className="text-lg font-JakartaBold">{order.driverId?.name || "Đang tìm tài xế..."}</Text>

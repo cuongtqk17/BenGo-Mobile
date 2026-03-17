@@ -21,7 +21,7 @@ const GoogleTextInput = ({
   const textInputRef = useRef<TextInput>(null);
   return (
     <View
-      className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-neutral-100 ${containerStyle}`}
+      className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-gray-100 ${containerStyle}`}
       style={style}
     >
       <GooglePlacesAutocomplete

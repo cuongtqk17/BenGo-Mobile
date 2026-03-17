@@ -94,7 +94,7 @@ const SearchDestinationScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* S1: Search Input Box Header */}
-      <View className="flex-row items-center z-[1000] px-4 py-4 border-b border-neutral-100">
+      <View className="flex-row items-center z-[1000] px-4 py-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-2">
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
@@ -144,7 +144,7 @@ const SearchDestinationScreen = () => {
 
       <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         {/* S2: Quick Buttons */}
-        <View className="px-4 pb-4 border-b border-neutral-100">
+        <View className="px-4 pb-4 border-b border-gray-100">
           <TouchableOpacity
             onPress={handleCurrentLocation}
             className="flex-row items-center py-3"
@@ -182,7 +182,7 @@ const SearchDestinationScreen = () => {
                 onPress={() => handleSavedPlace(item)}
                 className="flex-row items-center py-4 border-b border-neutral-50"
               >
-                <View className="w-10 h-10 rounded-full bg-neutral-100 justify-center items-center mr-4">
+                <View className="w-10 h-10 rounded-full bg-gray-100 justify-center items-center mr-4">
                   <Ionicons
                     name={item.type === "home" ? "home" : "briefcase"}
                     size={20}

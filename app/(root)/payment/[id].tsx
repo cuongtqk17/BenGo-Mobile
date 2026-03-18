@@ -119,7 +119,7 @@ const PaymentScreen = () => {
                             <Text className="text-lg font-JakartaBold mb-4">Phương thức thanh toán</Text>
                             <TouchableOpacity
                                 onPress={() => setPaymentMethod("CASH")}
-                                className={`flex-row items-center p-4 rounded-2xl mb-3 border-2 ${paymentMethod === "CASH" ? "border-green-500 bg-green-50" : "border-gray-100"}`}
+                                className={`flex-row items-center p-4 rounded-2xl mb-4 border-2 ${paymentMethod === "CASH" ? "border-green-500 bg-green-50" : "border-gray-100"}`}
                             >
                                 <View className={`w-10 h-10 rounded-full items-center justify-center ${paymentMethod === "CASH" ? "bg-green-500" : "bg-gray-100"}`}>
                                     <Ionicons name="cash" size={20} color={paymentMethod === "CASH" ? "white" : "#9CA3AF"} />

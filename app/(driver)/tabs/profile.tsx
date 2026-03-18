@@ -14,7 +14,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFetch, fetchAPI } from "@/lib/fetch";
+import { useProfile } from "@/hooks/useProfile";
+import { useDriverDocuments, useDriverToggleStatus } from "@/hooks/useDriver";
+import { fetchAPI } from "@/lib/fetch";
 import { useState, useCallback } from "react";
 import CustomButton from "@/components/Common/CustomButton";
 import { User, DriverProfile, DriverDocument } from "@/types/type";
@@ -24,25 +26,25 @@ const ProfileScreen = () => {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
-  // P4.1: Lấy dữ liệu profile và stats
   const {
     data: profileData,
-    loading: profileLoading,
+    isLoading: profileLoading,
     refetch: refetchProfile
-  } = useFetch<any>("/(api)/auth/profile");
+  } = useProfile();
 
-  // P4.3: Lấy trạng thái giấy tờ
+  const effectiveUserId = user?._id || user?.id || profileData?._id || profileData?.id || null;
+
   const {
     data: documentData,
-    loading: docLoading,
+    isLoading: docLoading,
     refetch: refetchDocs
-  } = useFetch<{ documents: DriverDocument[]; profileStatus: string }>("/(api)/driver/documents");
+  } = useDriverDocuments(effectiveUserId);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await Promise.all([refetchProfile(), refetchDocs()]);
     setRefreshing(false);
-  }, []);
+  }, [refetchProfile, refetchDocs]);
 
   const handleLogout = () => {
     Alert.alert(
@@ -55,16 +57,17 @@ const ProfileScreen = () => {
           style: "destructive",
           onPress: async () => {
             try {
-              // P3: Gửi API cập nhật trạng thái Offline
               await fetchAPI("/(api)/driver/status", {
                 method: "PUT",
-                body: JSON.stringify({ isOnline: false }),
+                body: JSON.stringify({
+                  isOnline: false,
+                  location: { lat: 0, lng: 0 }
+                }),
               });
               logout();
               router.replace("/(auth)/sign-in");
             } catch (error) {
-              console.error("Logout error:", error);
-              logout(); // Vẫn logout local nếu API lỗi
+              logout();
               router.replace("/(auth)/sign-in");
             }
           },
@@ -185,8 +188,8 @@ const ProfileScreen = () => {
             <MenuActionItem
               icon="document-attach-outline"
               label="Quản lý giấy tờ"
-              status={documentData?.profileStatus}
-              onPress={() => Alert.alert("Thông báo", "Chuyển đến màn hình Quản lý giấy tờ")}
+              status={documentData?.data?.driverProfile?.status || profileData?.status}
+              onPress={() => router.push("/(driver)/documents")}
             />
             <Divider />
             <MenuActionItem

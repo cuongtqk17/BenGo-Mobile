@@ -7,10 +7,7 @@ export const useProfile = () => {
         queryKey: ["profile"],
         queryFn: async () => {
             const response = await fetchAPI("/(api)/auth/profile");
-            if (response.success && response.data) {
-                return response.data;
-            }
-            throw new Error(response.error || "Không thể lấy thông tin hồ sơ");
+            return response.data ?? response;
         },
         retry: 1,
     });

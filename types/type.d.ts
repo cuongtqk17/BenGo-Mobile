@@ -409,6 +409,15 @@ export interface User {
   avatar?: string;
   walletBalance?: number;
   active?: boolean;
+  status?: string;
+  rejectionReason?: string;
+  stats?: {
+    totalTrips: number;
+    acceptanceRate: number;
+    seniority: string;
+  };
+  rank?: string;
+  rating?: number;
   createdAt?: string;
   updatedAt?: string;
 }

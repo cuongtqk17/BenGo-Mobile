@@ -132,7 +132,7 @@ const TrackOrderScreen = () => {
             onPress={() => router.back()}
             className="w-10 h-10 bg-white rounded-full items-center justify-center shadow-md"
           >
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
           <View className="bg-white px-4 py-2 rounded-full shadow-md ml-3">
             <Text className="font-JakartaBold">Theo dõi đơn hàng</Text>

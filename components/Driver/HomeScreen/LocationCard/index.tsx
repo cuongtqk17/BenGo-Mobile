@@ -19,7 +19,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
 }) => {
   return (
     <View className="px-4 py-4">
-      <View className="flex-row items-center mb-3">
+      <View className="flex-row items-center mb-4">
         <Ionicons name="location" size={18} color="#22C55E" />
         <Text className="text-gray-800 text-base font-JakartaBold ml-2">Vị trí hiện tại</Text>
         {isLoading && (
@@ -40,7 +40,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         <Text className="text-gray-900 text-base font-JakartaSemiBold mb-1" numberOfLines={2}>
           {address}
         </Text>
-        {city ? <Text className="text-gray-500 text-base font-JakartaMedium mb-3">{city}</Text> : null}
+        {city ? <Text className="text-gray-500 text-base font-JakartaMedium mb-4">{city}</Text> : null}
 
         <View className="flex-row justify-between items-center pt-3 border-t border-gray-100">
           <Text className="text-gray-500 text-sm font-Jakarta">

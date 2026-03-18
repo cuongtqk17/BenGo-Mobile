@@ -163,7 +163,7 @@ const BookingSetupScreen = () => {
         {/* Header */}
         <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
           <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-900">Thông tin đơn hàng</Text>
         </View>
@@ -264,7 +264,7 @@ const BookingSetupScreen = () => {
             <Text className="text-neutral-600 mb-2 font-JakartaMedium">Hình ảnh hàng hóa</Text>
             <View className="flex-row flex-wrap">
               {images.map((img, idx) => (
-                <View key={idx} className="relative mr-3 mb-3">
+                <View key={idx} className="relative mr-3 mb-4">
                   <Image source={{ uri: img }} className="w-20 h-20 rounded-xl" />
                   <TouchableOpacity
                     className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1"

@@ -74,7 +74,7 @@ const TripDetailScreen = () => {
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 border-b border-gray-100 bg-white">
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-900">
           {" "}

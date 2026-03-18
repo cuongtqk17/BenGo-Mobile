@@ -59,3 +59,21 @@ export const useDriverUpdateLocation = () => {
         mutationFn: DriverApi.updateLocation,
     });
 };
+
+export const useDriverDocuments = (id: string | null) => {
+  return useQuery({
+    queryKey: ["driver-documents", id],
+    queryFn: () => DriverApi.getDocuments(id!),
+    enabled: !!id,
+  });
+};
+
+export const useUpdateDriverDocuments = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: DriverApi.updateDocuments,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["driver-documents", variables.id] });
+    },
+  });
+};

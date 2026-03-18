@@ -96,7 +96,7 @@ const SearchDestinationScreen = () => {
       {/* S1: Search Input Box Header */}
       <View className="flex-row items-center z-[1000] px-4 py-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-2">
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
 
         <View style={{ flex: 1 }}>

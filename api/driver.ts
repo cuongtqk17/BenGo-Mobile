@@ -47,6 +47,61 @@ export interface OrderDetail extends OrderHistoryItem {
     updatedAt: string;
 }
 
+export interface DriverDocument {
+  type: "IDENTITY_FRONT" | "IDENTITY_BACK" | "DRIVING_LICENSE" | "VEHICLE_REGISTRATION";
+  imageUrl: string | null;
+  status: "APPROVED" | "PENDING" | "REJECTED" | "LOCKED";
+}
+
+export interface DriverDocumentsResponse {
+  statusCode: number;
+  message: string;
+  data: {
+    _id: string;
+    phone: string;
+    email: string;
+    name: string;
+    role: "DRIVER";
+    walletBalance: number;
+    active: boolean;
+    driverProfile: {
+      location: { type: "Point"; coordinates: [number, number] };
+      _id: string;
+      userId: string;
+      vehicleType: string;
+      plateNumber: string;
+      licenseImage: string | null;
+      status: "APPROVED" | "PENDING" | "REJECTED" | "LOCKED";
+      identityNumber: string | null;
+      identityFrontImage: string | null;
+      identityBackImage: string | null;
+      drivingLicenseNumber: string | null;
+      vehicleRegistrationImage: string | null;
+      bankInfo: {
+        bankName: string;
+        accountNumber: string;
+        accountHolder: string;
+      } | null;
+      rejectionReason?: string | null;
+      adminNote?: string | null;
+    };
+  };
+  meta: {
+    timestamp: string;
+    apiVersion: string;
+  };
+}
+
+export interface UpdateDocumentPayload {
+  id: string;
+  type: "IDENTITY_FRONT" | "IDENTITY_BACK" | "DRIVING_LICENSE" | "VEHICLE_REGISTRATION";
+  imageUrl: string;
+  identityNumber?: string;
+  drivingLicenseNumber?: string;
+  plateNumber?: string;
+  vehicleType?: string;
+}
+
 export const toggleStatus = async (payload: { isOnline: boolean; location: { lat: number; lng: number } }) => {
     return fetchAPI("/(api)/driver/status", {
         method: "PUT",
@@ -84,6 +139,20 @@ export const getOrders = async (params: { page?: number; limit?: number; status?
 };
 
 export const getOrderDetails = async (id: string): Promise<OrderDetail> => {
-    const response = await fetchAPI(`/(api)/orders/${id}`);
-    return response.data;
+  const response = await fetchAPI(`/(api)/orders/${id}`);
+  return response.data;
+};
+
+export const getDocuments = async (id: string): Promise<DriverDocumentsResponse> => {
+  const response = await fetchAPI(`/(api)/driver/${id}/documents`);
+  return response;
+};
+
+export const updateDocuments = async (payload: UpdateDocumentPayload) => {
+  const { id, ...rest } = payload;
+  const response = await fetchAPI(`/(api)/driver/${id}/documents`, {
+    method: "POST",
+    body: JSON.stringify(rest),
+  });
+  return response;
 };

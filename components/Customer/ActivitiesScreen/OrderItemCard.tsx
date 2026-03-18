@@ -38,7 +38,7 @@ const OrderItemCard = ({ order }: { order: Order }) => {
     return (
         <Pressable
             onPress={handlePress}
-            className="bg-white p-4 mb-3 rounded-2xl border border-gray-100"
+            className="bg-white p-4 mb-4 rounded-2xl border border-gray-100"
             style={({ pressed }) => ({
                 backgroundColor: pressed ? "#F9FAFB" : "white",
                 elevation: 3,

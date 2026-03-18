@@ -89,7 +89,7 @@ const CustomerOrderDetailScreen = () => {
             {/* Header */}
             <View className="flex-row items-center px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
-                    <Ionicons name="arrow-back" size={24} color="black" />
+                    <Ionicons name="chevron-back" size={24} color="black" />
                 </TouchableOpacity>
                 <Text className="ml-4 text-lg font-JakartaBold">Chi tiết đơn hàng</Text>
             </View>
@@ -149,7 +149,7 @@ const CustomerOrderDetailScreen = () => {
                 </View>
 
                 {/* CD4: Address Info Card */}
-                <View className="mx-5 mt-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <View className="mx-5 mt-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
                     <View className="flex-row items-center mb-4">
                         <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
                         <View className="ml-3 flex-1">
@@ -188,7 +188,7 @@ const CustomerOrderDetailScreen = () => {
                         <Text className="text-sm text-neutral-700 font-JakartaMedium">
                             {order.specialNote || "Không có ghi chú"}
                         </Text>
-                        <View className="mt-3">
+                        <View className="mt-4">
                             <VehicleBadge type={order.vehicleType} />
                         </View>
                     </View>

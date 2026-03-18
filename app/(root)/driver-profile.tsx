@@ -113,7 +113,7 @@ export default function DriverProfileScreen() {
   const statusColor = getStatusColor(driverProfile.approval_status);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-100">
       <PageHeader title={t("driver.driverProfile")} />
       <ScrollView
         className="flex-1"

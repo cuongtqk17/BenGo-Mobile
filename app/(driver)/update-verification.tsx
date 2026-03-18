@@ -53,7 +53,7 @@ const ImageUploadBox = ({
 );
 
 const SectionTitle = ({ title, icon }: { title: string; icon: any }) => (
-  <View className="flex-row items-center my-4">
+  <View className="flex-row items-center my-2">
     <View className="bg-green-50 w-12 h-12 rounded-2xl items-center justify-center mr-3">
       <Ionicons name={icon} size={22} color="#10B981" />
     </View>
@@ -70,6 +70,8 @@ const UpdateVerificationScreen = () => {
   const effectiveUserId = userIdFromAuth || profileData?._id || profileData?.id || null;
 
   const { data: docData, isLoading: docsLoading, refetch } = useDriverDocuments(effectiveUserId);
+  const profileStatus = docData?.data?.driverProfile?.status || profileData?.status || "PENDING";
+
   const { mutateAsync: updateDocs } = useUpdateDriverDocuments();
   const { uploadImage, isUploading } = useUpload();
 
@@ -333,13 +335,15 @@ const UpdateVerificationScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View className="p-4 bg-white border-t border-gray-100 shadow-2xl">
-        <CustomButton
-          title="GỬI YÊU CẦU DUYỆT"
-          onPress={handleSubmit}
-          loading={loading || isUploading}
-        />
-      </View>
+      {profileStatus !== "APPROVED" && (
+        <View className="p-4 bg-white border-t border-gray-100 shadow-2xl">
+          <CustomButton
+            title="GỬI YÊU CẦU DUYỆT"
+            onPress={handleSubmit}
+            loading={loading || isUploading}
+          />
+        </View>
+      )}
 
       <Modal visible={loading} transparent>
         <View className="flex-1 bg-black/40 items-center justify-center">

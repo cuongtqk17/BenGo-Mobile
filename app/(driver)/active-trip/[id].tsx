@@ -121,7 +121,7 @@ const ActiveTripScreen = () => {
         >
           {location && (
             <Marker coordinate={driverCoord} anchor={{ x: 0.5, y: 0.5 }}>
-              <View className="bg-white p-2 rounded-full shadow-lg border-2 border-green-500">
+              <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-green-500">
                 <Ionicons name="car" size={20} color="#10B981" />
               </View>
             </Marker>
@@ -129,7 +129,7 @@ const ActiveTripScreen = () => {
 
           {!isCompleted && (
             <Marker coordinate={targetCoord}>
-              <View className="bg-white p-2 rounded-full shadow-lg border-2 border-blue-500">
+              <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-blue-500">
                 <Ionicons name={isHeadingToPickup ? 'radio-button-on' : 'pin'} size={20} color="#3B82F6" />
               </View>
             </Marker>

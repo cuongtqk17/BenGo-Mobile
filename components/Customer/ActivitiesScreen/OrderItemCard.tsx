@@ -44,19 +44,43 @@ const OrderItemCard = ({ order }: { order: Order }) => {
                 <StatusBadge status={order?.status as string} />
             </View>
 
-            <View className="flex-row mb-4">
-                <View className="items-center mr-3 mt-1">
-                    <Ionicons name="radio-button-on" size={16} color="#3B82F6" />
-                    <View className="w-[1px] h-8 border-l border-neutral-200 my-1" />
-                    <Ionicons name="location" size={16} color="#10B981" />
-                </View>
-                <View className="flex-1">
-                    <Text className="text-neutral-600 font-JakartaMedium mb-4" numberOfLines={1}>
-                        {order?.pickup?.address || "N/A"}
-                    </Text>
-                    <Text className="text-gray-700 font-JakartaSemiBold" numberOfLines={1}>
-                        {order?.dropoff?.address || "N/A"}
-                    </Text>
+            {/* Body: Timeline */}
+            <View className="mb-4 px-1">
+                <View className="flex-row items-start">
+                    <View className="items-center mr-4 pt-1.5">
+                        <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+                            <View className="w-2 h-2 rounded-full bg-green-500" />
+                        </View>
+                        <View className="w-[1px] h-16 bg-gray-200 my-1 border-dashed" />
+                        <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+                            <View className="w-2 h-2 rounded-full bg-red-500" />
+                        </View>
+                    </View>
+
+                    <View className="flex-1">
+                        <View className="mb-4">
+                            <Text className="text-gray-500 font-JakartaBold mb-1">
+                                Điểm đón
+                            </Text>
+                            <Text
+                                className="text-gray-700 font-JakartaBold"
+                                numberOfLines={2}
+                            >
+                                {order?.pickup?.address || "Không xác định"}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text className="text-gray-500 font-JakartaBold mb-1">
+                                Điểm giao
+                            </Text>
+                            <Text
+                                className="text-gray-700 font-JakartaBold"
+                                numberOfLines={2}
+                            >
+                                {order?.dropoff?.address || "Không xác định"}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
             </View>
 

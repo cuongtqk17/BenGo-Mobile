@@ -87,7 +87,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
                 </View>
                 <View className="absolute left-[11px] top-6 w-0.5 h-10 bg-gray-200" />
                 <View className="flex-1 pt-0.5">
-                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">ĐIỂM ĐÓN</Text>
+                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">Điểm đón</Text>
                   <Text className="text-gray-700 font-JakartaSemiBold text-base" numberOfLines={2}>
                     {order.pickup?.address || 'Địa chỉ đón khách'}
                   </Text>
@@ -112,7 +112,10 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
           <View className="pt-2 pb-6 px-4">
             <CustomButton
               title="Nhận chuyến"
-              onPress={() => onAccept(order.orderId)}
+              onPress={() => {
+                console.log("[DEBUG] IncomingRequestModal: 'Nhận chuyến' button pressed for orderId:", order.orderId);
+                onAccept(order.orderId);
+              }}
               disabled={isAccepting}
               loading={isAccepting}
               IconRight={() => !isAccepting ? (

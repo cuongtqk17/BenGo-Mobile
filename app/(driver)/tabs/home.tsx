@@ -109,14 +109,23 @@ const DriverHome = () => {
 
   // Accept order
   const handleAcceptOrder = async (orderId: string) => {
+    console.log("[DEBUG] DriverHome: handleAcceptOrder triggered for orderId:", orderId);
     try {
-      await acceptOrder(orderId);
+      const response = await acceptOrder(orderId);
+      console.log("[DEBUG] DriverHome: acceptOrder API success:", response);
+
       setShowOrderModal(false);
       setSelectedOrder(null);
+
+      console.log("[DEBUG] DriverHome: Navigating to active-trip:", orderId);
       router.push(`/(driver)/active-trip/${orderId}` as any);
     } catch (error: any) {
-      console.error('Accept order error:', error);
-      showAlert('Lỗi', 'Không thể nhận chuyến vào lúc này');
+      console.error('[DEBUG] DriverHome: handleAcceptOrder failed:', {
+        message: error.message,
+        error: error,
+        responseData: error.response?.data
+      });
+      showAlert('Lỗi', `Không thể nhận chuyến: ${error.message || 'Vui lòng thử lại sau'}`);
     }
   };
   const reverseGeocode = async (latitude: number, longitude: number): Promise<{ address: string; city: string }> => {

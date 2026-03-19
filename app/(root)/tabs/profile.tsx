@@ -89,7 +89,7 @@ const CustomerProfileScreen = () => {
                 }
             >
                 {/* P1: User Identity Header */}
-                <View className="px-4 py-6 flex-row items-center justify-between">
+                <View className="px-4 py-4 flex-row items-center justify-between">
                     <View className="flex-row items-center flex-1">
                         <View className="relative">
                             <Image
@@ -125,7 +125,7 @@ const CustomerProfileScreen = () => {
                         colors={["#16A34A", "#15803D"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
-                        className="rounded-[24px] p-6 shadow-xl overflow-hidden"
+                        className="rounded-[24px] p-4 shadow-xl overflow-hidden"
                     >
                         <View className="flex-row justify-between items-start mb-4">
                             <View>

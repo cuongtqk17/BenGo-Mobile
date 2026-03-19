@@ -71,7 +71,7 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
             <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
               <View className="w-2 h-2 rounded-full bg-green-500" />
             </View>
-            <View className="w-[1px] h-10 bg-gray-200 my-1 border-dashed" />
+            <View className="w-[1px] h-16 bg-gray-200 my-1 border-dashed" />
             <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
               <View className="w-2 h-2 rounded-full bg-red-500" />
             </View>
@@ -79,12 +79,26 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
 
           <View className="flex-1">
             <View className="mb-4">
-              <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Điểm đón</Text>
-              <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.pickupAddress}</Text>
+              <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">
+                Điểm đón
+              </Text>
+              <Text
+                className="text-gray-700 font-JakartaBold"
+                numberOfLines={2}
+              >
+                {item?.pickupAddress || "Không xác định"}
+              </Text>
             </View>
             <View>
-              <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Điểm giao</Text>
-              <Text className="text-gray-800 font-JakartaBold text-base" numberOfLines={1}>{item.dropoffAddress}</Text>
+              <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">
+                Điểm giao
+              </Text>
+              <Text
+                className="text-gray-700 font-JakartaBold"
+                numberOfLines={2}
+              >
+                {item?.dropoffAddress || "Không xác định"}
+              </Text>
             </View>
           </View>
         </View>

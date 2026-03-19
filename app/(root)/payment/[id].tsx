@@ -104,13 +104,13 @@ const PaymentScreen = () => {
             >
                 <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
                     {/* Header */}
-                    <View className="py-6 items-center">
+                    <View className="py-4 items-center">
                         <Text className="text-2xl font-JakartaBold text-gray-700">Hoàn tất dịch vụ</Text>
                         <Text className="text-neutral-500 font-JakartaMedium mt-1">Cảm ơn bạn đã sử dụng BenGo</Text>
                     </View>
 
                     {/* E1: Receipt Card */}
-                    <View className="bg-green-50 rounded-3xl p-6 items-center mb-4 border border-green-100">
+                    <View className="bg-green-50 rounded-3xl p-4 items-center mb-4 border border-green-100">
                         <View className="w-16 h-16 bg-white rounded-full items-center justify-center mb-4 shadow-sm">
                             <Ionicons name="card" size={32} color="#10B981" />
                         </View>

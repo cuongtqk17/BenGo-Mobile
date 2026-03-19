@@ -62,7 +62,7 @@ const CustomerOrderDetailScreen = () => {
 
     if (!order) {
         return (
-            <View className="flex-1 justify-center items-center bg-white p-6">
+            <View className="flex-1 justify-center items-center bg-white p-4">
                 <Text className="text-lg font-JakartaBold text-gray-700">Không tìm thấy đơn hàng</Text>
                 <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-600 px-4 py-3 rounded-full">
                     <Text className="text-white font-JakartaBold">Quay lại</Text>
@@ -149,16 +149,16 @@ const CustomerOrderDetailScreen = () => {
                             coordinate={{ latitude: Number(order.pickup.lat), longitude: Number(order.pickup.lng) }}
                             title="Điểm lấy hàng"
                         >
-                            <View className="bg-blue-100 p-2 rounded-full border border-blue-500">
-                                <Ionicons name="radio-button-on" size={16} color="#3B82F6" />
+                            <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-blue-500">
+                                <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
                             </View>
                         </Marker>
                         <Marker
                             coordinate={{ latitude: Number(order.dropoff.lat), longitude: Number(order.dropoff.lng) }}
                             title="Điểm giao hàng"
                         >
-                            <View className="bg-red-100 p-2 rounded-full border border-red-500">
-                                <Ionicons name="location" size={16} color="#EF4444" />
+                            <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-red-500">
+                                <Ionicons name="location" size={20} color="#EF4444" />
                             </View>
                         </Marker>
                         <Polyline
@@ -175,21 +175,51 @@ const CustomerOrderDetailScreen = () => {
                 {/* Unified Context Card: Address + Goods + Driver */}
                 <View className="mx-4 mt-4 p-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
                     {/* Address Information */}
-                    <View className="mb-4">
-                        <View className="flex-row items-center mb-4">
-                            <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
-                                <Ionicons name="location" size={18} color="#ffffff" />
-                            </View>
-                            <Text className="text-lg font-JakartaBold text-green-600">Địa điểm</Text>
+                    <View className="flex-row items-center mb-4">
+                        <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
+                            <Ionicons name="location" size={18} color="#ffffff" />
                         </View>
+                        <Text className="text-lg font-JakartaBold text-green-600">Địa điểm</Text>
+                    </View>
 
-                        <View className="flex-1 mb-2">
-                            <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Điểm lấy hàng</Text>
-                            <Text className="font-JakartaBold text-gray-400">{order.pickup.address}</Text>
-                        </View>
-                        <View className="flex-1">
-                            <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Điểm giao hàng</Text>
-                            <Text className="font-JakartaBold text-gray-400">{order.dropoff.address}</Text>
+                    {/* Body: Timeline */}
+                    <View className="mb-4 px-1">
+
+                        <View className="flex-row items-start">
+                            <View className="items-center mr-4 pt-1.5">
+                                <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+                                    <View className="w-2 h-2 rounded-full bg-green-500" />
+                                </View>
+                                <View className="w-[1px] h-16 bg-gray-200 my-1 border-dashed" />
+                                <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+                                    <View className="w-2 h-2 rounded-full bg-red-500" />
+                                </View>
+                            </View>
+
+                            <View className="flex-1">
+                                <View className="mb-4">
+                                    <Text className="text-gray-500 font-JakartaBold mb-1">
+                                        Điểm đón
+                                    </Text>
+                                    <Text
+                                        className="text-gray-700 font-JakartaBold"
+                                        numberOfLines={2}
+                                    >
+                                        {order?.pickup?.address || "Không xác định"}
+                                    </Text>
+                                </View>
+                                <View>
+                                    <Text className="text-gray-500 font-JakartaBold mb-1">
+                                        Điểm giao
+                                    </Text>
+                                    <Text
+                                        className="text-gray-700 font-JakartaBold"
+                                        numberOfLines={2}
+                                    >
+                                        {order?.dropoff?.address || "Không xác định"}
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                     {/* Goods Information */}

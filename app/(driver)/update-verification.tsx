@@ -426,7 +426,7 @@ const UpdateVerificationScreen = () => {
 
       <Modal visible={loading} transparent>
         <View className="flex-1 bg-black/40 items-center justify-center">
-          <View className="bg-white p-6 rounded-3xl items-center shadow-lg">
+          <View className="bg-white p-4 rounded-3xl items-center shadow-lg">
             <ActivityIndicator size="large" color="#0047AB" />
             <Text className="font-JakartaBold text-lg mt-4 text-gray-700">{loadingAction}</Text>
             <Text className="font-Jakarta text-gray-500 mt-1">Vui lòng không đóng ứng dụng</Text>

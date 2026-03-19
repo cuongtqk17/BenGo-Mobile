@@ -114,7 +114,7 @@ const TrackOrderScreen = () => {
 
   if (!order) {
     return (
-      <View className="flex-1 justify-center items-center bg-white p-6">
+      <View className="flex-1 justify-center items-center bg-white p-4">
         <Text className="text-lg font-JakartaBold text-gray-700">Không tìm thấy đơn hàng</Text>
         <TouchableOpacity onPress={() => router.back()} className="mt-4 bg-green-500 px-4 py-3 rounded-xl">
           <Text className="text-white font-JakartaBold">Quay lại</Text>
@@ -264,7 +264,7 @@ const TrackOrderScreen = () => {
                   <Text className="text-sm font-JakartaSemiBold" numberOfLines={1}>{order.pickup.address}</Text>
                 </View>
                 <View>
-                  <Text className="text-sm text-neutral-400 font-JakartaMedium">ĐIỂM GIAO HÀNG</Text>
+                  <Text className="text-sm text-neutral-400 font-JakartaMedium">Điểm giao HÀNG</Text>
                   <Text className="text-sm font-JakartaSemiBold" numberOfLines={1}>{order.dropoff.address}</Text>
                 </View>
               </View>

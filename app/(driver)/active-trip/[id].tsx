@@ -180,7 +180,7 @@ const ActiveTripScreen = () => {
         style={{ shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10, marginTop: -20 }}
       >
         {/* Customer Info */}
-        <View className="flex-row justify-between items-center mb-6">
+        <View className="flex-row justify-between items-center mb-4">
           <View className="flex-row items-center flex-1">
             <View className="w-14 h-14 bg-gray-100 rounded-full items-center justify-center mr-3 overflow-hidden">
               <Image source={{ uri: `https://api.dicebear.com/9.x/avataaars/png?seed=${order.customerId?.name || 'Customer'}` }} className="w-full h-full" />
@@ -210,7 +210,7 @@ const ActiveTripScreen = () => {
         </View>
 
         {/* Location Info */}
-        <View className="bg-gray-50 rounded-2xl p-4 mb-6 relative">
+        <View className="bg-gray-50 rounded-2xl p-4 mb-4 relative">
           <View className="flex-row items-start mb-4">
             <View className="mt-1 mr-3 w-5 items-center">
               <Ionicons name="radio-button-on" size={20} color="#3B82F6" />

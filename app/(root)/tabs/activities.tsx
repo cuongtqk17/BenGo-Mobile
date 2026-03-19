@@ -56,7 +56,7 @@ const ActivitiesScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
             {/* Header */}
-            <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
+            <View className="flex-row items-center px-4 py-4 border-b border-gray-100 bg-white">
                 <Text className="ml-4 text-xl font-JakartaBold">Hoạt động</Text>
             </View>
 

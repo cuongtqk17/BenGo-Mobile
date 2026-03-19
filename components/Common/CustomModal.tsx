@@ -34,7 +34,7 @@ const CustomModal = ({ visible, title, message, onClose, primaryButtonText = "Đ
           <Text className="font-JakartaBold text-xl text-gray-900 text-center mb-2">
             {title}
           </Text>
-          <Text className="font-Jakarta text-gray-500 text-center mb-6">
+          <Text className="font-Jakarta text-gray-500 text-center mb-4">
             {message}
           </Text>
           <View className="flex-row w-full gap-3">

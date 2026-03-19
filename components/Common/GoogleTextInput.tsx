@@ -12,7 +12,6 @@ const GoogleTextInput = ({
   icon,
   initialLocation,
   containerStyle,
-  style,
   textInputBackgroundColor,
   handlePress,
 }: GoogleInputProps) => {
@@ -21,17 +20,19 @@ const GoogleTextInput = ({
   const textInputRef = useRef<TextInput>(null);
   return (
     <View
-      className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-gray-100 ${containerStyle}`}
-      style={style}
+      className={`flex relative z-50 flex-row justify-center items-center rounded-xl border border-gray-300 bg-white h-14 ${containerStyle}`}
     >
       <GooglePlacesAutocomplete
-        ref={textInputRef as any}
         fetchDetails={true}
-        placeholder="Bạn muốn giao hàng đến đâu?"
+        placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
         debounce={400}
         minLength={1}
         styles={{
+          container: {
+            flex: 1,
+            zIndex: 9999,
+          },
           textInputContainer: {
             alignItems: "center",
             justifyContent: "center",
@@ -41,15 +42,15 @@ const GoogleTextInput = ({
             borderBottomWidth: 0,
             borderLeftWidth: 0,
             borderRightWidth: 0,
-            height: 40,
+            height: 44,
+            paddingLeft: 4,
           },
           textInput: {
-            backgroundColor: textInputBackgroundColor
-              ? textInputBackgroundColor
-              : "transparent",
-            fontSize: 16,
-            fontWeight: "600",
-            height: 40,
+            backgroundColor: "transparent",
+            fontSize: 15,
+            fontFamily: "JakartaSemiBold",
+            color: "#1F2937",
+            height: 44,
             width: "100%",
             borderTopWidth: 0,
             borderBottomWidth: 0,
@@ -57,17 +58,17 @@ const GoogleTextInput = ({
             borderRightWidth: 0,
             paddingTop: 0,
             paddingBottom: 0,
-            marginTop: -1,
+            marginTop: 0,
           },
           listView: {
             backgroundColor: textInputBackgroundColor
               ? textInputBackgroundColor
-              : "transparent",
-            position: "relative",
-            top: 0,
+              : "white",
+            position: "absolute",
+            top: 44,
             width: "100%",
-            shadowColor: "transparent",
-            zIndex: 100,
+            shadowColor: "#000",
+            zIndex: 9999,
           },
         }}
         onPress={(data, details = null) => {
@@ -110,7 +111,7 @@ const GoogleTextInput = ({
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation ?? "Bạn muốn giao hàng đến đâu?",
+          placeholder: initialLocation ?? t("home.whereTo"),
           numberOfLines: 1,
           editable: !isLoading,
           scrollEnabled: false,

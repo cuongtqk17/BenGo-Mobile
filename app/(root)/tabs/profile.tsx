@@ -179,7 +179,7 @@ const CustomerProfileScreen = () => {
                         <MenuItem
                             icon="location"
                             label="Địa chỉ đã lưu"
-                            onPress={() => router.push("/search-destination")}
+                            onPress={() => router.push("/(root)/booking-setup")}
                         />
                         <MenuItem
                             icon="notifications"

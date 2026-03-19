@@ -15,12 +15,15 @@ const TextArea = React.forwardRef<TextInput, TextAreaProps>(
     return (
       <View className={`my-2 w-full ${containerStyle}`}>
         {label && (
-          <Text className={`text-lg font-JakartaSemiBold mb-2 text-green-600 ${labelStyle}`}>
+          <Text
+            className={`text-lg font-JakartaSemiBold mb-2 text-gray-700 ${labelStyle}`}
+          >
             {label}
           </Text>
         )}
+
         <View
-          className={`bg-neutral-50 rounded-xl border ${error ? "border-red-500" : "border-gray-100"
+          className={`bg-white rounded-xl border ${error ? "border-red-500" : "border-gray-300"
             } focus:border-green-500 ${className}`}
         >
           <TextInput

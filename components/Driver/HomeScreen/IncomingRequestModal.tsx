@@ -68,7 +68,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
 
           {/* Body */}
           <View className="p-6">
-            <View className="items-center mb-6">
+            <View className="items-center mb-4">
               <Text className="text-gray-500 font-JakartaMedium text-sm mb-1 uppercase">Giá trị chuyến đi</Text>
               <Text className="text-green-600 text-[42px] font-JakartaExtraBold">{formatCurrency(order.price)}</Text>
               <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1.5 rounded-full">

@@ -11,7 +11,6 @@ import { useCustomerProfile } from "@/hooks/useCustomer";
 
 import BackgroundMap from "@/components/Customer/HomeScreen/BackgroundMap";
 import FloatingSearchBar from "@/components/Customer/HomeScreen/FloatingSearchBar";
-import AddressShortcuts from "@/components/Customer/HomeScreen/AddressShortcuts";
 import CustomModal from "@/components/Common/CustomModal";
 
 export default function HomeScreen() {
@@ -40,7 +39,7 @@ export default function HomeScreen() {
   };
 
   const handleSearchPress = () => {
-    router.push("/(root)/search-destination");
+    router.push("/(root)/booking-setup");
   };
 
   const handleShortcutPress = (type: string) => {
@@ -52,16 +51,12 @@ export default function HomeScreen() {
           longitude: address.lng,
           address: address.fullAddress,
         });
-        router.push("/(root)/confirm-ride" as any);
+        router.push("/(root)/booking-setup" as any);
         return;
       }
     }
     showAlert("Thông báo", "Địa chỉ này chưa được thiết lập trong hồ sơ.");
   };
-
-
-
-
 
   const requestLocation = async () => {
     try {
@@ -97,10 +92,6 @@ export default function HomeScreen() {
       <View style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
         <BackgroundMap />
         <FloatingSearchBar onPress={handleSearchPress} />
-        <AddressShortcuts
-          onPress={handleShortcutPress}
-          savedAddresses={userData?.savedAddresses}
-        />
       </View>
 
       <CustomModal

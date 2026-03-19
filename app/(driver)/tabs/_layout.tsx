@@ -33,7 +33,7 @@ const Layout = () => {
           title: "Trang chủ",
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons name={focused ? "map" : "map-outline"} size={24} color={color} />
+            <Ionicons name={focused ? "home" : "home-outline"} size={24} color={color} />
           ),
         }}
       />

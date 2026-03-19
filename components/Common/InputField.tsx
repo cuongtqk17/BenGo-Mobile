@@ -35,7 +35,7 @@ const InputField = forwardRef<TextInput, InputFieldProps>(({
       )}
       <View
         className={`flex flex-row justify-start items-center relative 
-        bg-white rounded-full border ${error ? "border-red-500" : "border-gray-300"} focus:border-green-500  ${containerStyle}`}
+        bg-white rounded-xl border ${error ? "border-red-500" : "border-gray-300"} focus:border-green-500  ${containerStyle}`}
       >
         {icon &&
           (typeof icon === "string" && !icon.startsWith("http") ? (
@@ -58,7 +58,7 @@ const InputField = forwardRef<TextInput, InputFieldProps>(({
             borderRadius: 9999,
             padding: 16,
             fontFamily: "JakartaSemiBold",
-            fontSize: 15,
+            fontSize: 16,
             flex: 1,
             textAlign: "left",
           }}

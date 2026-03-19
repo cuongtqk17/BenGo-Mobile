@@ -101,7 +101,7 @@ const CustomerProfileScreen = () => {
                 }
             >
                 {/* P1: User Identity Header */}
-                <View className="px-6 py-6 flex-row items-center justify-between">
+                <View className="px-4 py-6 flex-row items-center justify-between">
                     <View className="flex-row items-center flex-1">
                         <View className="relative">
                             <Image
@@ -132,7 +132,7 @@ const CustomerProfileScreen = () => {
                 </View>
 
                 {/* P2: BenGo Wallet Card */}
-                <View className="px-6 mb-8">
+                <View className="px-4 mb-8">
                     <LinearGradient
                         colors={["#0047AB", "#002B66"]}
                         start={{ x: 0, y: 0 }}
@@ -154,7 +154,7 @@ const CustomerProfileScreen = () => {
 
                         <View className="flex-row justify-between items-center">
                             <View>
-                                <Text className="text-white/50 text-sm font-JakartaMedium uppercase tracking-widest">
+                                <Text className="text-white/50 text-sm font-JakartaMedium uppercase">
                                     Mã định danh ví
                                 </Text>
                                 <Text className="text-white/80 text-sm font-JakartaBold">
@@ -163,7 +163,7 @@ const CustomerProfileScreen = () => {
                             </View>
                             <TouchableOpacity
                                 onPress={() => showAlert("Nạp tiền", "Tính năng nạp tiền qua cổng thanh toán đang được tích hợp.")}
-                                className="bg-white px-6 py-2.5 rounded-full items-center justify-center flex-row shadow-lg"
+                                className="bg-white px-4 py-2.5 rounded-full items-center justify-center flex-row shadow-lg"
                             >
                                 <Ionicons name="add-circle" size={18} color="#0047AB" />
                                 <Text className="ml-2 font-JakartaBold text-[#0047AB] text-sm">Nạp tiền</Text>
@@ -173,7 +173,7 @@ const CustomerProfileScreen = () => {
                 </View>
 
                 {/* P3: Settings & Actions Menu List */}
-                <View className="px-6 mb-4">
+                <View className="px-4 mb-4">
                     <Text className="text-lg font-JakartaBold text-neutral-800 mb-4 px-2">Cài đặt tài khoản</Text>
                     <View className="bg-white rounded-2xl border border-neutral-50 shadow-sm p-2">
                         <MenuItem
@@ -201,7 +201,7 @@ const CustomerProfileScreen = () => {
 
 
                 {/* P4: Logout Action */}
-                <View className="px-6 pb-10 items-center">
+                <View className="px-4 pb-10 items-center">
                     <TouchableOpacity
                         onPress={handleSignOut}
                         className="w-[90%] flex-row items-center justify-center py-4 rounded-2xl border border-red-100 bg-red-50"

@@ -164,12 +164,12 @@ const ActiveTripScreen = () => {
           <View className={`h-0.5 flex-1 ${currentStep > 1 ? 'bg-green-500' : 'bg-gray-200'}`} />
           <View className="items-center flex-1">
             <Ionicons name={currentStep > 1 ? "checkmark-circle" : "ellipse-outline"} size={20} color={currentStep > 1 ? "#10B981" : "#D1D5DB"} />
-            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 1 ? 'text-green-600' : 'text-gray-400'}`}>Đã lấy hàng</Text>
+            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 1 ? 'text-green-600' : 'text-gray-500'}`}>Đã lấy hàng</Text>
           </View>
           <View className={`h-0.5 flex-1 ${currentStep > 2 ? 'bg-green-500' : 'bg-gray-200'}`} />
           <View className="items-center flex-1">
             <Ionicons name={currentStep > 2 ? "checkmark-circle" : "ellipse-outline"} size={20} color={currentStep > 2 ? "#10B981" : "#D1D5DB"} />
-            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 2 ? 'text-green-600' : 'text-gray-400'}`}>Hoàn thành</Text>
+            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 2 ? 'text-green-600' : 'text-gray-500'}`}>Hoàn thành</Text>
           </View>
         </View>
       </View>
@@ -216,7 +216,7 @@ const ActiveTripScreen = () => {
               <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
             </View>
             <View className="flex-1">
-              <Text className="text-gray-500 font-Jakarta text-xs mb-1 uppercase tracking-wider">Từ</Text>
+              <Text className="text-gray-500 font-Jakarta text-xs mb-1 uppercase">Từ</Text>
               <Text className="text-gray-700 font-JakartaSemiBold text-[15px]">{order.pickup.address}</Text>
             </View>
           </View>
@@ -228,7 +228,7 @@ const ActiveTripScreen = () => {
               <Ionicons name="pin" size={20} color="#DC2626" />
             </View>
             <View className="flex-1">
-              <Text className="text-gray-500 font-Jakarta text-xs mb-1 uppercase tracking-wider">Đến</Text>
+              <Text className="text-gray-500 font-Jakarta text-xs mb-1 uppercase">Đến</Text>
               <Text className="text-gray-700 font-JakartaSemiBold text-[15px]">{order.dropoff.address}</Text>
             </View>
           </View>

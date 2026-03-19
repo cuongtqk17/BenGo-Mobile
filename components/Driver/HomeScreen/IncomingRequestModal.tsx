@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PendingOrder } from '@/api/driver';
+import CustomButton from '@/components/Common/CustomButton';
 
 interface Props {
   visible: boolean;
@@ -54,7 +55,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
       <View className="flex-1 justify-center items-center bg-black/70 px-4">
         <View className="bg-white w-full rounded-[32px] overflow-hidden shadow-2xl">
           {/* Header */}
-          <View className="bg-green-50 w-full py-4 items-center border-b border-green-100 flex-row justify-between px-6">
+          <View className="bg-green-50 w-full py-4 items-center border-b border-green-100 flex-row justify-between px-4">
             <View className="w-8" />
             <View className="flex-row items-center">
               <Ionicons name="flash" size={24} color="#10B981" />
@@ -68,7 +69,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
           {/* Body */}
           <View className="p-6">
             <View className="items-center mb-6">
-              <Text className="text-gray-500 font-JakartaMedium text-sm mb-1 uppercase tracking-wider">Giá trị chuyến đi</Text>
+              <Text className="text-gray-500 font-JakartaMedium text-sm mb-1 uppercase">Giá trị chuyến đi</Text>
               <Text className="text-green-600 text-[42px] font-JakartaExtraBold">{formatCurrency(order.price)}</Text>
               <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1.5 rounded-full">
                 <Ionicons name="car-outline" size={16} color="#4B5563" />
@@ -86,7 +87,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
                 </View>
                 <View className="absolute left-[11px] top-6 w-0.5 h-10 bg-gray-200" />
                 <View className="flex-1 pt-0.5">
-                  <Text className="text-gray-500 font-Jakarta text-xs mb-0.5">ĐIỂM ĐÓN</Text>
+                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">ĐIỂM ĐÓN</Text>
                   <Text className="text-gray-700 font-JakartaSemiBold text-base" numberOfLines={2}>
                     {order.pickup?.address || 'Địa chỉ đón khách'}
                   </Text>
@@ -98,7 +99,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
                   <Ionicons name="location" size={14} color="#DC2626" />
                 </View>
                 <View className="flex-1 pt-0.5">
-                  <Text className="text-gray-500 font-Jakarta text-xs mb-0.5">ĐIỂM ĐẾN</Text>
+                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">ĐIỂM ĐẾN</Text>
                   <Text className="text-gray-700 font-JakartaSemiBold text-base" numberOfLines={2}>
                     {order.destination?.address || 'Địa chỉ trả khách'}
                   </Text>
@@ -108,37 +109,22 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
           </View>
 
           {/* Footer & Buttons */}
-          <View className="pt-2 pb-6 px-6">
-            <TouchableOpacity
+          <View className="pt-2 pb-6 px-4">
+            <CustomButton
+              title="CHẤP NHẬN"
               onPress={() => onAccept(order.orderId)}
               disabled={isAccepting}
-              className={`w-full py-4 rounded-2xl items-center justify-center flex-row ${isAccepting ? 'bg-green-400' : 'bg-green-600'}`}
-              style={{ shadowColor: '#16A34A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 }}
-            >
-              <Text className="text-white font-JakartaBold text-xl uppercase tracking-wider">CHẤP NHẬN</Text>
-              {!isAccepting && (
+              loading={isAccepting}
+              IconRight={() => !isAccepting ? (
                 <View className="ml-2 bg-white/20 px-2 py-0.5 rounded-full">
                   <Text className="text-white font-JakartaBold text-sm">{timeLeft}s</Text>
                 </View>
-              )}
-            </TouchableOpacity>
+              ) : <></>}
+            />
 
             <TouchableOpacity onPress={onDecline} disabled={isAccepting} className="mt-4 items-center">
-              <Text className="text-gray-400 font-JakartaSemiBold text-base">Bỏ qua chuyến này</Text>
+              <Text className="text-gray-500 font-JakartaSemiBold text-base">Bỏ qua chuyến này</Text>
             </TouchableOpacity>
-          </View>
-
-          {/* Progress Bar Container */}
-          <View className="h-1.5 w-full bg-gray-100 absolute bottom-0">
-            <Animated.View
-              className="h-full bg-green-500"
-              style={{
-                width: progressAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['100%', '0%']
-                })
-              }}
-            />
           </View>
         </View>
       </View>

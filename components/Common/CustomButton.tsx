@@ -57,13 +57,6 @@ const CustomButton = ({
     className={`flex flex-row justify-center items-center px-4 w-full rounded-full gap-1 flex-shrink-0 ${getBgVariantStyle(bgVariant)} ${className} ${loading ? "opacity-70" : ""}`}
     style={[
       { height: 44 },
-      !className?.includes("shadow-none") && bgVariant !== "outline" && {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 4,
-        elevation: 4,
-      },
       props.style,
     ]}
     {...props}

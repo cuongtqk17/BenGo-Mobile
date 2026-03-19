@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Switch, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
+import { Switch } from 'react-native-switch';
 import { icons } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -47,13 +48,25 @@ const Header: React.FC<HeaderProps> = ({
 
       <View className="flex-row items-center">
         <Switch
-          trackColor={{ false: "#E5E7EB", true: "#22C55E" }}
-          thumbColor="#FFFFFF"
-          ios_backgroundColor="#E5E7EB"
-          onValueChange={onToggleStatus}
           value={isOnline}
+          onValueChange={onToggleStatus}
           disabled={disabled}
-          style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+          activeText={""}
+          inActiveText={""}
+          circleSize={20}
+          barHeight={24}
+          circleBorderWidth={0}
+          backgroundActive={"#16A34A"}
+          backgroundInactive={"#E5E5E5"}
+          circleActiveColor={"#ffffff"}
+          circleInActiveColor={"#f4f3f4"}
+          changeValueImmediately={true}
+          renderActiveText={false}
+          renderInActiveText={false}
+          switchLeftPx={2}
+          switchRightPx={2}
+          switchWidthMultiplier={2.2}
+          switchBorderRadius={12}
         />
       </View>
     </View>

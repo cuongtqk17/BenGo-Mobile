@@ -102,7 +102,7 @@ const SearchDestinationScreen = () => {
         <View style={{ flex: 1 }}>
           <GooglePlacesAutocomplete
             ref={googlePlacesRef}
-            placeholder={t("home.whereTo") || "Bạn muốn giao hàng đến đâu?"}
+            placeholder="Bạn muốn giao hàng đến đâu?"
             fetchDetails={true}
             onPress={handleSelectLocation}
             query={{

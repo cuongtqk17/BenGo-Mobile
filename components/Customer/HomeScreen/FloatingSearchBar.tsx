@@ -1,15 +1,11 @@
 import React from "react";
 import { TouchableOpacity, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-
 interface FloatingSearchBarProps {
   onPress: () => void;
 }
 
 const FloatingSearchBar = ({ onPress }: FloatingSearchBarProps) => {
-  const { t } = useTranslation();
-
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -25,7 +21,7 @@ const FloatingSearchBar = ({ onPress }: FloatingSearchBarProps) => {
     >
       <Ionicons name="search" size={24} color="#6B7280" />
       <Text className="ml-3 text-gray-500 text-base font-JakartaMedium">
-        {t("home.whereTo") || "Bạn muốn giao hàng đến đâu?"}
+        Bạn muốn giao hàng đến đâu?
       </Text>
     </TouchableOpacity>
   );

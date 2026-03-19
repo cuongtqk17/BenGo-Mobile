@@ -27,7 +27,7 @@ const GoogleTextInput = ({
       <GooglePlacesAutocomplete
         ref={textInputRef as any}
         fetchDetails={true}
-        placeholder={t("home.whereTo")}
+        placeholder="Bạn muốn giao hàng đến đâu?"
         enablePoweredByContainer={false}
         debounce={400}
         minLength={1}
@@ -110,7 +110,7 @@ const GoogleTextInput = ({
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation ?? t("home.whereTo"),
+          placeholder: initialLocation ?? "Bạn muốn giao hàng đến đâu?",
           numberOfLines: 1,
           editable: !isLoading,
           scrollEnabled: false,

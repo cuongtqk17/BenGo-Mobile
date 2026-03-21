@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { OrderHistoryItem } from '@/api/driver';
+import { useAuth } from '@/context/AuthContext';
 import { useDriverOrders } from '@/hooks/useDriver';
+import { useOrderHistory } from '@/hooks/useOrders';
 import TripCard from '@/components/Driver/ActivityScreen/TripCard';
+import OrderItemCard from '@/components/Customer/ActivitiesScreen/OrderItemCard';
 import InputField from '@/components/Common/InputField';
 
 const FILTERS = [
@@ -28,39 +30,56 @@ const TIME_FILTERS = [
   { label: 'Tùy chọn', value: 'custom' },
 ];
 
-const DriverHistory = () => {
-  const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
+const OrdersScreen = () => {
+  const { user } = useAuth();
+  const isDriver = user?.role?.toLowerCase() === 'driver';
+
+  const [orders, setOrders] = useState<any[]>([]);
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [timeFilter, setTimeFilter] = useState('today');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const { data, isLoading: loading, isFetching: loadingMore, refetch } = useDriverOrders({
+  // Hook for Driver - Only enable if user is a driver
+  const driverQuery = useDriverOrders({
     page,
     limit: 10,
     status: statusFilter,
     search,
-    time: timeFilter
+    time: timeFilter,
+    enabled: isDriver // <-- Added enabled flag
   });
 
+  // Hook for Customer - Only enable if user is NOT a driver
+  const customerQuery = useOrderHistory({
+    status: statusFilter,
+    page,
+    limit: 10,
+    enabled: !isDriver // <-- Added enabled flag
+  });
+
+  const query = isDriver ? driverQuery : customerQuery;
+  const { data, isLoading: loading, isFetching: loadingMore, refetch } = query;
+
   useEffect(() => {
-    if (data?.data?.data) {
-      if (page === 1) {
-        setOrders(data.data.data);
-      } else {
-        setOrders(prev => [...prev, ...data.data.data]);
+    if (data) {
+      const newItems = isDriver ? data?.data?.data : (Array.isArray(data) ? data : []);
+      if (newItems) {
+        if (page === 1) {
+          setOrders(newItems);
+        } else {
+          setOrders(prev => [...prev, ...newItems]);
+        }
+        setHasMore(newItems.length === 10);
       }
-      setHasMore(data.data.data.length === 10);
     }
-  }, [data, page]);
+  }, [data, page, isDriver, statusFilter, timeFilter, search]); // Added filters to dependencies
 
   useEffect(() => {
     setPage(1);
     setOrders([]);
   }, [statusFilter, timeFilter, search]);
-
-
 
   const onRefresh = () => {
     setPage(1);
@@ -74,21 +93,22 @@ const DriverHistory = () => {
   };
 
   const handleTripPress = (id: string) => {
-    router.push(`/(driver)/history/${id}` as any);
+    const route = isDriver ? `/(driver)/history/${id}` : `/(root)/order-detail/${id}`;
+    router.push(route as any);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={['top']}>
       {/* Header & Search */}
-      <View className="px-4 py-2">
-        <Text className="text-2xl font-JakartaBold text-gray-700 mb-4">Hoạt động</Text>
+      <View className="px-4 py-2 bg-white">
+        <Text className="text-xl font-JakartaBold text-gray-700 mb-4">Hoạt động</Text>
 
         <InputField
           icon="search-outline"
           placeholder="Tìm theo mã đơn hoặc địa chỉ..."
           value={search}
           onChangeText={setSearch}
-          containerStyle="bg-white border-none mb-2"
+          containerStyle="bg-gray-50 border-none mb-2"
           inputStyle="text-base font-JakartaMedium"
           iconRight={
             search.length > 0 && (
@@ -100,7 +120,7 @@ const DriverHistory = () => {
         />
 
         {/* Status Tabs */}
-        <View className="flex-row border-b border-gray-200 mb-4">
+        <View className="flex-row border-b border-gray-100 mb-4">
           {FILTERS.map((f) => (
             <TouchableOpacity
               key={f.value}
@@ -133,9 +153,15 @@ const DriverHistory = () => {
       {/* List */}
       <FlatList
         data={orders}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => item?.id || index.toString()}
         renderItem={({ item }) => (
-          <TripCard item={item} onPress={handleTripPress} />
+          isDriver ? (
+            <TripCard item={item} onPress={handleTripPress} />
+          ) : (
+            <View className="px-4">
+              <OrderItemCard order={item} />
+            </View>
+          )
         )}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
@@ -145,10 +171,10 @@ const DriverHistory = () => {
         ListEmptyComponent={() => (
           !loading ? (
             <View className="flex-1 items-center justify-center pt-20">
-              <View className="w-20 h-20 bg-gray-50 rounded-full items-center justify-center mb-4">
+              <View className="w-20 h-20 bg-white rounded-full items-center justify-center mb-4 shadow-sm">
                 <Ionicons name="document-text-outline" size={40} color="#CBD5E1" />
               </View>
-              <Text className="text-gray-500 font-JakartaMedium text-base">Không tìm thấy chuyến đi nào</Text>
+              <Text className="text-gray-500 font-JakartaMedium text-base">Không tìm thấy đơn hàng nào</Text>
             </View>
           ) : null
         )}
@@ -159,10 +185,10 @@ const DriverHistory = () => {
             </View>
           ) : <View className="h-20" />
         )}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
       />
     </SafeAreaView>
   );
 };
 
-export default DriverHistory;
+export default OrdersScreen;

@@ -17,7 +17,6 @@ import VehicleBadge from "@/components/Common/VehicleBadge";
 const TripDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: order, isLoading: loading } = useDriverOrderDetail(id || null);
-
   if (loading) {
     return (
       <View className="flex-1 bg-white justify-center items-center">
@@ -70,7 +69,7 @@ const TripDetailScreen = () => {
   const dropoffLng = order?.dropoff?.lng || 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={["top", "bottom"]}>
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 border-b border-gray-100 bg-white">
         <TouchableOpacity onPress={() => router.back()}>
@@ -141,7 +140,7 @@ const TripDetailScreen = () => {
             </Text>
 
             {/* Body: Timeline */}
-            <View className="mb-4 px-1">
+            <View className="mb-4">
               <View className="flex-row items-start">
                 <View className="items-center mr-4 pt-1.5">
                   <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">

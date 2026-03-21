@@ -26,6 +26,12 @@ export interface Order {
     specialNote?: string;
     priority?: "NORMAL" | "VIP" | "URGENT" | "FRAGILE";
     tags?: string[];
+    customer?: {
+        _id?: string;
+        name: string;
+        phone: string;
+        email?: string;
+    };
     driverId?: {
         _id: string;
         name: string;
@@ -33,6 +39,7 @@ export interface Order {
         avatar?: string;
         currentLocation?: { lat: number; lng: number };
         licensePlate?: string;
+        rating?: number;
     };
     driver?: {
         _id: string;
@@ -40,6 +47,7 @@ export interface Order {
         phone: string;
         avatar?: string;
         licensePlate?: string;
+        rating?: number;
     } | null;
 }
 

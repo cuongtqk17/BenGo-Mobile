@@ -13,7 +13,7 @@ import { Switch } from 'react-native-switch';
 import { Image } from 'react-native';
 import CustomModal from "@/components/Common/CustomModal";
 import { useAuth } from '@/context/AuthContext';
-import { useDriverPendingOrders, useDriverStats, useDriverToggleStatus, useDriverAcceptOrder, useDriverUpdateLocation } from '@/hooks/useDriver';
+import { useDriverPendingOrders, useDriverStats, useDriverToggleStatus, useDriverAcceptOrder, useDriverUpdateLocation, useDriverActiveOrder } from '@/hooks/useDriver';
 import { PendingOrder } from '@/api/driver';
 
 interface LocationState {
@@ -76,6 +76,8 @@ const DriverHome = () => {
     today
   );
 
+  const { data: activeOrder, isLoading: isLoadingActiveOrder } = useDriverActiveOrder();
+
   // Mutations
   const { mutateAsync: toggleStatus, isPending: isTogglingStatus } = useDriverToggleStatus();
   const { mutateAsync: acceptOrder, isPending: isAccepting } = useDriverAcceptOrder();
@@ -109,22 +111,14 @@ const DriverHome = () => {
 
   // Accept order
   const handleAcceptOrder = async (orderId: string) => {
-    console.log("[DEBUG] DriverHome: handleAcceptOrder triggered for orderId:", orderId);
     try {
       const response = await acceptOrder(orderId);
-      console.log("[DEBUG] DriverHome: acceptOrder API success:", response);
 
       setShowOrderModal(false);
       setSelectedOrder(null);
 
-      console.log("[DEBUG] DriverHome: Navigating to active-trip:", orderId);
       router.push(`/(driver)/active-trip/${orderId}` as any);
     } catch (error: any) {
-      console.error('[DEBUG] DriverHome: handleAcceptOrder failed:', {
-        message: error.message,
-        error: error,
-        responseData: error.response?.data
-      });
       showAlert('Lỗi', `Không thể nhận chuyến: ${error.message || 'Vui lòng thử lại sau'}`);
     }
   };
@@ -271,6 +265,29 @@ const DriverHome = () => {
           totalEarnings={driverStats.totalEarnings}
           totalTrips={driverStats.totalTrips}
         />
+
+        {activeOrder && (
+          <TouchableOpacity
+            onPress={() => router.push(`/(driver)/active-trip/${activeOrder.id}` as any)}
+            className="mx-5 mb-4 bg-green-600 p-4 rounded-2xl flex-row items-center justify-between shadow-md"
+          >
+            <View className="flex-row items-center flex-1">
+              <View className="w-10 h-10 bg-white/20 rounded-full items-center justify-center mr-3">
+                <Ionicons name="car-outline" size={24} color="white" />
+              </View>
+              <View className="flex-1">
+                <Text className="text-white font-JakartaBold text-sm uppercase">Bạn có chuyến đi đang thực hiện</Text>
+                <Text className="text-white text-xs font-JakartaMedium" numberOfLines={1}>
+                  {activeOrder.pickupAddress || 'Đang thực hiện chuyến đi'}
+                </Text>
+              </View>
+            </View>
+            <View className="bg-white/20 px-3 py-1.5 rounded-full flex-row items-center">
+              <Text className="text-white font-JakartaBold text-xs mr-1">Quay lại</Text>
+              <Ionicons name="arrow-forward" size={14} color="white" />
+            </View>
+          </TouchableOpacity>
+        )}
 
         <View className="px-4 mb-2">
           {isOnline ? (

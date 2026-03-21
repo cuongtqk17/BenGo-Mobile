@@ -1,8 +1,8 @@
 import React from 'react';
 import OrdersScreen from '@/components/Common/OrdersScreen';
 
-const ActivitiesScreen = () => {
+const DriverOrders = () => {
     return <OrdersScreen />;
 };
 
-export default ActivitiesScreen;
+export default DriverOrders;

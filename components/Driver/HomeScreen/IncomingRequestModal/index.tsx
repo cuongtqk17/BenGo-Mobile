@@ -113,7 +113,6 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
             <CustomButton
               title="Nhận chuyến"
               onPress={() => {
-                console.log("[DEBUG] IncomingRequestModal: 'Nhận chuyến' button pressed for orderId:", order.orderId);
                 onAccept(order.orderId);
               }}
               disabled={isAccepting}

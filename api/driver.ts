@@ -32,7 +32,8 @@ export interface OrderHistoryItem {
 }
 
 export interface OrderDetail extends OrderHistoryItem {
-    customerId: { _id: string; name: string; phone: string };
+    customerId?: { _id: string; name: string; phone: string };
+    customer?: { _id?: string; name: string; phone: string; email?: string };
     driverId?: { _id: string; name: string; phone: string; avatar?: string };
     pickup: { address: string; lat: number; lng: number };
     dropoff: { address: string; lat: number; lng: number };

@@ -175,16 +175,15 @@ const CustomerOrderDetailScreen = () => {
                 {/* Unified Context Card: Address + Goods + Driver */}
                 <View className="mx-4 mt-4 p-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
                     {/* Address Information */}
-                    <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
-                            <Ionicons name="location" size={18} color="#ffffff" />
+                    <View className="flex-row items-center mb-2">
+                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                            <Ionicons name="location" size={14} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Địa điểm</Text>
                     </View>
 
                     {/* Body: Timeline */}
-                    <View className="mb-4 px-1">
-
+                    <View className="mb-4">
                         <View className="flex-row items-start">
                             <View className="items-center mr-4 pt-1.5">
                                 <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
@@ -224,11 +223,11 @@ const CustomerOrderDetailScreen = () => {
                     </View>
                     {/* Goods Information */}
                     <View className="mb-4">
-                        <View className="flex-row items-center mb-4">
-                            <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
-                                <Ionicons name="information-circle" size={18} color="#ffffff" />
+                        <View className="flex-row items-center mb-2">
+                            <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                                <Ionicons name="information-circle" size={14} color="#ffffff" />
                             </View>
-                            <Text className="text-lg font-JakartaBold text-green-600">Thông tin hàng hóa</Text>
+                            <Text className="text-lg font-JakartaBold text-green-600">Hình ảnh hàng hóa</Text>
                         </View>
 
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
@@ -236,7 +235,7 @@ const CustomerOrderDetailScreen = () => {
                                 <Image
                                     key={index}
                                     source={{ uri: img }}
-                                    className="w-24 h-24 rounded-2xl mr-3 bg-gray-100"
+                                    className="w-32 h-32 rounded-xl"
                                     resizeMode="cover"
                                 />
                             ))}
@@ -256,8 +255,8 @@ const CustomerOrderDetailScreen = () => {
                     {(order.driver || order.driverId) && (
                         <>
                             <View className="h-[1px] bg-gray-50 my-6" />
-                            <View className="flex-row items-center mb-4">
-                                <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
+                            <View className="flex-row items-center mb-2">
+                                <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
                                     <Ionicons name="person" size={16} color="#ffffff" />
                                 </View>
                                 <Text className="text-base font-JakartaBold text-gray-700">Tài xế nhận đơn</Text>
@@ -296,8 +295,8 @@ const CustomerOrderDetailScreen = () => {
 
                 {/* Payment Summary Section */}
                 <View className="mx-4 mt-4 mb-4 p-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                    <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
+                    <View className="flex-row items-center mb-2">
+                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
                             <Ionicons name="receipt" size={16} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Chi tiết thanh toán</Text>

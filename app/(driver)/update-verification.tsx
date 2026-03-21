@@ -75,11 +75,6 @@ const UpdateVerificationScreen = () => {
   const { mutateAsync: updateDocs } = useUpdateDriverDocuments();
   const { mutateAsync: updateProfile } = useUpdateProfile();
   const { uploadImage, isUploading } = useUpload();
-
-  useEffect(() => {
-    if (docData) console.log("[UpdateVerification] API Data:", JSON.stringify(docData, null, 2));
-  }, [docData]);
-
   const [form, setForm] = useState({
     identityNumber: "",
     identityFront: null as string | null,

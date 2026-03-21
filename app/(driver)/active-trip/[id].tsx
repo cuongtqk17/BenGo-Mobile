@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Image, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Image, Linking, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +20,6 @@ const ActiveTripScreen = () => {
 
   const { data: order, isLoading } = useDriverOrderDetail(id as string);
   const { mutateAsync: updateStatus, isPending } = useDriverUpdateOrderStatus();
-
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   const [alertModal, setAlertModal] = useState({
@@ -107,153 +106,215 @@ const ActiveTripScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={["top", "bottom"]}>
-      {/* Map Section */}
-      <View className="flex-1 relative">
-        <MapView
-          ref={mapRef}
-          style={{ flex: 1 }}
-          initialRegion={{
-            ...driverCoord,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
-          showsUserLocation={false}
-        >
-          {location && (
-            <Marker coordinate={driverCoord} anchor={{ x: 0.5, y: 0.5 }}>
-              <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-green-500">
-                <Ionicons name="car" size={20} color="#10B981" />
-              </View>
-            </Marker>
-          )}
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {/* Map Section */}
+        <View className="relative" style={{ height: 400 }}>
+          <MapView
+            ref={mapRef}
+            style={{ flex: 1 }}
+            initialRegion={{
+              ...driverCoord,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            }}
+            showsUserLocation={false}
+          >
+            {location && (
+              <Marker coordinate={driverCoord} anchor={{ x: 0.5, y: 0.5 }}>
+                <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-green-500">
+                  <Ionicons name="car" size={20} color="#10B981" />
+                </View>
+              </Marker>
+            )}
 
-          {!isCompleted && (
-            <Marker coordinate={targetCoord}>
-              <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-blue-500">
-                <Ionicons name={isHeadingToPickup ? 'radio-button-on' : 'pin'} size={20} color="#3B82F6" />
-              </View>
-            </Marker>
-          )}
+            {!isCompleted && (
+              <Marker coordinate={targetCoord}>
+                <View className="bg-gray-100 p-1 rounded-full shadow-lg border-2 border-blue-500">
+                  <Ionicons name={isHeadingToPickup ? 'radio-button-on' : 'pin'} size={20} color="#3B82F6" />
+                </View>
+              </Marker>
+            )}
 
-          {!isCompleted && location && GOOGLE_MAPS_APIKEY && (
-            <MapDirections
-              origin={driverCoord}
-              destination={targetCoord}
-              apikey={GOOGLE_MAPS_APIKEY}
-              strokeWidth={4}
-              strokeColor="#3B82F6"
-              optimizeWaypoints={true}
-            />
-          )}
-        </MapView>
+            {!isCompleted && location && GOOGLE_MAPS_APIKEY && (
+              <MapDirections
+                origin={driverCoord}
+                destination={targetCoord}
+                apikey={GOOGLE_MAPS_APIKEY}
+                strokeWidth={4}
+                strokeColor="#3B82F6"
+                optimizeWaypoints={true}
+              />
+            )}
+          </MapView>
 
-        {/* Back Button Overlay */}
-        <TouchableOpacity
-          className="absolute top-4 left-4 w-10 h-10 bg-white rounded-full items-center justify-center shadow-lg"
-          onPress={() => router.replace('/(driver)/tabs/home')}
-        >
-          <Ionicons name="chevron-back" size={24} color="#111827" />
-        </TouchableOpacity>
-
-        {/* Progress Timeline Overlay */}
-        <View className="absolute top-4 mx-16 bg-white rounded-2xl p-3 shadow-lg flex-row items-center justify-between">
-          <View className="items-center flex-1">
-            <Ionicons name="ellipse" size={20} color="#10B981" />
-            <Text className="text-[10px] font-JakartaBold text-gray-700 mt-1">Đón khách</Text>
-          </View>
-          <View className={`h-0.5 flex-1 ${currentStep > 1 ? 'bg-green-500' : 'bg-gray-200'}`} />
-          <View className="items-center flex-1">
-            <Ionicons name={currentStep > 1 ? "checkmark-circle" : "ellipse-outline"} size={20} color={currentStep > 1 ? "#10B981" : "#D1D5DB"} />
-            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 1 ? 'text-green-600' : 'text-gray-500'}`}>Đã lấy hàng</Text>
-          </View>
-          <View className={`h-0.5 flex-1 ${currentStep > 2 ? 'bg-green-500' : 'bg-gray-200'}`} />
-          <View className="items-center flex-1">
-            <Ionicons name={currentStep > 2 ? "checkmark-circle" : "ellipse-outline"} size={20} color={currentStep > 2 ? "#10B981" : "#D1D5DB"} />
-            <Text className={`text-[10px] font-JakartaBold mt-1 ${currentStep > 2 ? 'text-green-600' : 'text-gray-500'}`}>Hoàn thành</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Bottom Information Card */}
-      <View
-        className="bg-white rounded-t-3xl pt-6 px-5 pb-8"
-        style={{ shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10, marginTop: -20 }}
-      >
-        {/* Customer Info */}
-        <View className="flex-row justify-between items-center mb-4">
-          <View className="flex-row items-center flex-1">
-            <View className="w-14 h-14 bg-gray-100 rounded-full items-center justify-center mr-3 overflow-hidden">
-              <Image source={{ uri: `https://api.dicebear.com/9.x/avataaars/png?seed=${order.customerId?.name || 'Customer'}` }} className="w-full h-full" />
-            </View>
-            <View>
-              <Text className="text-gray-700 font-JakartaBold text-lg">{order.customerId?.name || 'Khách hàng'}</Text>
-              <View className="flex-row items-center mt-1">
-                <Ionicons name="star" size={14} color="#F59E0B" />
-                <Text className="text-gray-700 font-JakartaSemiBold text-sm ml-1">5.0</Text>
-              </View>
-            </View>
-          </View>
-          <View className="flex-row gap-3">
-            <TouchableOpacity
-              className="w-12 h-12 rounded-full bg-blue-50 items-center justify-center"
-              onPress={() => showAlert("Sắp ra mắt", "Chức năng nhắn tin đang được phát triển")}
-            >
-              <Ionicons name="chatbubbles" size={24} color="#3B82F6" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="w-12 h-12 rounded-full bg-green-50 items-center justify-center"
-              onPress={() => Linking.openURL(`tel:${order.customerId?.phone}`)}
-            >
-              <Ionicons name="call" size={24} color="#10B981" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Location Info */}
-        <View className="bg-gray-50 rounded-2xl p-4 mb-4 relative">
-          <View className="flex-row items-start mb-4">
-            <View className="mt-1 mr-3 w-5 items-center">
-              <Ionicons name="radio-button-on" size={20} color="#3B82F6" />
-            </View>
-            <View className="flex-1">
-              <Text className="text-gray-500 font-Jakarta text-sm mb-1 uppercase">Từ</Text>
-              <Text className="text-gray-700 font-JakartaSemiBold text-[15px]">{order.pickup.address}</Text>
-            </View>
-          </View>
-
-          <View className="absolute left-[23px] top-[34px] w-[2px] h-[34px] bg-gray-200" />
-
-          <View className="flex-row items-start">
-            <View className="mt-1 mr-3 w-5 items-center">
-              <Ionicons name="pin" size={20} color="#DC2626" />
-            </View>
-            <View className="flex-1">
-              <Text className="text-gray-500 font-Jakarta text-sm mb-1 uppercase">Đến</Text>
-              <Text className="text-gray-700 font-JakartaSemiBold text-[15px]">{order.dropoff.address}</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Swipe Button Area */}
-        {isPending ? (
-          <View className="h-[56px] justify-center items-center bg-gray-100 rounded-full">
-            <ActivityIndicator color="#10B981" />
-          </View>
-        ) : !isCompleted ? (
-          <SwipeButton
-            title={isHeadingToPickup ? "VUỐT ĐỂ LẤY HÀNG" : "VUỐT ĐỂ GIAO HÀNG"}
-            color={isHeadingToPickup ? "#F97316" : "#3B82F6"} // Orange for pickup, Blue for delivery
-            onSwipeSuccess={handleSwipeSuccess}
-          />
-        ) : (
+          {/* Back Button Overlay */}
           <TouchableOpacity
-            className="h-[56px] justify-center items-center bg-green-500 rounded-full"
+            className="absolute top-4 left-4 w-10 h-10 bg-white rounded-full items-center justify-center shadow-lg"
             onPress={() => router.replace('/(driver)/tabs/home')}
           >
-            <Text className="text-white font-JakartaBold text-base">HOÀN THÀNH CHUYẾN ĐI</Text>
+            <Ionicons name="chevron-back" size={24} color="#111827" />
           </TouchableOpacity>
-        )}
-      </View>
+
+          {/* Progress Timeline Overlay */}
+          <View className="absolute top-4 left-16 right-10 bg-white rounded-2xl px-2 py-3 shadow-lg">
+            <View className="flex-row items-center px-2">
+              {/* Step 1 */}
+              <View className="items-center">
+                <Ionicons name="ellipse" size={18} color="#10B981" />
+              </View>
+
+              {/* Line 1-2 */}
+              <View className={`h-1 flex-1 mx-[-2px] ${currentStep > 1 ? 'bg-green-500' : 'bg-gray-200'}`} />
+
+              {/* Step 2 */}
+              <View className="items-center">
+                <Ionicons
+                  name={currentStep > 1 ? "checkmark-circle" : "ellipse-outline"}
+                  size={18}
+                  color={currentStep > 1 ? "#10B981" : "#D1D5DB"}
+                />
+              </View>
+
+              {/* Line 2-3 */}
+              <View className={`h-1 flex-1 mx-[-2px] ${currentStep > 2 ? 'bg-green-500' : 'bg-gray-200'}`} />
+
+              {/* Step 3 */}
+              <View className="items-center">
+                <Ionicons
+                  name={currentStep > 2 ? "checkmark-circle" : "ellipse-outline"}
+                  size={18}
+                  color={currentStep > 2 ? "#10B981" : "#D1D5DB"}
+                />
+              </View>
+            </View>
+
+            {/* Labels Row */}
+            <View className="flex-row justify-between mt-2 px-1">
+              <Text className="text-[10px] text-nowrap font-JakartaBold text-gray-700 w-16 text-center">Lấy hàng</Text>
+              <Text className={`text-[10px] text-nowrap font-JakartaBold w-16 text-center ${currentStep > 1 ? 'text-green-600' : 'text-gray-500'}`}>Đang giao</Text>
+              <Text className={`text-[10px] text-nowrap font-JakartaBold w-16 text-center ${currentStep > 2 ? 'text-green-600' : 'text-gray-500'}`}>Đã giao</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Bottom Information Card */}
+        <View
+          className="bg-white rounded-t-3xl pt-6 px-5 pb-8"
+          style={{ shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10, marginTop: -20 }}
+        >
+          {/* Customer Info */}
+          <View className="flex-row justify-between items-center mb-6">
+            <View className="flex-row items-center flex-1">
+              <View className="w-14 h-14 bg-gray-100 rounded-full items-center justify-center mr-3 overflow-hidden">
+                <Image source={{ uri: `https://api.dicebear.com/9.x/avataaars/png?seed=${order.customer?.name || 'Customer'}` }} className="w-full h-full" />
+              </View>
+              <View>
+                <Text className="text-gray-700 font-JakartaBold">Khách hàng: {order.customer?.name || 'Khách hàng'}</Text>
+                <View className="flex-row items-center mt-1">
+                  <Ionicons name="star" size={14} color="#F59E0B" />
+                  <Text className="text-gray-700 font-JakartaSemiBold text-sm ml-1">5.0</Text>
+                </View>
+              </View>
+            </View>
+            <View className="flex-row gap-3">
+              <TouchableOpacity
+                className="w-12 h-12 items-center justify-center bg-green-50 rounded-full border border-green-200"
+                onPress={() => Linking.openURL(`tel:${order.customer?.phone}`)}
+              >
+                <Ionicons name="call" size={20} color="#10B981" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Body: Timeline */}
+          <View className="mb-6 px-1">
+            <View className="flex-row items-start">
+              <View className="items-center mr-4 pt-1.5">
+                <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+                  <View className="w-2 h-2 rounded-full bg-green-500" />
+                </View>
+                <View className="w-[1px] h-16 bg-gray-200 my-1 border-dashed" />
+                <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+                  <View className="w-2 h-2 rounded-full bg-red-500" />
+                </View>
+              </View>
+
+              <View className="flex-1">
+                <View className="mb-4">
+                  <Text className="text-gray-500 font-JakartaBold mb-1">
+                    Điểm đón
+                  </Text>
+                  <Text
+                    className="text-gray-700 font-JakartaBold"
+                    numberOfLines={2}
+                  >
+                    {order?.pickup?.address || "Không xác định"}
+                  </Text>
+                </View>
+                <View>
+                  <Text className="text-gray-500 font-JakartaBold mb-1">
+                    Điểm giao
+                  </Text>
+                  <Text
+                    className="text-gray-700 font-JakartaBold"
+                    numberOfLines={2}
+                  >
+                    {order?.dropoff?.address || "Không xác định"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Order Details: Financial & Goods */}
+          <View className="flex-row justify-between mb-6 bg-gray-50 p-4 rounded-2xl">
+            <View>
+              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Phí cước</Text>
+              <Text className="text-base font-JakartaBold text-green-600">{order.totalPrice?.toLocaleString('vi-VN')}đ</Text>
+            </View>
+            <View className="items-center">
+              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Khoảng cách</Text>
+              <Text className="text-base font-JakartaBold text-gray-700">{order.distanceKm} km</Text>
+            </View>
+            <View className="items-end">
+              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Thanh toán</Text>
+              <Text className="text-base font-JakartaBold text-gray-700">{order.paymentMethod === 'CASH' ? 'Tiền mặt' : 'Ví'}</Text>
+            </View>
+          </View>
+
+          {order.goodsImages && order.goodsImages.length > 0 && (
+            <View className="mb-6">
+              <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Hình ảnh hàng hóa</Text>
+              <View className="flex-row">
+                {order.goodsImages.slice(0, 4).map((img, idx) => (
+                  <Image key={idx} source={{ uri: img }} className="w-32 h-32 rounded-xl" />
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Swipe Button Area */}
+          {isPending ? (
+            <View className="h-[56px] justify-center items-center bg-gray-100 rounded-full">
+              <ActivityIndicator color="#10B981" />
+            </View>
+          ) : !isCompleted ? (
+            <SwipeButton
+              title={isHeadingToPickup ? "VUỐT ĐỂ LẤY HÀNG" : "VUỐT ĐỂ GIAO HÀNG"}
+              color={isHeadingToPickup ? "#10B981" : "#10B981"} // Orange for pickup, Blue for delivery
+              onSwipeSuccess={handleSwipeSuccess}
+            />
+          ) : (
+            <TouchableOpacity
+              className="h-[56px] justify-center items-center bg-green-500 rounded-full"
+              onPress={() => router.replace('/(driver)/tabs/home')}
+            >
+              <Text className="text-white font-JakartaBold text-base">HOÀN THÀNH CHUYẾN ĐI</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </ScrollView>
+
 
       <CustomModal
         visible={alertModal.visible}

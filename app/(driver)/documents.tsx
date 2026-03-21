@@ -119,7 +119,7 @@ const DocumentManagementScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={["top", "bottom"]}>
       <StatusBar style="light" />
       <Stack.Screen options={{ headerShown: false }} />
 

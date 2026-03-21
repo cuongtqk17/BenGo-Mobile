@@ -105,7 +105,7 @@ const PaymentScreen = () => {
                 <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
                     {/* Header */}
                     <View className="py-4 items-center">
-                        <Text className="text-2xl font-JakartaBold text-gray-700">Hoàn tất dịch vụ</Text>
+                        <Text className="text-xl font-JakartaBold text-gray-700">Hoàn tất dịch vụ</Text>
                         <Text className="text-neutral-500 font-JakartaMedium mt-1">Cảm ơn bạn đã sử dụng BenGo</Text>
                     </View>
 

@@ -105,7 +105,7 @@ const EarningsScreen = () => {
   const isRefreshing = statsLoading || ordersLoading;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={["top", "bottom"]}>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -118,7 +118,7 @@ const EarningsScreen = () => {
         }
       >
         <View className="px-4 py-4">
-          <Text className="text-2xl font-JakartaBold text-gray-700 mb-4">
+          <Text className="text-xl font-JakartaBold text-gray-700 mb-4">
             Thu nhập
           </Text>
 

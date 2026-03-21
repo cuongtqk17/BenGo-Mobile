@@ -9,6 +9,20 @@ export const useDriverPendingOrders = (lat: number | null, lng: number | null, r
     });
 };
 
+export const useDriverActiveOrder = () => {
+    return useQuery({
+        queryKey: ["driver-active-order"],
+        queryFn: async () => {
+            const response = await DriverApi.getOrders({ status: "ACCEPTED", limit: 1 });
+            const accepted = response.data?.data?.[0];
+            if (accepted) return accepted;
+
+            const pickedUpResponse = await DriverApi.getOrders({ status: "PICKED_UP", limit: 1 });
+            return pickedUpResponse.data?.data?.[0] || null;
+        },
+    });
+};
+
 export const useDriverStats = (from: string, to: string, enabled: boolean = true) => {
     return useQuery({
         queryKey: ["driver-stats", from, to],
@@ -17,10 +31,11 @@ export const useDriverStats = (from: string, to: string, enabled: boolean = true
     });
 };
 
-export const useDriverOrders = (params: { page?: number; limit?: number; status?: string; search?: string; time?: string }) => {
+export const useDriverOrders = (params: { page?: number; limit?: number; status?: string; search?: string; time?: string; enabled?: boolean }) => {
     return useQuery({
         queryKey: ["driver-orders", params],
         queryFn: () => DriverApi.getOrders(params),
+        enabled: params.enabled !== false,
     });
 };
 
@@ -50,6 +65,7 @@ export const useDriverAcceptOrder = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["driver-pending-orders"] });
             queryClient.invalidateQueries({ queryKey: ["driver-orders"] });
+            queryClient.invalidateQueries({ queryKey: ["driver-active-order"] });
         },
     });
 };
@@ -85,6 +101,7 @@ export const useDriverUpdateOrderStatus = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["order-detail", variables.id] });
       queryClient.invalidateQueries({ queryKey: ["driver-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["driver-active-order"] });
     },
   });
 };

@@ -151,7 +151,7 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <Text className="text-2xl font-JakartaBold text-gray-700 mt-4">
+            <Text className="text-xl font-JakartaBold text-gray-700 mt-4">
               {user?.name || "Tài xế BenGo"}
             </Text>
 

@@ -38,13 +38,13 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-        name="history"
+        name="orders"
         options={{
           title: "Hoạt động",
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons name={focused ? "list" : "list-outline"} size={26} color={color} />
-          ),
+            <Ionicons name={focused ? "receipt" : "receipt-outline"} size={24} color={color} />
+          )
         }}
       />
       <Tabs.Screen

@@ -65,7 +65,7 @@ const TripCard: React.FC<TripCardProps> = ({ item, onPress }) => {
       </View>
 
       {/* Body: Timeline */}
-      <View className="mb-4 px-1">
+      <View className="mb-4">
         <View className="flex-row items-start">
           <View className="items-center mr-4 pt-1.5">
             <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">

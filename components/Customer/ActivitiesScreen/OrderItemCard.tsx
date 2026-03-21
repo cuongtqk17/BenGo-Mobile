@@ -5,9 +5,6 @@ import { router } from "expo-router";
 import { Order } from "@/api/orders";
 import VehicleBadge from "@/components/Common/VehicleBadge";
 import StatusBadge from "@/components/Common/StatusBadge";
-
-
-
 const OrderItemCard = ({ order }: { order: Order }) => {
     const handleReorder = () => {
         router.push("/(root)/booking-setup");
@@ -45,7 +42,7 @@ const OrderItemCard = ({ order }: { order: Order }) => {
             </View>
 
             {/* Body: Timeline */}
-            <View className="mb-4 px-1">
+            <View className="mb-4">
                 <View className="flex-row items-start">
                     <View className="items-center mr-4 pt-1.5">
                         <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
@@ -91,7 +88,9 @@ const OrderItemCard = ({ order }: { order: Order }) => {
                         {order?.totalPrice ? Number(order.totalPrice).toLocaleString("vi-VN") : "0"}đ
                     </Text>
                     <Text className="text-sm text-neutral-400 font-JakartaMedium">
-                        {order?.createdAt ? new Date(order.createdAt).toLocaleDateString("vi-VN") : "N/A"}
+                        {order?.createdAt ?
+                            `${new Date(order.createdAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false })} - ${new Date(order.createdAt).toLocaleDateString("vi-VN")}`
+                            : "N/A"}
                     </Text>
                 </View>
             </View>

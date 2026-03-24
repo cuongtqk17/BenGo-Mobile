@@ -5,7 +5,8 @@ export const useNotifications = () => {
     return useQuery({
         queryKey: ["notifications"],
         queryFn: NotificationApi.getNotifications,
-        staleTime: 60 * 1000, // 1 minute
+        staleTime: 4000,
+        refetchInterval: 4000,
     });
 };
 

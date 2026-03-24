@@ -429,6 +429,7 @@ const DriverHome = () => {
           setSelectedOrder(null);
         }}
         isAccepting={isAccepting}
+        isOnline={isOnline}
       />
 
       <HotspotFinder

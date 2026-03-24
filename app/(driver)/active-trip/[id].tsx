@@ -8,7 +8,7 @@ import MapDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 
 import { useDriverOrderDetail, useDriverUpdateOrderStatus } from '@/hooks/useDriver';
-import SwipeButton from '@/components/Common/SwipeButton';
+import CustomButton from '@/components/Common/CustomButton';
 import CustomModal from '@/components/Common/CustomModal';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
@@ -95,7 +95,7 @@ const ActiveTripScreen = () => {
         await updateStatus({ id: id as string, status: 'PICKED_UP' });
       } else if (isHeadingToDropoff) {
         await updateStatus({ id: id as string, status: 'DELIVERED' });
-        showAlert('Thành công', 'Chuyến đi đã hoàn thành!', () => router.replace('/(driver)/tabs/home'));
+        showAlert('Thành công', 'Chuyến đi đã hoàn thành!', () => router.replace('/(driver)/tabs/orders'));
       }
     } catch (error) {
       showAlert('Lỗi', 'Không thể cập nhật trạng thái');
@@ -269,16 +269,16 @@ const ActiveTripScreen = () => {
           {/* Order Details: Financial & Goods */}
           <View className="flex-row justify-between mb-6 bg-gray-50 p-4 rounded-2xl">
             <View>
-              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Phí cước</Text>
+              <Text className="text-sm text-gray-400 font-JakartaBold uppercase mb-1">Phí cước</Text>
               <Text className="text-base font-JakartaBold text-green-600">{order.totalPrice?.toLocaleString('vi-VN')}đ</Text>
             </View>
             <View className="items-center">
-              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Khoảng cách</Text>
+              <Text className="text-sm text-gray-400 font-JakartaBold uppercase mb-1">Khoảng cách</Text>
               <Text className="text-base font-JakartaBold text-gray-700">{order.distanceKm} km</Text>
             </View>
             <View className="items-end">
-              <Text className="text-xs text-gray-400 font-JakartaBold uppercase mb-1">Thanh toán</Text>
-              <Text className="text-base font-JakartaBold text-gray-700">{order.paymentMethod === 'CASH' ? 'Tiền mặt' : 'Ví'}</Text>
+              <Text className="text-sm text-gray-400 font-JakartaBold uppercase mb-1">Thanh toán</Text>
+              <Text className="text-base font-JakartaBold text-gray-700">{order.paymentMethod === 'CASH' ? 'Tiền mặt' : 'Ví điện tử'}</Text>
             </View>
           </View>
 
@@ -293,24 +293,20 @@ const ActiveTripScreen = () => {
             </View>
           )}
 
-          {/* Swipe Button Area */}
-          {isPending ? (
-            <View className="h-[56px] justify-center items-center bg-gray-100 rounded-full">
-              <ActivityIndicator color="#10B981" />
-            </View>
-          ) : !isCompleted ? (
-            <SwipeButton
-              title={isHeadingToPickup ? "VUỐT ĐỂ LẤY HÀNG" : "VUỐT ĐỂ GIAO HÀNG"}
-              color={isHeadingToPickup ? "#10B981" : "#10B981"} // Orange for pickup, Blue for delivery
-              onSwipeSuccess={handleSwipeSuccess}
+          {/* Action Button Area */}
+          {!isCompleted ? (
+            <CustomButton
+              title={isHeadingToPickup ? "Xác nhận đã lấy hàng" : "Xác nhận đã giao hàng"}
+              onPress={handleSwipeSuccess}
+              loading={isPending}
+              IconLeft={() => <Ionicons name={isHeadingToPickup ? "cube" : "checkmark-done"} size={20} color="white" />}
             />
           ) : (
-            <TouchableOpacity
-              className="h-[56px] justify-center items-center bg-green-500 rounded-full"
-              onPress={() => router.replace('/(driver)/tabs/home')}
-            >
-              <Text className="text-white font-JakartaBold text-base">HOÀN THÀNH CHUYẾN ĐI</Text>
-            </TouchableOpacity>
+            <CustomButton
+              title="Hoàn thành chuyến đi"
+              onPress={() => router.replace('/(driver)/tabs/orders')}
+              IconLeft={() => <Ionicons name="checkmark-circle" size={20} color="white" />}
+            />
           )}
         </View>
       </ScrollView>

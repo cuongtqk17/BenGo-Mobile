@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Animated, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PendingOrder } from '@/api/driver';
 import CustomButton from '@/components/Common/CustomButton';
+import CustomModal from '@/components/Common/CustomModal';
+import VehicleBadge from '@/components/Common/VehicleBadge';
 
 interface Props {
   visible: boolean;
@@ -11,10 +13,12 @@ interface Props {
   onDecline: () => void;
   onTimeout: () => void;
   isAccepting: boolean;
+  isOnline?: boolean;
 }
 
-const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, isAccepting }: Props) => {
+const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, isAccepting, isOnline = true }: Props) => {
   const [timeLeft, setTimeLeft] = useState(30);
+  const [showWarning, setShowWarning] = useState(false);
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -71,38 +75,53 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
             <View className="items-center mb-4">
               <Text className="text-gray-500 font-JakartaMedium text-sm mb-1 uppercase">Giá trị chuyến đi</Text>
               <Text className="text-green-600 text-[42px] font-JakartaExtraBold">{formatCurrency(order.price)}</Text>
-              <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1.5 rounded-full">
-                <Ionicons name="car-outline" size={16} color="#4B5563" />
-                <Text className="text-gray-700 font-JakartaSemiBold text-sm ml-2 mr-4">BenGo Car</Text>
-                <Ionicons name="navigate-outline" size={16} color="#4B5563" />
-                <Text className="text-gray-700 font-JakartaSemiBold text-sm ml-2">{order.distance} km</Text>
+              <View className="flex-row justify-center items-center mt-2 gap-2">
+                <VehicleBadge vehicleType={(order as any).vehicleType || "UNKNOWN"} />
+                <View className="flex-row items-center px-3 py-1 rounded-full border bg-gray-100 border-gray-200">
+                  <Ionicons name="navigate-outline" size={14} color="#374151" />
+                  <Text className="ml-1.5 font-JakartaBold text-sm text-gray-700">
+                    {order.distance} km
+                  </Text>
+                </View>
               </View>
             </View>
 
-            {/* Timeline */}
-            <View className="pl-2">
-              <View className="flex-row items-start mb-4 relative">
-                <View className="w-6 h-6 rounded-full bg-blue-100 items-center justify-center z-10 mr-3">
-                  <View className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                </View>
-                <View className="absolute left-[11px] top-6 w-0.5 h-10 bg-gray-200" />
-                <View className="flex-1 pt-0.5">
-                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">Điểm đón</Text>
-                  <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
-                    {order.pickup?.address || 'Địa chỉ đón khách'}
-                  </Text>
-                </View>
-              </View>
-
+            {/* Body: Timeline */}
+            <View className="mb-4 px-1 mt-2">
               <View className="flex-row items-start">
-                <View className="w-6 h-6 rounded-full bg-red-100 items-center justify-center z-10 mr-3">
-                  <Ionicons name="location" size={14} color="#DC2626" />
+                <View className="items-center mr-4 pt-1.5">
+                  <View className="w-5 h-5 rounded-full border-2 border-green-500 bg-white items-center justify-center">
+                    <View className="w-2 h-2 rounded-full bg-green-500" />
+                  </View>
+                  <View className="w-[1px] h-16 bg-gray-200 my-1 border-dashed" />
+                  <View className="w-5 h-5 rounded-full border-2 border-red-500 bg-white items-center justify-center">
+                    <View className="w-2 h-2 rounded-full bg-red-500" />
+                  </View>
                 </View>
-                <View className="flex-1 pt-0.5">
-                  <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">ĐIỂM ĐẾN</Text>
-                  <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
-                    {order.destination?.address || 'Địa chỉ trả khách'}
-                  </Text>
+
+                <View className="flex-1">
+                  <View className="mb-4">
+                    <Text className="text-gray-400 font-JakartaBold text-sm uppercase mb-1">
+                      Điểm đón
+                    </Text>
+                    <Text
+                      className="text-gray-700 font-JakartaBold"
+                      numberOfLines={2}
+                    >
+                      {(order as any).pickupAddress || order.pickup?.address || "Không xác định"}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text className="text-gray-400 font-JakartaBold text-sm uppercase mb-1">
+                      Điểm giao
+                    </Text>
+                    <Text
+                      className="text-gray-700 font-JakartaBold"
+                      numberOfLines={2}
+                    >
+                      {(order as any).dropoffAddress || order.destination?.address || "Không xác định"}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -113,6 +132,10 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
             <CustomButton
               title="Nhận chuyến"
               onPress={() => {
+                if (!isOnline) {
+                  setShowWarning(true);
+                  return;
+                }
                 onAccept(order.orderId);
               }}
               disabled={isAccepting}
@@ -130,6 +153,13 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
           </View>
         </View>
       </View>
+
+      <CustomModal
+        visible={showWarning}
+        title="Lưu ý"
+        message="Bạn cần gạt công tắc Trực tuyến (ở trên cùng màn hình) để có thể nhận chuyến này."
+        onClose={() => setShowWarning(false)}
+      />
     </Modal>
   );
 };

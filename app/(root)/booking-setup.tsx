@@ -23,6 +23,7 @@ import CustomModal from "@/components/Common/CustomModal";
 import TextArea from "@/components/Common/TextArea";
 import InputField from "@/components/Common/InputField";
 import { useUpload } from "@/hooks/useUpload";
+import { useBookingAI } from "@/hooks/useBookingAI";
 const VEHICLE_TYPES = [
   { id: "BIKE", title: "Xe máy", icon: "bicycle", basePrice: 15000 },
   { id: "VAN", title: "Xe tải van", icon: "car-sport", basePrice: 150000 },
@@ -71,6 +72,49 @@ const BookingSetupScreen = () => {
   const [isEstimating, setIsEstimating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { uploadImage, isUploading } = useUpload();
+
+  // AI Booking Suggestion
+  const {
+    suggestion: aiSuggestion,
+    isLoading: isAILoading,
+    error: aiError,
+    getSuggestion: getAISuggestion,
+    clearSuggestion: clearAISuggestion,
+  } = useBookingAI();
+
+  const handleAISuggest = async () => {
+    if (!goodsName.trim()) {
+      showAlert("Thiếu thông tin", "Vui lòng nhập tên hàng hóa trước khi sử dụng AI gợi ý.");
+      return;
+    }
+    await getAISuggestion({
+      goodsName,
+      goodsWeight: goodsWeight || '0',
+      hasImages: images.length > 0,
+      imageCount: images.length,
+      currentNote: note,
+      distance: estimation?.distance,
+    });
+  };
+
+  const handleAcceptAISuggestion = () => {
+    if (aiSuggestion) {
+      // Auto-fill corrected name
+      if (aiSuggestion.correctedName) {
+        setGoodsName(aiSuggestion.correctedName);
+      }
+      // Auto-fill estimated weight
+      if (aiSuggestion.estimatedWeight && aiSuggestion.estimatedWeight !== '0') {
+        setGoodsWeight(aiSuggestion.estimatedWeight);
+      }
+      // Auto-fill vehicle
+      setSelectedVehicle(aiSuggestion.recommendedVehicle);
+      // Auto-fill note
+      if (aiSuggestion.suggestedNote) {
+        setNote(aiSuggestion.suggestedNote);
+      }
+    }
+  };
 
   // C3: API Estimate Trigger
   const fetchEstimate = async (vehicleType: string) => {
@@ -286,8 +330,151 @@ const BookingSetupScreen = () => {
                 </View>
               </View>
 
+              {/* AI Suggestion Section */}
+              <View className="mt-4 mb-2">
+                <TouchableOpacity
+                  onPress={handleAISuggest}
+                  disabled={isAILoading}
+                  className={`flex-row items-center justify-center py-3 rounded-2xl border-2 border-dashed ${
+                    isAILoading ? 'border-gray-200 bg-gray-50' : 'border-purple-300 bg-purple-50'
+                  }`}
+                >
+                  {isAILoading ? (
+                    <>
+                      <ActivityIndicator color="#9333EA" size="small" />
+                      <Text className="text-purple-600 font-JakartaBold text-sm ml-2">
+                        AI đang phân tích hàng hóa...
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Ionicons name="sparkles" size={20} color="#9333EA" />
+                      <Text className="text-purple-600 font-JakartaBold text-sm ml-2">
+                        AI Gợi ý loại xe & ghi chú
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+
+                {/* AI Error */}
+                {aiError && (
+                  <View className="mt-2 bg-red-50 border border-red-200 p-3 rounded-xl flex-row items-start">
+                    <Ionicons name="alert-circle" size={16} color="#EF4444" />
+                    <Text className="text-red-600 text-xs font-Jakarta ml-2 flex-1">{aiError}</Text>
+                  </View>
+                )}
+
+                {/* AI Suggestion Card */}
+                {aiSuggestion && !isAILoading && (
+                  <View
+                    className="mt-3 bg-white rounded-2xl p-4 border border-purple-200"
+                    style={{
+                      shadowColor: '#9333EA',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.08,
+                      shadowRadius: 8,
+                      elevation: 3,
+                    }}
+                  >
+                    {/* Header */}
+                    <View className="flex-row items-center mb-3">
+                      <View className="w-8 h-8 bg-purple-100 rounded-lg items-center justify-center mr-2">
+                        <Ionicons name="sparkles" size={16} color="#9333EA" />
+                      </View>
+                      <Text className="text-purple-700 font-JakartaBold text-base">Gợi ý từ AI</Text>
+                    </View>
+
+                    {/* Product Info - Name correction + Weight */}
+                    <View className="bg-blue-50 rounded-xl p-3 mb-3 border border-blue-200">
+                      <View className="flex-row items-center mb-2">
+                        <Ionicons name="search" size={16} color="#2563EB" />
+                        <Text className="text-blue-800 font-JakartaBold text-sm ml-2">Thông tin sản phẩm</Text>
+                      </View>
+                      {/* Name correction */}
+                      <View className="flex-row items-center mb-1.5 ml-6">
+                        <Text className="text-gray-500 text-xs font-Jakarta">Tên: </Text>
+                        <Text className="text-gray-400 text-xs font-Jakarta line-through mr-1">{goodsName}</Text>
+                        <Ionicons name="arrow-forward" size={10} color="#2563EB" />
+                        <Text className="text-blue-700 text-xs font-JakartaBold ml-1">{aiSuggestion.correctedName}</Text>
+                      </View>
+                      {/* Weight estimation */}
+                      <View className="flex-row items-center mb-1.5 ml-6">
+                        <Text className="text-gray-500 text-xs font-Jakarta">Cân nặng: </Text>
+                        {goodsWeight && goodsWeight !== '0' ? (
+                          <>
+                            <Text className="text-gray-400 text-xs font-Jakarta line-through mr-1">{goodsWeight} kg</Text>
+                            <Ionicons name="arrow-forward" size={10} color="#2563EB" />
+                          </>
+                        ) : null}
+                        <Text className="text-blue-700 text-xs font-JakartaBold ml-1">~{aiSuggestion.estimatedWeight} kg</Text>
+                      </View>
+                      {/* Product description */}
+                      {aiSuggestion.productInfo ? (
+                        <Text className="text-blue-600 text-xs font-Jakarta ml-6 mt-1 leading-4">
+                          ℹ️ {aiSuggestion.productInfo}
+                        </Text>
+                      ) : null}
+                    </View>
+
+                    {/* Vehicle recommendation */}
+                    <View className="bg-purple-50 rounded-xl p-3 mb-3">
+                      <View className="flex-row items-center mb-1">
+                        <Ionicons name="car" size={16} color="#7C3AED" />
+                        <Text className="text-purple-800 font-JakartaBold text-sm ml-2">
+                          Xe đề xuất: {VEHICLE_TYPES.find(v => v.id === aiSuggestion.recommendedVehicle)?.title || aiSuggestion.recommendedVehicle}
+                        </Text>
+                      </View>
+                      <Text className="text-purple-600 text-xs font-Jakarta ml-6">
+                        {aiSuggestion.vehicleReason}
+                      </Text>
+                    </View>
+
+                    {/* Suggested note */}
+                    {aiSuggestion.suggestedNote ? (
+                      <View className="bg-amber-50 rounded-xl p-3 mb-3">
+                        <View className="flex-row items-center mb-1">
+                          <Ionicons name="document-text" size={16} color="#D97706" />
+                          <Text className="text-amber-800 font-JakartaBold text-sm ml-2">Ghi chú gợi ý</Text>
+                        </View>
+                        <Text className="text-amber-700 text-xs font-Jakarta ml-6">
+                          "{aiSuggestion.suggestedNote}"
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {/* Tips */}
+                    {aiSuggestion.tips && aiSuggestion.tips.length > 0 && (
+                      <View className="mb-3">
+                        {aiSuggestion.tips.map((tip, idx) => (
+                          <View key={idx} className="flex-row items-start mb-1">
+                            <Text className="text-green-500 text-xs mr-1.5">💡</Text>
+                            <Text className="text-gray-600 text-xs font-Jakarta flex-1">{tip}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+
+                    {/* Accept button */}
+                    <TouchableOpacity
+                      onPress={handleAcceptAISuggestion}
+                      className="bg-purple-600 py-2.5 rounded-xl flex-row items-center justify-center"
+                      style={{
+                        shadowColor: '#9333EA',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 4,
+                        elevation: 4,
+                      }}
+                    >
+                      <Ionicons name="checkmark-circle" size={18} color="white" />
+                      <Text className="text-white font-JakartaBold text-sm ml-2">Áp dụng tất cả gợi ý</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
               {/* C3: Vehicle Selector */}
-              <View className="mt-4 mb-10">
+              <View className="mt-6 mb-10">
                 <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Chọn loại xe</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
                   {VEHICLE_TYPES.map((v) => (

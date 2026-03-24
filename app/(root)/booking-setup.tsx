@@ -24,10 +24,19 @@ import TextArea from "@/components/Common/TextArea";
 import InputField from "@/components/Common/InputField";
 import { useUpload } from "@/hooks/useUpload";
 import { useBookingAI } from "@/hooks/useBookingAI";
+import { useStripe } from "@stripe/stripe-react-native";
+
 const VEHICLE_TYPES = [
   { id: "BIKE", title: "Xe máy", icon: "bicycle", basePrice: 15000 },
   { id: "VAN", title: "Xe tải van", icon: "car-sport", basePrice: 150000 },
   { id: "TRUCK", title: "Xe tải", icon: "car", basePrice: 350000 },
+];
+
+const PAYMENT_METHODS = [
+  { id: "CASH", title: "Tiền mặt", icon: "cash-outline", color: "#10B981" },
+  { id: "WALLET", title: "Ví BenGo", icon: "wallet-outline", color: "#3B82F6" },
+  { id: "STRIPE", title: "Thẻ/Stripe", icon: "card-outline", color: "#6366F1" },
+  { id: "QR", title: "Chuyển khoản QR", icon: "qr-code-outline", color: "#F59E0B" },
 ];
 const BookingSetupScreen = () => {
   const { t } = useTranslation();
@@ -46,6 +55,8 @@ const BookingSetupScreen = () => {
   const [note, setNote] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState(VEHICLE_TYPES[1].id); // Default VAN
+  const [selectedPayment, setSelectedPayment] = useState("CASH");
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [alertModal, setAlertModal] = useState({
     visible: false,
     title: "",
@@ -160,7 +171,7 @@ const BookingSetupScreen = () => {
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.5,
@@ -189,6 +200,40 @@ const BookingSetupScreen = () => {
 
     setIsSubmitting(true);
     try {
+      // 1. If Stripe, handle payment first
+      if (selectedPayment === "STRIPE") {
+        const { data: paymentIntent } = await fetchAPI("/(api)/orders/create-payment-intent", {
+          method: "POST",
+          body: JSON.stringify({
+            amount: estimation?.price || 0,
+            currency: "vnd",
+          }),
+        });
+
+        if (!paymentIntent?.client_secret) {
+          throw new Error("Không thể khởi tạo thanh toán Stripe.");
+        }
+
+        const { error: initError } = await initPaymentSheet({
+          paymentIntentClientSecret: paymentIntent.client_secret,
+          merchantDisplayName: "BenGo JSC",
+        });
+
+        if (initError) {
+          throw new Error(initError.message);
+        }
+
+        const { error: presentError } = await presentPaymentSheet();
+        if (presentError) {
+          if (presentError.code === "Canceled") {
+            setIsSubmitting(false);
+            return;
+          }
+          throw new Error(presentError.message);
+        }
+      }
+
+      // 2. Create the order
       const response = await fetchAPI("/(api)/orders", {
         method: "POST",
         body: JSON.stringify({
@@ -196,6 +241,8 @@ const BookingSetupScreen = () => {
           destination: { lat: destinationLatitude, lng: destinationLongitude, address: destinationAddress },
           vehicleType: selectedVehicle,
           goodsImages: images,
+          paymentMethod: selectedPayment,
+          totalPrice: estimation?.price || 0,
           note: `${goodsName} (${goodsWeight}kg). ${note}`,
         }),
       });
@@ -210,11 +257,11 @@ const BookingSetupScreen = () => {
           }
         });
       } else {
-        // Fallback for demo
         showAlert("Đặt đơn thành công", "Đơn hàng của bạn đang được tìm tài xế.", () => router.push("/(root)/tabs/activities"));
       }
-    } catch (error) {
-      showAlert("Lỗi", "Không thể tạo đơn hàng lúc này. Vui lòng thử lại.");
+    } catch (error: any) {
+      console.error("Order Creation Error:", error);
+      showAlert("Lỗi", error.message || "Không thể tạo đơn hàng lúc này. Vui lòng thử lại.");
     } finally {
       setIsSubmitting(false);
     }
@@ -245,9 +292,9 @@ const BookingSetupScreen = () => {
           ListHeaderComponent={
             <>
               {/* C1: New Address Card Design with GoogleTextInput */}
-              <View className="flex-row items-center my-4">
-                <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
-                  <Ionicons name="location-sharp" size={18} color="#ffffff" />
+              <View className="flex-row items-center mt-4 mb-2">
+                <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                  <Ionicons name="location-sharp" size={14} color="#ffffff" />
                 </View>
                 <Text className="text-green-600 font-JakartaBold text-xl">Chọn địa điểm</Text>
               </View>
@@ -270,9 +317,9 @@ const BookingSetupScreen = () => {
                 />
               </View>
               {/* C2: Goods Info Card */}
-              <View className="flex-row items-center my-4">
-                <View className="bg-green-600 w-8 h-8 rounded-full items-center justify-center mr-2 border border-green-200">
-                  <Ionicons name="information-circle" size={18} color="#ffffff" />
+              <View className="flex-row items-center mt-4 mb-2">
+                <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                  <Ionicons name="information-circle" size={14} color="#ffffff" />
                 </View>
                 <Text className="text-green-600 font-JakartaBold text-xl">Thông tin hàng hóa</Text>
               </View>
@@ -335,9 +382,8 @@ const BookingSetupScreen = () => {
                 <TouchableOpacity
                   onPress={handleAISuggest}
                   disabled={isAILoading}
-                  className={`flex-row items-center justify-center py-3 rounded-2xl border-2 border-dashed ${
-                    isAILoading ? 'border-gray-200 bg-gray-50' : 'border-purple-300 bg-purple-50'
-                  }`}
+                  className={`flex-row items-center justify-center py-3 rounded-2xl border-2 border-dashed ${isAILoading ? 'border-gray-200 bg-gray-50' : 'border-purple-300 bg-purple-50'
+                    }`}
                 >
                   {isAILoading ? (
                     <>
@@ -474,7 +520,7 @@ const BookingSetupScreen = () => {
               </View>
 
               {/* C3: Vehicle Selector */}
-              <View className="mt-6 mb-10">
+              <View className="mb-4">
                 <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Chọn loại xe</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
                   {VEHICLE_TYPES.map((v) => (
@@ -499,12 +545,37 @@ const BookingSetupScreen = () => {
                   ))}
                 </ScrollView>
               </View>
+
+              {/* C4: Payment Selector */}
+              <View className="mb-4">
+                <Text className="text-lg font-JakartaSemiBold mb-2 text-gray-700">Phương thức thanh toán</Text>
+                <View className="bg-white rounded-2xl overflow-hidden border border-gray-100">
+                  {PAYMENT_METHODS.map((pm, idx) => (
+                    <TouchableOpacity
+                      key={pm.id}
+                      onPress={() => setSelectedPayment(pm.id)}
+                      className={`flex-row items-center p-4 border-b border-gray-50 last:border-b-0 ${selectedPayment === pm.id ? "bg-green-50" : ""
+                        }`}
+                    >
+                      <View className="w-10 h-10 rounded-full items-center justify-center mr-4" style={{ backgroundColor: pm.color + "15" }}>
+                        <Ionicons name={pm.icon as any} size={20} color={pm.color} />
+                      </View>
+                      <Text className={`flex-1 font-JakartaMedium ${selectedPayment === pm.id ? "text-green-700" : "text-gray-600"}`}>
+                        {pm.title}
+                      </Text>
+                      {selectedPayment === pm.id && (
+                        <Ionicons name="checkmark-circle" size={24} color="#10B981" />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
             </>
           }
         />
 
         {/* C4: Action Button Footer */}
-        <View className="p-5 border-t border-gray-100 bg-white shadow-2xl">
+        <View className="p-5 border-t border-gray-100 bg-white">
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="text-neutral-500 font-JakartaMedium">Tổng thanh toán</Text>

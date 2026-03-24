@@ -13,7 +13,7 @@ interface TextAreaProps extends TextInputProps {
 const TextArea = React.forwardRef<TextInput, TextAreaProps>(
   ({ label, labelStyle, containerStyle, inputStyle, error, className, ...props }, ref) => {
     return (
-      <View className={`my-2 w-full ${containerStyle}`}>
+      <View className={`mb-2 w-full ${containerStyle}`}>
         {label && (
           <Text
             className={`text-lg font-JakartaSemiBold mb-2 text-gray-700 ${labelStyle}`}
@@ -37,7 +37,7 @@ const TextArea = React.forwardRef<TextInput, TextAreaProps>(
                 paddingTop: 12,
                 paddingBottom: 12,
                 paddingHorizontal: 16,
-                fontFamily: "Jakarta-Medium",
+                fontFamily: "JakartaSemiBold",
                 fontSize: 16,
                 color: "#1F2937", // text-gray-700
               },

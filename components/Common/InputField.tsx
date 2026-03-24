@@ -25,7 +25,7 @@ const InputField = forwardRef<TextInput, InputFieldProps>(({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View className="my-2 w-full">
+    <View className="w-full mb-2">
       {label && (
         <Text
           className={`text-lg font-JakartaSemiBold mb-2 text-gray-700 ${labelStyle}`}

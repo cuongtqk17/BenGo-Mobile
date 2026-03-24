@@ -589,7 +589,7 @@ const BookingSetupScreen = () => {
           </View>
 
           <CustomButton
-            title={isSubmitting ? "Đang xử lý..." : "Tạo đơn"}
+            title={isSubmitting ? "Đang xử lý..." : "Xác nhận đặt đơn"}
             onPress={handleCreateOrder}
             disabled={isSubmitting || isEstimating}
           />

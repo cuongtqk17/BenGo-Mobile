@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image, Linking, ActivityIndicator, Dimensions } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,6 +24,8 @@ const CustomerOrderDetailScreen = () => {
     const { id } = useLocalSearchParams<{ id: string }>();
     const { data: order, isLoading } = useOrderDetails(id);
     const { mutateAsync: cancelOrder, isPending: isCancelling } = useCancelOrder();
+
+    const mapRef = useRef<MapView>(null);
 
     const [alertModal, setAlertModal] = useState({
         visible: false,
@@ -147,6 +149,7 @@ const CustomerOrderDetailScreen = () => {
                 {/* CD3: Route Map Summary */}
                 <View style={{ height: Dimensions.get('window').height * 0.35, width: '100%' }}>
                     <MapView
+                        ref={mapRef}
                         style={{ flex: 1 }}
                         initialRegion={{
                             latitude: (Number(order.pickup.lat) + Number(order.dropoff.lat)) / 2 || 10.762622,
@@ -178,11 +181,16 @@ const CustomerOrderDetailScreen = () => {
                             apikey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY || ""}
                             strokeWidth={3}
                             strokeColor="#16A34A"
+                            onReady={(result) => {
+                                mapRef.current?.fitToCoordinates(result.coordinates, {
+                                    edgePadding: { right: 50, bottom: 50, left: 50, top: 50 },
+                                    animated: true,
+                                });
+                            }}
                         />
                     </MapView>
                 </View>
 
-                {/* Card 1: Lộ trình vận chuyển */}
                 <View
                     className="mx-4 mt-4 p-4 bg-white rounded-3xl border border-gray-100"
                     style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 1 }}

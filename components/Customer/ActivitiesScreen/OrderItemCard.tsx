@@ -40,14 +40,7 @@ const OrderItemCard = ({ order }: { order: Order }) => {
         <Pressable
             onPress={handlePress}
             className="my-2 bg-white p-4 rounded-3xl border border-gray-100"
-            style={({ pressed }) => ({
-                backgroundColor: pressed ? "#F9FAFB" : "white",
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.05,
-                shadowRadius: 8,
-                elevation: 1
-            })}
+            style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 1 }}
         >
             {/* Header: ID and Status */}
             <View className="flex-row justify-between items-center mb-4">
@@ -78,13 +71,13 @@ const OrderItemCard = ({ order }: { order: Order }) => {
 
                     <View className="flex-1">
                         <View className="mb-4">
-                            <Text className="text-gray-500 font-JakartaBold mb-1 uppercase text-xs">Điểm đón</Text>
+                            <Text className="text-gray-500 font-JakartaBold mb-1">Điểm đón</Text>
                             <Text className="text-gray-700 font-JakartaBold text-sm" numberOfLines={2}>
                                 {order?.pickup?.address || "Không xác định"}
                             </Text>
                         </View>
                         <View>
-                            <Text className="text-gray-500 font-JakartaBold mb-1 uppercase text-xs">Điểm giao</Text>
+                            <Text className="text-gray-500 font-JakartaBold mb-1">Điểm giao</Text>
                             <Text className="text-gray-700 font-JakartaBold text-sm" numberOfLines={2}>
                                 {order?.dropoff?.address || "Không xác định"}
                             </Text>
@@ -101,13 +94,13 @@ const OrderItemCard = ({ order }: { order: Order }) => {
                     </View>
                     <View className="flex-row items-center">
                         <Ionicons name="time-outline" size={16} color="#94A3B8" />
-                        <Text className="text-gray-500 font-JakartaBold text-[11px] ml-1">
+                        <Text className="text-gray-500 font-JakartaBold text-sm ml-1">
                             {formatDateTime(order?.createdAt || "")}
                         </Text>
                     </View>
                 </View>
                 <View className="items-end">
-                    <Text className="text-gray-500 font-JakartaBold text-xs mb-1">Tổng phí</Text>
+                    <Text className="text-gray-500 font-JakartaBold text-sm mb-1">Tổng phí</Text>
                     <Text className="text-green-600 font-JakartaExtraBold text-2xl">
                         {order?.totalPrice ? Number(order.totalPrice).toLocaleString("vi-VN") : "0"}đ
                     </Text>

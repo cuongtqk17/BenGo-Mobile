@@ -4,7 +4,7 @@ import {
   Text,
   ActivityIndicator,
   RefreshControl,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -48,18 +48,19 @@ const NotificationItem = ({ item, onRead }: { item: Notification; onRead: (id: s
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={handlePress}
-      className={`mx-4 mb-3 p-4 bg-white rounded-3xl border border-gray-100 shadow-sm flex-row items-center ${!item.isRead ? 'border-l-4 border-l-green-600' : ''}`}
-      style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 1 }}
+      className={`mx-4 mb-3 p-4 bg-white rounded-3xl border border-gray-200 flex-row items-center`}
     >
       <View className={`bg-green-50 w-12 h-12 rounded-2xl items-center justify-center mr-4 border border-green-200`}>
         <Ionicons name={getIcon(item.type)} size={22} color="#10B981" />
       </View>
       <View className="flex-1">
         <View className="flex-row justify-between items-center mb-1">
-          <Text className={`font-JakartaBold text-sm uppercase text-gray-400 mb-1`} numberOfLines={1}>
+          <Text className={`font-JakartaBold text-sm uppercase text-green-600 mb-1`} numberOfLines={1}>
             {item.title}
           </Text>
-          {!item.isRead && <View className="w-2 h-2 rounded-full bg-green-600" />}
+          {!item.isRead && (
+            <Ionicons name="ellipse" size={10} color="#16a34a" />
+          )}
         </View>
         <Text className="text-gray-700 font-JakartaBold text-base mb-1" numberOfLines={2}>
           {item.message}
@@ -91,20 +92,23 @@ const NotificationsScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
       <Stack.Screen options={{ headerShown: false }} />
-      {/* Header & Search */}
-      <View className="px-4 py-2 mb-4">
-        <Text className="text-xl font-JakartaBold text-gray-700 mb-4">Thông báo</Text>
-      </View>
-
-      <FlatList
-        data={notifications as Notification[] || []}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <NotificationItem item={item} onRead={handleMarkRead} />
-        )}
-        contentContainerClassName="pt-2 pb-20"
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => (
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={refetch} colors={["#16a34a"]} />
+        }
+      >
+        {/* Header & Search */}
+        <View className="px-4 py-2">
+          <Text className="text-xl font-JakartaBold text-gray-700 mb-4">Thông báo</Text>
+        </View>
+
+        {(notifications as Notification[] || []).length > 0 ? (
+          (notifications as Notification[] || []).map((item) => (
+            <NotificationItem key={item._id} item={item} onRead={handleMarkRead} />
+          ))
+        ) : (
           <View className="flex-1 items-center justify-center py-20 px-10">
             <View className="bg-gray-100 w-20 h-20 rounded-full items-center justify-center mb-4">
               <Ionicons name="notifications-off-outline" size={40} color="#94A3B8" />
@@ -115,10 +119,7 @@ const NotificationsScreen = () => {
             </Text>
           </View>
         )}
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetch} colors={["#16a34a"]} />
-        }
-      />
+      </ScrollView>
     </SafeAreaView>
   );
 };

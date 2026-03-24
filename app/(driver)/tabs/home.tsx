@@ -69,11 +69,13 @@ const DriverHome = () => {
   const today = new Date().toISOString().split('T')[0];
 
   // Queries
-  const { data: pendingOrders = [], refetch: refetchOrders, isLoading: isLoadingOrders } = useDriverPendingOrders(
+  const { data: rawPendingOrders = [], refetch: refetchOrders, isLoading: isLoadingOrders } = useDriverPendingOrders(
     currentLocation.latitude,
     currentLocation.longitude,
     5
   );
+
+  const pendingOrders = isOnline ? rawPendingOrders : [];
 
   const { data: driverStats = { totalEarnings: 0, totalTrips: 0, rating: 5 }, isLoading: isLoadingStats } = useDriverStats(
     today,

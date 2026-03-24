@@ -54,10 +54,10 @@ const ImageUploadBox = ({
 
 const SectionTitle = ({ title, icon }: { title: string; icon: any }) => (
   <View className="flex-row items-center my-2">
-    <View className="bg-green-50 w-12 h-12 rounded-2xl items-center justify-center mr-3 border border-green-200">
-      <Ionicons name={icon} size={22} color="#10B981" />
+    <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
+      <Ionicons name={icon} size={14} color="#ffffff" />
     </View>
-    <Text className="text-green-600 font-JakartaBold text-lg">{title}</Text>
+    <Text className="text-lg font-JakartaBold text-green-600">{title}</Text>
   </View>
 );
 
@@ -403,21 +403,15 @@ const UpdateVerificationScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View className="p-4 bg-gray-100 border-t border-gray-100">
-        {profileStatus !== "APPROVED" ? (
-          <CustomButton
-            title="Gửi yêu cầu duyệt"
-            onPress={handleSubmit}
-            loading={loading || isUploading}
-          />
-        ) : (
-          <CustomButton
-            title="Cập nhật hồ sơ"
-            onPress={handleUpdateProfile}
-            loading={loading || isUploading}
-          />
-        )}
+      {profileStatus !== "APPROVED" && (<View className="p-4 bg-gray-100 border-t border-gray-100">
+        <CustomButton
+          title="Gửi yêu cầu duyệt"
+          onPress={handleSubmit}
+          loading={loading || isUploading}
+        />
+
       </View>
+      )}
 
       <Modal visible={loading} transparent>
         <View className="flex-1 bg-black/40 items-center justify-center">

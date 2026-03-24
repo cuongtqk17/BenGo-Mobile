@@ -196,7 +196,7 @@ const CustomerOrderDetailScreen = () => {
                     style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 1 }}
                 >
                     <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                        <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                             <Ionicons name="location" size={14} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Lộ trình vận chuyển</Text>
@@ -216,13 +216,13 @@ const CustomerOrderDetailScreen = () => {
                         <View className="flex-1">
                             <View className="mb-4">
                                 <Text className="text-gray-400 font-JakartaBold text-sm uppercase mb-1">Điểm đón</Text>
-                                <Text className="text-gray-700 font-JakartaBold text-base" numberOfLines={2}>
+                                <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                                     {order?.pickup?.address || "Không xác định"}
                                 </Text>
                             </View>
                             <View>
                                 <Text className="text-gray-400 font-JakartaBold text-sm uppercase mb-1">Điểm giao</Text>
-                                <Text className="text-gray-700 font-JakartaBold text-base" numberOfLines={2}>
+                                <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                                     {order?.dropoff?.address || "Không xác định"}
                                 </Text>
                             </View>
@@ -249,7 +249,7 @@ const CustomerOrderDetailScreen = () => {
                     style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}
                 >
                     <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                        <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                             <Ionicons name="cube" size={14} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Đặc điểm hàng hóa</Text>
@@ -288,7 +288,7 @@ const CustomerOrderDetailScreen = () => {
                 >
                     {/* Header: Contacts */}
                     <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                        <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                             <Ionicons name="people" size={14} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Liên hệ liên quan</Text>
@@ -367,7 +367,7 @@ const CustomerOrderDetailScreen = () => {
                     style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}
                 >
                     <View className="flex-row items-center mb-4">
-                        <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                        <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                             <Ionicons name="receipt" size={12} color="#ffffff" />
                         </View>
                         <Text className="text-lg font-JakartaBold text-green-600">Thanh toán & Cước phí</Text>

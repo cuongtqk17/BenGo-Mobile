@@ -38,191 +38,186 @@ const MapCard: React.FC<MapCardProps & {
   onHotspotPress,
   showUserLocation = true,
 }) => {
-  const mapRef = useRef<MapView>(null);
-  const [region, setRegion] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+    const mapRef = useRef<MapView>(null);
+    const [region, setRegion] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
+    useEffect(() => {
+      (async () => {
+        try {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setRegion({
+              latitude: 16.047079,
+              longitude: 108.206230,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+            setLoading(false);
+            return;
+          }
+
+          let location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+          });
+
+          const currentRegion = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.004,
+            longitudeDelta: 0.004,
+          };
+          setRegion(currentRegion);
+          
+          setTimeout(() => {
+            mapRef.current?.animateToRegion(currentRegion, 1000);
+          }, 500);
+        } catch (error) {
           setRegion({
             latitude: 16.047079,
             longitude: 108.206230,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
           });
+        } finally {
           setLoading(false);
-          return;
         }
+      })();
+    }, []);
 
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        });
+    const formatCurrency = (amount?: number): string => {
+      if (amount == null || isNaN(amount)) return '0 ₫';
+      return amount.toLocaleString('vi-VN') + ' ₫';
+    };
 
-        const currentRegion = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        };
-        setRegion(currentRegion);
-      } catch (error) {
-        setRegion({
-          latitude: 16.047079,
-          longitude: 108.206230,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.1,
-        });
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    if (loading) {
+      return (
+        <View className="h-[300px] w-full items-center justify-center bg-gray-50 mb-4 rounded-3xl overflow-hidden px-4">
+          <ActivityIndicator size="small" color="#22C55E" />
+          <Text className="text-gray-500 mt-2 text-base font-Jakarta">Đang tải bản đồ...</Text>
+        </View>
+      );
+    }
 
-  const formatCurrency = (amount?: number): string => {
-    if (amount == null || isNaN(amount)) return '0 ₫';
-    return amount.toLocaleString('vi-VN') + ' ₫';
-  };
-
-  if (loading) {
     return (
-      <View className="h-[300px] w-full items-center justify-center bg-gray-50 mb-4 rounded-3xl overflow-hidden px-4">
-        <ActivityIndicator size="small" color="#22C55E" />
-        <Text className="text-gray-500 mt-2 text-base font-Jakarta">Đang tải bản đồ...</Text>
-      </View>
-    );
-  }
-
-  return (
-    <View
-      className="h-[400px] w-full mb-4 rounded-3xl overflow-hidden bg-gray-50 border border-gray-100"
-      style={{
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-      }}
-    >
-      <MapView
-        ref={mapRef}
-        style={{ flex: 1 }}
-        initialRegion={region}
-        showsUserLocation={false}
-        showsMyLocationButton={false}
+      <View
+        className="h-[400px] w-full mb-4 rounded-3xl overflow-hidden bg-gray-50 border border-gray-100"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 2,
+          elevation: 2,
+        }}
       >
-        {/* Driver/User Marker */}
-        {region && (
-          <Marker
-            coordinate={{
-              latitude: region.latitude,
-              longitude: region.longitude,
-            }}
-          >
-            <View
-              className="bg-white p-2.5 rounded-full border border-gray-100 items-center justify-center"
-              style={{
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.15,
-                shadowRadius: 4,
-                elevation: 4,
+        <MapView
+          ref={mapRef}
+          style={{ flex: 1 }}
+          initialRegion={region}
+          showsUserLocation={false}
+          showsMyLocationButton={false}
+        >
+          {/* Driver/User Marker */}
+          {region && (
+            <Marker
+              coordinate={{
+                latitude: region.latitude,
+                longitude: region.longitude,
               }}
             >
-              <FontAwesome5 name="car-side" size={18} color="#10B981" />
-            </View>
-          </Marker>
-        )}
-
-        {/* Pending Orders Markers */}
-        {orders.map((order) => (
-          <Marker
-            key={order.orderId}
-            coordinate={{
-              latitude: order.pickup?.lat || 0,
-              longitude: order.pickup?.lng || 0,
-            }}
-            onPress={() => onOrderPress && onOrderPress(order)}
-          >
-            <View className="items-center">
-              <View
-                className="bg-white px-2 py-1 rounded-full border border-gray-100 mb-1"
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 2,
-                  elevation: 2,
-                }}
-              >
-                <Text className="text-sm font-JakartaBold text-gray-700">{formatCurrency(order.price)}</Text>
+              <View className="bg-gray-100 p-1 rounded-full border-2 border-green-500">
+                <Ionicons name="car-outline" size={20} color="#10B981" />
               </View>
-              <View
-                className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 2,
-                  elevation: 2,
-                }}
-              />
-            </View>
-          </Marker>
-        ))}
+            </Marker>
+          )}
 
-        {/* Hotspot Markers */}
-        {hotspots.map((hotspot, index) => {
-          const crowdColor = CROWD_COLORS[hotspot.crowdLevel] || CROWD_COLORS.medium;
-          return (
+          {/* Pending Orders Markers */}
+          {orders.map((order) => (
             <Marker
-              key={`hotspot-${hotspot.id}`}
+              key={order.orderId}
               coordinate={{
-                latitude: hotspot.latitude,
-                longitude: hotspot.longitude,
+                latitude: order.pickup?.lat || 0,
+                longitude: order.pickup?.lng || 0,
               }}
-              onPress={() => onHotspotPress && onHotspotPress(hotspot)}
+              onPress={() => onOrderPress && onOrderPress(order)}
             >
               <View className="items-center">
                 <View
-                  className="px-2 py-1 rounded-lg mb-1"
+                  className="bg-white px-2 py-1 rounded-full border border-gray-100 mb-1"
                   style={{
-                    backgroundColor: crowdColor + '20',
-                    borderWidth: 1,
-                    borderColor: crowdColor,
-                    shadowColor: crowdColor,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 4,
-                    elevation: 4,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                    elevation: 2,
                   }}
                 >
-                  <Text style={{ color: crowdColor, fontSize: 10, fontWeight: 'bold' }} numberOfLines={1}>
-                    {hotspot.name}
-                  </Text>
+                  <Text className="text-sm font-JakartaBold text-gray-700">{formatCurrency(order.price)}</Text>
                 </View>
                 <View
-                  className="w-8 h-8 rounded-full items-center justify-center"
+                  className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"
                   style={{
-                    backgroundColor: crowdColor,
-                    shadowColor: crowdColor,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.4,
-                    shadowRadius: 4,
-                    elevation: 5,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                    elevation: 2,
                   }}
-                >
-                  <Ionicons name="flame" size={16} color="white" />
-                </View>
+                />
               </View>
             </Marker>
-          );
-        })}
-      </MapView>
-    </View>
-  );
-};
+          ))}
+
+          {/* Hotspot Markers */}
+          {hotspots.map((hotspot, index) => {
+            const crowdColor = CROWD_COLORS[hotspot.crowdLevel] || CROWD_COLORS.medium;
+            return (
+              <Marker
+                key={`hotspot-${hotspot.id}`}
+                coordinate={{
+                  latitude: hotspot.latitude,
+                  longitude: hotspot.longitude,
+                }}
+                onPress={() => onHotspotPress && onHotspotPress(hotspot)}
+              >
+                <View className="items-center">
+                  <View
+                    className="px-2 py-1 rounded-lg mb-1"
+                    style={{
+                      backgroundColor: crowdColor + '20',
+                      borderWidth: 1,
+                      borderColor: crowdColor,
+                      shadowColor: crowdColor,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 4,
+                      elevation: 4,
+                    }}
+                  >
+                    <Text style={{ color: crowdColor, fontSize: 10, fontWeight: 'bold' }} numberOfLines={1}>
+                      {hotspot.name}
+                    </Text>
+                  </View>
+                  <View
+                    className="w-8 h-8 rounded-full items-center justify-center"
+                    style={{
+                      backgroundColor: crowdColor,
+                      shadowColor: crowdColor,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.4,
+                      shadowRadius: 4,
+                      elevation: 5,
+                    }}
+                  >
+                    <Ionicons name="flame" size={16} color="white" />
+                  </View>
+                </View>
+              </Marker>
+            );
+          })}
+        </MapView>
+      </View>
+    );
+  };
 
 export default MapCard;

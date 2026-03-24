@@ -109,6 +109,9 @@ const DriverHome = () => {
 
     const newStatus = !isOnline;
 
+    // Optimistic Update: Cập nhật giao diện ngay lập tức để không bị delay
+    setIsOnline(newStatus);
+
     try {
       await toggleStatus({
         isOnline: newStatus,
@@ -117,10 +120,10 @@ const DriverHome = () => {
           lng: currentLocation.longitude,
         },
       });
-      setIsOnline(newStatus);
     } catch (error: any) {
-      console.error('Toggle status error:', error);
-      showAlert('Lỗi', 'Không thể cập nhật trạng thái hoạt động');
+      // Revert lại nếu gọi API lỗi
+      setIsOnline(!newStatus);
+      showAlert('Lỗi', 'Không thể cập nhật trạng thái hoạt động. Vui lòng thử lại.');
     }
   };
 
@@ -479,9 +482,9 @@ const Header: React.FC<HeaderProps> = ({
     >
       <View className="flex-row items-center">
         <View className="w-14 h-14 bg-gray-100 rounded-full items-center justify-center mr-3 overflow-hidden">
-          <Image 
-            source={{ uri: avatarUrl || `https://api.dicebear.com/9.x/avataaars/png?seed=${userName || 'Driver'}` }} 
-            className="w-full h-full" 
+          <Image
+            source={{ uri: avatarUrl || `https://api.dicebear.com/9.x/avataaars/png?seed=${userName || 'Driver'}` }}
+            className="w-full h-full"
           />
         </View>
         <View className="ml-3">

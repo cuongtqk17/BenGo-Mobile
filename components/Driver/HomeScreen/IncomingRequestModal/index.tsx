@@ -88,7 +88,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
                 <View className="absolute left-[11px] top-6 w-0.5 h-10 bg-gray-200" />
                 <View className="flex-1 pt-0.5">
                   <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">Điểm đón</Text>
-                  <Text className="text-gray-700 font-JakartaSemiBold text-base" numberOfLines={2}>
+                  <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                     {order.pickup?.address || 'Địa chỉ đón khách'}
                   </Text>
                 </View>
@@ -100,7 +100,7 @@ const IncomingRequestModal = ({ visible, order, onAccept, onDecline, onTimeout, 
                 </View>
                 <View className="flex-1 pt-0.5">
                   <Text className="text-gray-500 font-Jakarta text-sm mb-0.5">ĐIỂM ĐẾN</Text>
-                  <Text className="text-gray-700 font-JakartaSemiBold text-base" numberOfLines={2}>
+                  <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                     {order.destination?.address || 'Địa chỉ trả khách'}
                   </Text>
                 </View>

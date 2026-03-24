@@ -293,7 +293,7 @@ const BookingSetupScreen = () => {
             <>
               {/* C1: New Address Card Design with GoogleTextInput */}
               <View className="flex-row items-center mt-4 mb-2">
-                <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                   <Ionicons name="location-sharp" size={14} color="#ffffff" />
                 </View>
                 <Text className="text-green-600 font-JakartaBold text-xl">Chọn địa điểm</Text>
@@ -318,7 +318,7 @@ const BookingSetupScreen = () => {
               </View>
               {/* C2: Goods Info Card */}
               <View className="flex-row items-center mt-4 mb-2">
-                <View className="bg-green-600 w-6 h-6 rounded-full items-center justify-center mr-2 border border-green-200">
+                <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center mr-2 border border-green-200">
                   <Ionicons name="information-circle" size={14} color="#ffffff" />
                 </View>
                 <Text className="text-green-600 font-JakartaBold text-xl">Thông tin hàng hóa</Text>

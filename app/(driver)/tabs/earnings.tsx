@@ -105,7 +105,7 @@ const EarningsScreen = () => {
   const isRefreshing = statsLoading || ordersLoading;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100" edges={["top", "bottom"]}>
+    <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -127,7 +127,7 @@ const EarningsScreen = () => {
             colors={["#059669", "#10B981"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="rounded-3xl p-5 mb-4 shadow-sm overflow-hidden"
+            style={{ padding: 16, borderRadius: 24, marginBottom: 16, overflow: "hidden" }}
           >
             <View className="flex-row justify-between items-start">
               <View>
@@ -224,6 +224,7 @@ const EarningsScreen = () => {
                 }}
                 style={{
                   borderRadius: 16,
+                  marginLeft: -16,
                 }}
               />
             </View>

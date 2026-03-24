@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { Order } from "@/api/orders";
 import VehicleBadge from "@/components/Common/VehicleBadge";
 import StatusBadge from "@/components/Common/StatusBadge";
+import CustomButton from "@/components/Common/CustomButton";
 
 const OrderItemCard = ({ order }: { order: Order }) => {
     const handleReorder = () => {
@@ -71,14 +72,14 @@ const OrderItemCard = ({ order }: { order: Order }) => {
 
                     <View className="flex-1">
                         <View className="mb-4">
-                            <Text className="text-gray-500 font-JakartaBold mb-1">Điểm đón</Text>
-                            <Text className="text-gray-700 font-JakartaBold text-sm" numberOfLines={2}>
+                            <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">Điểm đón</Text>
+                            <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                                 {order?.pickup?.address || "Không xác định"}
                             </Text>
                         </View>
                         <View>
-                            <Text className="text-gray-500 font-JakartaBold mb-1">Điểm giao</Text>
-                            <Text className="text-gray-700 font-JakartaBold text-sm" numberOfLines={2}>
+                            <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">Điểm giao</Text>
+                            <Text className="text-gray-700 font-JakartaBold" numberOfLines={2}>
                                 {order?.dropoff?.address || "Không xác định"}
                             </Text>
                         </View>
@@ -109,12 +110,13 @@ const OrderItemCard = ({ order }: { order: Order }) => {
 
             {/* Reorder Button for Delivered orders */}
             {order?.status === "DELIVERED" && (
-                <TouchableOpacity
+                <CustomButton
+                    title="Đặt lại chuyến này"
                     onPress={handleReorder}
-                    className="mt-4 bg-green-50 py-3 rounded-2xl items-center border border-green-100"
-                >
-                    <Text className="text-green-600 font-JakartaBold text-sm">Đặt lại chuyến này</Text>
-                </TouchableOpacity>
+                    bgVariant="outline"
+                    textVariant="primary"
+                    className="mt-4"
+                />
             )}
 
             {/* Detail hint indicator */}

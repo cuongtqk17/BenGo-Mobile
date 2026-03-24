@@ -153,7 +153,7 @@ const TripDetailScreen = () => {
 
                 <View className="flex-1">
                   <View className="mb-4">
-                    <Text className="text-gray-500 font-JakartaBold mb-1">
+                    <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">
                       Điểm đón
                     </Text>
                     <Text
@@ -166,7 +166,7 @@ const TripDetailScreen = () => {
                     </Text>
                   </View>
                   <View>
-                    <Text className="text-gray-500 font-JakartaBold mb-1">
+                    <Text className="text-gray-500 font-JakartaBold mb-1 uppercase">
                       Điểm giao
                     </Text>
                     <Text

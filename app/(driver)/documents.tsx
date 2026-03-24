@@ -44,16 +44,12 @@ const DocumentCategoryCard = ({
   title,
   status,
   icon,
-  onPress
 }: {
   title: string;
   status: string;
   icon: any;
-  onPress: () => void;
 }) => (
-  <TouchableOpacity
-    activeOpacity={0.7}
-    onPress={onPress}
+  <View
     className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-4 flex-row items-center"
   >
     <View className="bg-green-50 w-12 h-12 rounded-2xl items-center justify-center mr-4 border border-green-200">
@@ -65,8 +61,7 @@ const DocumentCategoryCard = ({
         <StatusBadge status={status} />
       </View>
     </View>
-    <Ionicons name="chevron-forward" size={20} color="#94A3B8" />
-  </TouchableOpacity>
+  </View>
 );
 
 const DocumentManagementScreen = () => {
@@ -140,7 +135,7 @@ const DocumentManagementScreen = () => {
           colors={getBannerColors(profileStatus)}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={{ padding: 24, borderRadius: 28, marginBottom: 24, shadowOpacity: 0.1, shadowRadius: 10 }}
+          style={{ padding: 16, borderRadius: 24, marginBottom: 16, overflow: "hidden" }}
         >
           <View className="flex-row items-center">
             <View className="bg-white/30 w-14 h-14 rounded-2xl items-center justify-center mr-4">
@@ -176,28 +171,30 @@ const DocumentManagementScreen = () => {
           title="Thông tin Định danh"
           status={profileStatus}
           icon="id-card-outline"
-          onPress={() => router.push("/update-verification")}
         />
 
         <DocumentCategoryCard
           title="Bằng lái xe"
           status={profileStatus}
           icon="car-outline"
-          onPress={() => router.push("/update-verification")}
         />
 
         <DocumentCategoryCard
           title="Thông tin Xe & Đăng ký"
           status={profileStatus}
           icon="document-text-outline"
-          onPress={() => router.push("/update-verification")}
         />
 
         <DocumentCategoryCard
           title="Tài khoản Ngân hàng"
           status={profileStatus}
           icon="business-outline"
+        />
+
+        <CustomButton
+          title="Xem chi tiết"
           onPress={() => router.push("/update-verification")}
+          className="mt-2"
         />
 
         <View className="h-40" />

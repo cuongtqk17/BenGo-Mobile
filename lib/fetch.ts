@@ -35,7 +35,7 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
         }
 
         console.log(`📡 [fetchAPI] Request: ${options?.method || 'GET'} ${finalUrl}`);
-        
+
         const response = await fetch(finalUrl, {
             ...options,
             headers,
@@ -70,7 +70,6 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             }
         }
     } catch (error) {
-        console.error(`🔥 [fetchAPI] Error:`, error);
         throw error;
     }
 };

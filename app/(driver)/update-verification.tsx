@@ -156,17 +156,14 @@ const UpdateVerificationScreen = () => {
       setUploadingField(field);
 
       try {
-        console.log(`📡 [DriverVerification] Auto-uploading ${field}:`, selectedUri.substring(0, 30));
         const res = await uploadImage(selectedUri);
 
         if (res?.url) {
-          console.log(`✅ [DriverVerification] Upload success for ${field}:`, res.url);
           setForm(prev => ({ ...prev, [field]: res.url }));
         } else {
           showAlert("Lỗi", "Không thể tải ảnh lên. Vui lòng thử lại!");
         }
       } catch (err) {
-        console.error(`🔥 [DriverVerification] Auto-upload fail for ${field}:`, err);
         showAlert("Lỗi", "Đã xảy ra lỗi trong quá trình tải ảnh.");
       } finally {
         setUploadingField(null);
@@ -175,62 +172,53 @@ const UpdateVerificationScreen = () => {
   };
 
   const validate = () => {
-    if (!form.identityNumber || !form.identityFront || !form.identityBack) return "Vui lòng cung cấp đầy đủ thông tin Định danh & ảnh 2 mặt CCCD.";
-    if (!form.licenseNumber || !form.licenseImage) return "Vui lòng cung cấp Số GPLX và ảnh chụp.";
-    if (!form.plateNumber || !form.vehicleType || !form.registrationImage) return "Vui lòng cung cấp thông tin Phương tiện & ảnh Đăng ký xe.";
+    if (!form.identityNumber) return "Vui lòng nhập Số CCCD.";
+    if (!form.plateNumber) return "Vui lòng nhập Biển số xe.";
+    if (!form.vehicleType) return "Vui lòng nhập Loại xe.";
     return null;
   };
 
   const handleSubmit = async () => {
-    console.log("🚀 [DriverVerification] handleSubmit Clicked");
     const error = validate();
     if (error) {
-      console.log("❌ [DriverVerification] Validation Fail:", error);
       showAlert("Thiếu thông tin", error);
       return;
     }
 
     try {
       if (!effectiveUserId) {
-        console.log("❌ [DriverVerification] Missing userId");
         showAlert("Lỗi", "Không tìm thấy thông tin định danh người dùng.");
         return;
       }
 
       setIsSubmitting(true);
-      setLoadingAction("Đang gửi hồ sơ...");
+      setLoadingAction("Đang gửi yêu cầu duyệt hồ sơ...");
 
-      const payloadDocs = {
-        identityFront: { id: effectiveUserId, type: "IDENTITY_FRONT", imageUrl: form.identityFront!, identityNumber: form.identityNumber },
-        identityBack: { id: effectiveUserId, type: "IDENTITY_BACK", imageUrl: form.identityBack! },
-        license: { id: effectiveUserId, type: "DRIVING_LICENSE", imageUrl: form.licenseImage!, drivingLicenseNumber: form.licenseNumber },
-        vehicle: { id: effectiveUserId, type: "VEHICLE_REGISTRATION", imageUrl: form.registrationImage!, plateNumber: form.plateNumber, vehicleType: form.vehicleType }
+      const profileUpdatePayload = {
+        driverProfile: {
+          identityNumber: form.identityNumber,
+          identityFrontImage: form.identityFront || undefined,
+          identityBackImage: form.identityBack || undefined,
+          licenseImage: form.licenseImage || undefined,
+          drivingLicenseNumber: form.licenseNumber,
+          plateNumber: form.plateNumber,
+          vehicleType: form.vehicleType,
+          vehicleRegistrationImage: form.registrationImage || undefined,
+          bankInfo: {
+            bankName: form.bankName,
+            accountNumber: form.accountNumber,
+            accountHolder: form.accountHolder,
+          },
+        }
       };
 
-      console.log("🛠️ [DriverVerification] Submit Documents Payloads:", JSON.stringify(payloadDocs, null, 2));
+      await updateProfile(profileUpdatePayload as any);
 
-      // Sequential submission with delay for Render Free Tier
-      const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-      setLoadingAction("Đang gửi Định danh mặt trước...");
-      await updateDocs(payloadDocs.identityFront as any);
-      await sleep(1000);
-
-      setLoadingAction("Đang gửi Định danh mặt sau...");
-      await updateDocs(payloadDocs.identityBack as any);
-      await sleep(1000);
-
-      setLoadingAction("Đang gửi bằng lái xe...");
-      await updateDocs(payloadDocs.license as any);
-      await sleep(1000);
-
-      setLoadingAction("Đang gửi đăng ký xe...");
-      await updateDocs(payloadDocs.vehicle as any);
-
-      console.log("🎉 [DriverVerification] All Documents Submitted Successfully");
-      showAlert("Thành công", "Hồ sơ của bạn đã được gửi xét duyệt.", () => router.push("/(driver)/documents"));
+      showAlert("Thành công", "Hồ sơ của bạn đã được gửi xét duyệt.", () => {
+        refetch();
+        router.push("/(driver)/documents");
+      });
     } catch (err) {
-      console.error("🔥 [DriverVerification] Error in handleSubmit:", err);
       showAlert("Lỗi", "Không thể gửi hồ sơ. Vui lòng thử lại!");
     } finally {
       setIsSubmitting(false);
@@ -238,10 +226,8 @@ const UpdateVerificationScreen = () => {
   };
 
   const handleUpdateProfile = async () => {
-    console.log("🚀 [DriverVerification] handleUpdateProfile Clicked");
     const error = validate();
     if (error) {
-      console.log("❌ [DriverVerification] Validation Fail:", error);
       showAlert("Thiếu thông tin", error);
       return;
     }
@@ -278,7 +264,6 @@ const UpdateVerificationScreen = () => {
       showAlert("Thành công", "Hồ sơ của bạn đã được cập nhật.");
       refetch();
     } catch (err) {
-      console.error("🔥 [DriverVerification] Error in updateProfile:", err);
       showAlert("Lỗi", "Không thể cập nhật hồ sơ. Vui lòng thử lại!");
     } finally {
       setIsSubmitting(false);

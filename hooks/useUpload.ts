@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { fetchAPI } from "@/lib/fetch";
+import { Platform } from "react-native";
 
 export interface UploadResponse {
   public_id: string;
@@ -15,15 +16,18 @@ export const useUpload = () => {
     mutationFn: async (uri: string): Promise<UploadResponse> => {
       const formData = new FormData();
 
-      const filename = uri.split("/").pop();
-      const match = /\.(\w+)$/.exec(filename || "");
-      const type = match ? `image/${match[1]}` : `image`;
+      const lastSlashIndex = uri.lastIndexOf("/");
+      const filename = uri.substring(lastSlashIndex + 1) || `image_${Date.now()}.jpg`;
+      const extension = filename.split(".").pop()?.toLowerCase();
+      const type = extension ? `image/${extension === "jpg" ? "jpeg" : extension}` : "image/jpeg";
+
+      console.log(`📤 [useUpload] Preparing FormData: ${filename} (${type})`);
 
       // @ts-ignore
       formData.append("file", {
-        uri,
+        uri: Platform.OS === "android" ? uri : uri.replace("file://", ""),
         name: filename,
-        type,
+        type: type,
       });
 
       const response = await fetchAPI("/upload", {

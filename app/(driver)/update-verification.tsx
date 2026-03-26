@@ -27,20 +27,28 @@ import InputField from "@/components/Common/InputField";
 const ImageUploadBox = ({
   label,
   imageUri,
-  onPress
+  onPress,
+  isUploading
 }: {
   label: string;
   imageUri: string | null;
-  onPress: () => void
+  onPress: () => void;
+  isUploading?: boolean;
 }) => (
   <View className="mb-4">
     <Text className="text-gray-700 font-JakartaSemiBold mb-2 ml-1">{label}</Text>
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
+      disabled={isUploading}
       className={`h-40 w-full rounded-2xl border-2 border-dashed border-gray-300 bg-white overflow-hidden items-center justify-center`}
     >
-      {imageUri ? (
+      {isUploading ? (
+        <View className="items-center justify-center">
+          <ActivityIndicator color="#059669" size="large" />
+          <Text className="text-gray-400 font-JakartaMedium text-xs mt-2">Đang tải lên...</Text>
+        </View>
+      ) : imageUri ? (
         <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
       ) : (
         <View className="items-center">
@@ -91,6 +99,7 @@ const UpdateVerificationScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [loadingAction, setLoadingAction] = useState("");
+  const [uploadingField, setUploadingField] = useState<string | null>(null);
 
   const [alertModal, setAlertModal] = useState({
     visible: false,
@@ -143,7 +152,25 @@ const UpdateVerificationScreen = () => {
     });
 
     if (!result.canceled) {
-      setForm(prev => ({ ...prev, [field]: result.assets[0].uri }));
+      const selectedUri = result.assets[0].uri;
+      setUploadingField(field);
+
+      try {
+        console.log(`📡 [DriverVerification] Auto-uploading ${field}:`, selectedUri.substring(0, 30));
+        const res = await uploadImage(selectedUri);
+
+        if (res?.url) {
+          console.log(`✅ [DriverVerification] Upload success for ${field}:`, res.url);
+          setForm(prev => ({ ...prev, [field]: res.url }));
+        } else {
+          showAlert("Lỗi", "Không thể tải ảnh lên. Vui lòng thử lại!");
+        }
+      } catch (err) {
+        console.error(`🔥 [DriverVerification] Auto-upload fail for ${field}:`, err);
+        showAlert("Lỗi", "Đã xảy ra lỗi trong quá trình tải ảnh.");
+      } finally {
+        setUploadingField(null);
+      }
     }
   };
 
@@ -155,67 +182,45 @@ const UpdateVerificationScreen = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("🚀 [DriverVerification] handleSubmit Clicked");
     const error = validate();
     if (error) {
+      console.log("❌ [DriverVerification] Validation Fail:", error);
       showAlert("Thiếu thông tin", error);
       return;
     }
 
     try {
       if (!effectiveUserId) {
+        console.log("❌ [DriverVerification] Missing userId");
         showAlert("Lỗi", "Không tìm thấy thông tin định danh người dùng.");
         return;
       }
 
       setLoading(true);
-      setLoadingAction("Đang tải ảnh lên...");
+      setLoadingAction("Đang gửi hồ sơ...");
 
-      const uploadIfNeeded = async (uri: string | null) => {
-        if (!uri) return null;
-        if (uri.startsWith("http")) return uri;
-        const res = await uploadImage(uri);
-        return res?.url || null;
+      const payloadDocs = {
+        identityFront: { id: effectiveUserId, type: "IDENTITY_FRONT", imageUrl: form.identityFront!, identityNumber: form.identityNumber },
+        identityBack: { id: effectiveUserId, type: "IDENTITY_BACK", imageUrl: form.identityBack! },
+        license: { id: effectiveUserId, type: "DRIVING_LICENSE", imageUrl: form.licenseImage!, drivingLicenseNumber: form.licenseNumber },
+        vehicle: { id: effectiveUserId, type: "VEHICLE_REGISTRATION", imageUrl: form.registrationImage!, plateNumber: form.plateNumber, vehicleType: form.vehicleType }
       };
 
-      const identityFrontUrl = await uploadIfNeeded(form.identityFront);
-      const identityBackUrl = await uploadIfNeeded(form.identityBack);
-      const licenseUrl = await uploadIfNeeded(form.licenseImage);
-      const registrationUrl = await uploadIfNeeded(form.registrationImage);
+      console.log("🛠️ [DriverVerification] Submit Documents Payloads:", JSON.stringify(payloadDocs, null, 2));
 
-      setLoadingAction("Đang cập nhật hồ sơ...");
+      // Execute all updates
+      await Promise.all([
+        updateDocs(payloadDocs.identityFront as any),
+        updateDocs(payloadDocs.identityBack as any),
+        updateDocs(payloadDocs.license as any),
+        updateDocs(payloadDocs.vehicle as any)
+      ]);
 
-      // 1. Identity
-      await updateDocs({
-        id: effectiveUserId,
-        type: "IDENTITY_FRONT",
-        imageUrl: identityFrontUrl!,
-        identityNumber: form.identityNumber,
-      });
-      await updateDocs({
-        id: effectiveUserId,
-        type: "IDENTITY_BACK",
-        imageUrl: identityBackUrl!,
-      });
-
-      // 2. License
-      await updateDocs({
-        id: effectiveUserId,
-        type: "DRIVING_LICENSE",
-        imageUrl: licenseUrl!,
-        drivingLicenseNumber: form.licenseNumber,
-      });
-
-      // 3. Vehicle
-      await updateDocs({
-        id: effectiveUserId,
-        type: "VEHICLE_REGISTRATION",
-        imageUrl: registrationUrl!,
-        plateNumber: form.plateNumber,
-        vehicleType: form.vehicleType,
-      });
-
-      showAlert("Thành công", "Hồ sơ của bạn đã được gửi xét duyệt.", () => router.push("/documents"));
+      console.log("🎉 [DriverVerification] All Documents Submitted Successfully");
+      showAlert("Thành công", "Hồ sơ của bạn đã được gửi xét duyệt.", () => router.push("/(driver)/documents"));
     } catch (err) {
+      console.error("🔥 [DriverVerification] Error in handleSubmit:", err);
       showAlert("Lỗi", "Không thể gửi hồ sơ. Vui lòng thử lại!");
     } finally {
       setLoading(false);
@@ -223,31 +228,19 @@ const UpdateVerificationScreen = () => {
   };
 
   const handleUpdateProfile = async () => {
+    console.log("🚀 [DriverVerification] handleUpdateProfile Clicked");
     const error = validate();
     if (error) {
+      console.log("❌ [DriverVerification] Validation Fail:", error);
       showAlert("Thiếu thông tin", error);
       return;
     }
 
     try {
       setLoading(true);
-      setLoadingAction("Đang tải ảnh lên...");
-
-      const uploadIfNeeded = async (uri: string | null) => {
-        if (!uri) return null;
-        if (uri.startsWith("http")) return uri;
-        const res = await uploadImage(uri);
-        return res?.url || null;
-      };
-
-      const identityFrontUrl = await uploadIfNeeded(form.identityFront);
-      const identityBackUrl = await uploadIfNeeded(form.identityBack);
-      const licenseUrl = await uploadIfNeeded(form.licenseImage);
-      const registrationUrl = await uploadIfNeeded(form.registrationImage);
-
       setLoadingAction("Đang cập nhật hồ sơ...");
 
-      await updateProfile({
+      const profileUpdatePayload = {
         phone: profileData?.phone,
         email: profileData?.email,
         name: profileData?.name,
@@ -255,23 +248,27 @@ const UpdateVerificationScreen = () => {
         driverProfile: {
           vehicleType: form.vehicleType,
           plateNumber: form.plateNumber,
-          licenseImage: licenseUrl || undefined,
+          licenseImage: form.licenseImage || undefined,
           identityNumber: form.identityNumber,
-          identityFrontImage: identityFrontUrl || undefined,
-          identityBackImage: identityBackUrl || undefined,
+          identityFrontImage: form.identityFront || undefined,
+          identityBackImage: form.identityBack || undefined,
           drivingLicenseNumber: form.licenseNumber,
-          vehicleRegistrationImage: registrationUrl || undefined,
+          vehicleRegistrationImage: form.registrationImage || undefined,
           bankInfo: {
             bankName: form.bankName,
             accountNumber: form.accountNumber,
             accountHolder: form.accountHolder,
           },
         }
-      });
+      };
+      console.log("🛠️ [DriverVerification] Update Profile Payload:", JSON.stringify(profileUpdatePayload, null, 2));
+
+      await updateProfile(profileUpdatePayload);
 
       showAlert("Thành công", "Hồ sơ của bạn đã được cập nhật.");
       refetch();
     } catch (err) {
+      console.error("🔥 [DriverVerification] Error in updateProfile:", err);
       showAlert("Lỗi", "Không thể cập nhật hồ sơ. Vui lòng thử lại!");
     } finally {
       setLoading(false);
@@ -296,7 +293,7 @@ const UpdateVerificationScreen = () => {
           <Ionicons name="chevron-back" size={28} color="#111827" />
         </TouchableOpacity>
         <Text className="flex-1 text-center font-JakartaBold text-lg text-gray-700 pr-8">
-          Cập nhật hồ sơ
+          Hoàn thiện hồ sơ
         </Text>
       </View>
 
@@ -324,6 +321,7 @@ const UpdateVerificationScreen = () => {
                 label="CCCD Mặt trước"
                 imageUri={form.identityFront}
                 onPress={() => handlePickImage("identityFront")}
+                isUploading={uploadingField === "identityFront"}
               />
             </View>
             <View className="w-[48%]">
@@ -331,6 +329,7 @@ const UpdateVerificationScreen = () => {
                 label="CCCD Mặt sau"
                 imageUri={form.identityBack}
                 onPress={() => handlePickImage("identityBack")}
+                isUploading={uploadingField === "identityBack"}
               />
             </View>
           </View>
@@ -347,6 +346,7 @@ const UpdateVerificationScreen = () => {
             label="Ảnh chụp Bằng lái xe"
             imageUri={form.licenseImage}
             onPress={() => handlePickImage("licenseImage")}
+            isUploading={uploadingField === "licenseImage"}
           />
 
           <SectionTitle title="Thông tin Phương tiện" icon="document-text-outline" />
@@ -370,6 +370,7 @@ const UpdateVerificationScreen = () => {
             label="Ảnh chụp Đăng ký xe (Cà vẹt)"
             imageUri={form.registrationImage}
             onPress={() => handlePickImage("registrationImage")}
+            isUploading={uploadingField === "registrationImage"}
           />
 
           <SectionTitle title="Thông tin Ngân hàng" icon="business-outline" />

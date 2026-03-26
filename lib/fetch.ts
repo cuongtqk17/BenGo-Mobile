@@ -24,10 +24,17 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             ...options?.headers as Record<string, string>,
         };
 
-        if (!isFormData && !headers['Content-Type']) {
+        // IMPORTANT: For FormData, we must let fetch set the Content-Type header 
+        // with the correct boundary. Setting it manually (like application/json) 
+        // or leaving it empty if it was somehow set before will break it.
+        if (isFormData) {
+            delete headers['Content-Type'];
+        } else if (!headers['Content-Type']) {
             headers['Content-Type'] = 'application/json';
         }
 
+        console.log(`📡 [fetchAPI] Request: ${options?.method || 'GET'} ${finalUrl}`);
+        
         const response = await fetch(finalUrl, {
             ...options,
             headers,

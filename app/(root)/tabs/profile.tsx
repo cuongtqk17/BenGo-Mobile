@@ -166,18 +166,6 @@ const CustomerProfileScreen = () => {
                 <View className="px-4">
                     <View className="bg-white rounded-3xl border border-gray-100 shadow-sm">
                         <MenuActionItem
-                            icon="location-outline"
-                            label="Địa chỉ đã lưu"
-                            onPress={() => router.push("/(root)/booking-setup")}
-                        />
-                        <Divider />
-                        <MenuActionItem
-                            icon="notifications-outline"
-                            label="Thông báo"
-                            onPress={() => router.push("/(root)/tabs/notifications")}
-                        />
-                        <Divider />
-                        <MenuActionItem
                             icon="shield-checkmark-outline"
                             label="Bảo mật & Mật khẩu"
                             onPress={() => showAlert("Bảo mật", "Tính năng đổi mật khẩu đang cập nhật")}
@@ -187,6 +175,13 @@ const CustomerProfileScreen = () => {
                             icon="help-buoy-outline"
                             label="Trung tâm hỗ trợ"
                             onPress={() => Linking.openURL('tel:19001234')}
+                        />
+                        <Divider />
+                        <MenuActionItem
+                            icon="car-sport-outline"
+                            label={profile?.role === 'DRIVER' ? "Hồ sơ tài xế" : "Đăng ký trở thành tài xế"}
+                            status={profile?.status}
+                            onPress={() => router.push("/(driver)/update-verification")}
                         />
                     </View>
                 </View>

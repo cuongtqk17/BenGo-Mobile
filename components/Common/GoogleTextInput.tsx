@@ -93,9 +93,6 @@ const GoogleTextInput = ({
           fields: "geometry,formatted_address",
         }}
         nearbyPlacesAPI="GooglePlacesSearch"
-        onFail={(error) => {
-          console.error("❌ GooglePlacesAutocomplete onFail:", error);
-        }}
         renderLeftButton={() => (
           <View className="justify-center items-center w-6 h-6">
             {isLoading ? (

@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 
 export const fetchAPI = async (url: string, options?: RequestInit) => {
     try {
@@ -31,11 +32,22 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             ...options,
             headers,
         });
+
         if (!response.ok) {
             const errorText = await response.text();
+
+            // --- Xử lý 401 Unauthorized ---
+            if (response.status === 401) {
+                console.warn("🚨 [fetchAPI] 401 Unauthorized detected! Logging out...");
+                useAuthStore.getState().logout();
+
+                setTimeout(() => {
+                    router.replace("/(auth)/sign-in");
+                }, 0);
+            }
             throw new Error(`Lỗi HTTP! trạng thái: ${response.status} - ${errorText.substring(0, 200)}`);
         }
-        
+
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             const jsonData = await response.json();
@@ -46,7 +58,7 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
                 const parsedData = JSON.parse(text);
                 return parsedData;
             } catch (parseError) {
-                throw new Error(`Phản hồi JSON không hợp lệ: ${text.substring(0, 100)}...`);
+                return text;
             }
         }
     } catch (error) {
@@ -54,14 +66,11 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
     }
 };
 
-
-
 export const useFetch = <T>(url: string, options?: RequestInit) => {
     const { data, error, isLoading, refetch } = useQuery<T, Error>({
         queryKey: [url, options],
         queryFn: async () => {
             const result = await fetchAPI(url, options);
-            // Handling the structure { data: T } which fetchAPI seems to return
             return result.data ?? result;
         },
     });

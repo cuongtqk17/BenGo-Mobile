@@ -216,7 +216,6 @@ const UpdateVerificationScreen = () => {
 
       showAlert("Thành công", "Hồ sơ của bạn đã được gửi xét duyệt.", () => router.push("/documents"));
     } catch (err) {
-      console.error(err);
       showAlert("Lỗi", "Không thể gửi hồ sơ. Vui lòng thử lại!");
     } finally {
       setLoading(false);
@@ -273,7 +272,6 @@ const UpdateVerificationScreen = () => {
       showAlert("Thành công", "Hồ sơ của bạn đã được cập nhật.");
       refetch();
     } catch (err) {
-      console.error(err);
       showAlert("Lỗi", "Không thể cập nhật hồ sơ. Vui lòng thử lại!");
     } finally {
       setLoading(false);

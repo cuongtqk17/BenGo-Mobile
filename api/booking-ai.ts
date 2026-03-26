@@ -64,7 +64,7 @@ export const getBookingAISuggestion = async (
   request: BookingAIRequest,
   openaiApiKey: string
 ): Promise<BookingAISuggestion> => {
-  const weightNote = !request.goodsWeight || request.goodsWeight === '0' 
+  const weightNote = !request.goodsWeight || request.goodsWeight === '0'
     ? '(chưa nhập - hãy ước tính giúp)'
     : `${request.goodsWeight} kg`;
 
@@ -135,7 +135,6 @@ Hãy tra cứu thông tin sản phẩm, sửa chính tả, ước tính cân n�
       tips: parsed.tips || [],
     };
   } catch (error: any) {
-    console.error('Booking AI error:', error);
     throw error;
   }
 };

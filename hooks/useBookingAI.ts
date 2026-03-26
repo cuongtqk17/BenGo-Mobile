@@ -27,7 +27,6 @@ export const useBookingAI = (): UseBookingAIReturn => {
       const result = await getBookingAISuggestion(request, apiKey);
       setSuggestion(result);
     } catch (err: any) {
-      console.error('Booking AI error:', err);
       setError(err.message || 'Không thể lấy gợi ý AI');
     } finally {
       setIsLoading(false);

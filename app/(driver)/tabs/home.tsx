@@ -176,7 +176,6 @@ const DriverHome = () => {
       }
       return { address: 'Không xác định', city: 'Việt Nam' };
     } catch (error) {
-      console.error('Reverse Geocode error:', error);
       return { address: 'Lỗi tải địa chỉ', city: 'Việt Nam' };
     }
   };

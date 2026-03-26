@@ -153,8 +153,6 @@ const BookingSetupScreen = () => {
         });
       }
     } catch (error) {
-      console.error("Estimate Error:", error);
-      // Fallback
       setEstimation({
         distance: 5.2,
         duration: 25,
@@ -186,7 +184,6 @@ const BookingSetupScreen = () => {
           setImages(prev => [...prev, uploadRes.url]);
         }
       } catch (error) {
-        console.error("[BookingSetup] Upload Error:", error);
         showAlert("Lỗi upload", "Không thể tải ảnh lên. Vui lòng thử lại.");
       }
     }
@@ -260,7 +257,6 @@ const BookingSetupScreen = () => {
         showAlert("Đặt đơn thành công", "Đơn hàng của bạn đang được tìm tài xế.", () => router.push("/(root)/tabs/activities"));
       }
     } catch (error: any) {
-      console.error("Order Creation Error:", error);
       showAlert("Lỗi", error.message || "Không thể tạo đơn hàng lúc này. Vui lòng thử lại.");
     } finally {
       setIsSubmitting(false);

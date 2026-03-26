@@ -33,7 +33,6 @@ export const useHotspot = (): UseHotspotReturn => {
       setSummary(response.summary);
       setAnalyzedAt(response.analyzedAt);
     } catch (err: any) {
-      console.error('Hotspot fetch error:', err);
       setError(err.message || 'Không thể dự đoán địa điểm. Vui lòng thử lại.');
       setHotspots([]);
       setSummary('');

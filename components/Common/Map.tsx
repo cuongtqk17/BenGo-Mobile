@@ -34,10 +34,6 @@ const Map = ({
   } = useFetch<Driver[]>(
     `/(api)/driver${user?.id ? `?user_id=${user.id}` : ""}`
   );
-
-  useEffect(() => {
-    if (error) console.error("Map - Drivers fetch error:", error);
-  }, [drivers, error]);
   const {
     userLongitude: storeUserLongitude,
     userLatitude: storeUserLatitude,

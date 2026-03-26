@@ -67,7 +67,6 @@ const PaymentScreen = () => {
             showAlert("Thành công", "Thanh toán thành công!");
             setIsPaymentDone(true);
         } catch (error: any) {
-            console.error("Payment Error:", error);
             showAlert("Lỗi", error.message || "Đã có lỗi xảy ra trong quá trình thanh toán.");
         }
     };
@@ -83,7 +82,6 @@ const PaymentScreen = () => {
             });
             showAlert("Cảm ơn", "Đánh giá của bạn đã được gửi.", () => router.replace("/(root)/tabs/home"));
         } catch (error) {
-            console.error("Rating Error:", error);
             showAlert("Lỗi", "Không thể gửi đánh giá lúc này.");
         }
     };

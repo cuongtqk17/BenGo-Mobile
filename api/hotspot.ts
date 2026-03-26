@@ -152,7 +152,6 @@ Hãy dự đoán các địa điểm đông người xung quanh vị trí này.`
       analyzedAt: now.toISOString(),
     };
   } catch (error: any) {
-    console.error('Hotspot prediction error:', error);
     throw error;
   }
 };

@@ -240,8 +240,7 @@ const SignUp = () => {
       {/* Modal for Success */}
       <Modal
         visible={showSuccessModal}
-        transparent={true}
-        animationType="slide"
+        transparent animationType="fade"
       >
         <View
           className="flex-1 justify-center items-center px-4"
@@ -274,8 +273,7 @@ const SignUp = () => {
       {/* Modal for Verification (OTP) */}
       <Modal
         visible={verificationModal.visible}
-        transparent={true}
-        animationType="slide"
+        transparent animationType="fade"
       >
         <View
           className="flex-1 justify-center items-center px-4"

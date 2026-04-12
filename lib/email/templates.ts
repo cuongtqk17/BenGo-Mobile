@@ -28,12 +28,12 @@ export const getVerificationEmailHTML = (name: string, otp: string): string => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f7fafc; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
-        .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 40px 20px; text-align: center; }
-        .content { padding: 40px 30px; text-align: center; color: #4a5568; }
-        .otp-box { background-color: #f0fdf4; border: 2px dashed #10b981; border-radius: 12px; padding: 25px; margin: 30px 0; display: inline-block; }
-        .otp-code { font-size: 36px; font-weight: 800; color: #065f46; letter-spacing: 8px; }
-        .footer { background-color: #f8fafc; padding: 25px; text-align: center; color: #94a3b8; font-size: 13px; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
+        .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 30px 20px; text-align: center; }
+        .content { padding: 30px 25px; text-align: center; color: #4a5568; }
+        .otp-box { background-color: #f0fdf4; border: 2px dashed #10b981; border-radius: 12px; padding: 20px; margin: 20px 0; display: inline-block; }
+        .otp-code { font-size: 32px; font-weight: 800; color: #065f46; letter-spacing: 8px; }
+        .footer { background-color: #f8fafc; padding: 20px; text-align: center; color: #94a3b8; font-size: 13px; }
       </style>
     </head>
     <body>
@@ -85,15 +85,15 @@ export const getRideConfirmationHTML = (data: RideConfirmationData): string => {
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #f3f4f6; padding: 20px; color: #1f2937; }
-        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .header { background: #0284c7; padding: 40px 20px; text-align: center; color: white; }
-        .content { padding: 30px; }
-        .card { background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #e2e8f0; }
-        .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .container { max-width: 600px; margin: 10px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .header { background: #0284c7; padding: 30px 20px; text-align: center; color: white; }
+        .content { padding: 25px; }
+        .card { background: #f8fafc; border-radius: 12px; padding: 15px; margin: 15px 0; border: 1px solid #e2e8f0; }
+        .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
         .label { color: #64748b; font-size: 14px; }
         .value { font-weight: 600; text-align: right; }
-        .price { font-size: 24px; font-weight: 800; color: #0284c7; text-align: center; margin: 20px 0; }
-        .footer { background: #f9fafb; padding: 25px; text-align: center; font-size: 12px; color: #9ca3af; }
+        .price { font-size: 22px; font-weight: 800; color: #0284c7; text-align: center; margin: 15px 0; }
+        .footer { background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
       </style>
     </head>
     <body>

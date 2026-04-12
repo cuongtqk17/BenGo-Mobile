@@ -405,7 +405,7 @@ const UpdateVerificationScreen = () => {
       </View>
       )}
 
-      <Modal visible={isSubmitting} transparent>
+      <Modal visible={isSubmitting} transparent animationType="fade">
         <View className="flex-1 bg-black/40 items-center justify-center">
           <View className="bg-white p-4 rounded-3xl items-center shadow-lg">
             <ActivityIndicator size="large" color="#0047AB" />

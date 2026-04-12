@@ -184,15 +184,11 @@ const HotspotFinder: React.FC<HotspotFinderProps> = ({
   return (
     <Modal
       visible={visible}
-      animationType="slide"
-      transparent={true}
+      transparent animationType="fade"
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-black/40">
-        {/* Top bar for closing */}
         <TouchableOpacity className="h-20" activeOpacity={1} onPress={onClose} />
-
-        {/* Main bottom sheet */}
         <View
           className="flex-1 bg-gray-50 rounded-t-3xl overflow-hidden"
           style={{
@@ -243,16 +239,14 @@ const HotspotFinder: React.FC<HotspotFinderProps> = ({
                 <TouchableOpacity
                   key={opt.value}
                   onPress={() => setSelectedRadius(opt.value)}
-                  className={`flex-1 py-2.5 mx-1 rounded-xl items-center border ${
-                    selectedRadius === opt.value
-                      ? 'bg-green-600 border-green-600'
-                      : 'bg-white border-gray-200'
-                  }`}
+                  className={`flex-1 py-2.5 mx-1 rounded-xl items-center border ${selectedRadius === opt.value
+                    ? 'bg-green-600 border-green-600'
+                    : 'bg-white border-gray-200'
+                    }`}
                 >
                   <Text
-                    className={`text-sm font-JakartaBold ${
-                      selectedRadius === opt.value ? 'text-white' : 'text-gray-600'
-                    }`}
+                    className={`text-sm font-JakartaBold ${selectedRadius === opt.value ? 'text-white' : 'text-gray-600'
+                      }`}
                   >
                     {opt.label}
                   </Text>
@@ -266,9 +260,8 @@ const HotspotFinder: React.FC<HotspotFinderProps> = ({
             <TouchableOpacity
               onPress={handleSearch}
               disabled={isLoading}
-              className={`py-3.5 rounded-2xl flex-row items-center justify-center ${
-                isLoading ? 'bg-gray-300' : 'bg-green-600'
-              }`}
+              className={`py-3.5 rounded-2xl flex-row items-center justify-center ${isLoading ? 'bg-gray-300' : 'bg-green-600'
+                }`}
               style={{
                 shadowColor: '#16A34A',
                 shadowOffset: { width: 0, height: 4 },

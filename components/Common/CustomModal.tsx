@@ -19,7 +19,7 @@ const CustomModal = ({ visible, title, message, onClose, primaryButtonText = "Đ
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View className="flex-1 bg-black/40 justify-center items-center px-4">
+      <View className="flex-1 bg-black/40 justify-center items-center p-6">
         <View className="bg-white rounded-3xl w-full p-4 items-center shadow-xl">
           <View
             className={`w-16 h-16 rounded-full items-center justify-center mb-4 ${isSuccess ? "bg-green-100" : isDanger ? "bg-red-100" : "bg-blue-100"

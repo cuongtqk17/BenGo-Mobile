@@ -111,15 +111,26 @@ const SignIn = () => {
         router.replace("/(root)/tabs/home");
       }
     } catch (error: any) {
-      const errorMessage =
-        error.message || "Tài khoản hoặc mật khẩu không đúng";
-      showAlert("Lỗi đăng nhập", errorMessage?.message);
+      let errorMessage = error.message || "Tài khoản hoặc mật khẩu không đúng";
+
+      // Cố gắng lấy message từ chuỗi JSON trong lỗi HTTP
+      if (errorMessage.includes(" - {")) {
+        try {
+          const jsonPart = errorMessage.substring(errorMessage.indexOf(" - ") + 3);
+          const errorData = JSON.parse(jsonPart);
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (e) {
+        }
+      }
+
+      showAlert("Lỗi đăng nhập", errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Navigate to registration guide
   const handleRegister = () => {
     router.push("/(auth)/sign-up");
   };

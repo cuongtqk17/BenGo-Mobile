@@ -16,8 +16,6 @@ export const useUpload = () => {
 
   const uploadMutation = useMutation({
     mutationFn: async (uri: string): Promise<UploadResponse> => {
-      console.log(`🚀 [useUpload] Starting upload for: ${uri.substring(0, 40)}...`);
-
       const filename = uri.split("/").pop() || `image_${Date.now()}.jpg`;
       const extension = filename.split(".").pop()?.toLowerCase() || "jpg";
       const type = extension === "jpg" ? "image/jpeg" : `image/${extension}`;
@@ -32,25 +30,19 @@ export const useUpload = () => {
         type: type,
       });
 
-      const baseUrl = process.env.EXPO_PUBLIC_SERVER_URL || "https://bengo-backend.onrender.com/api/v1";
+      const baseUrl = process.env.EXPO_PUBLIC_SERVER_URL || "http://localhost:5000/api/v1";
       const url = `${baseUrl}/upload`;
 
-      // Retry mechanism for weak servers (Render Free)
       const tryUpload = async (attempt: number): Promise<UploadResponse> => {
         try {
-          console.log(`📡 [useUpload] Attempt ${attempt} calling fetch to: ${url}`);
           const response = await fetch(url, {
             method: "POST",
             body: formData,
             headers: {
               "Authorization": `Bearer ${token}`,
               "Accept": "application/json",
-              // We intentionally omit Content-Type here to let fetch generate it with the correct boundary
-              // Some servers/proxies fail without boundary or if boundary is malformed.
             },
           });
-
-          console.log(`📡 [useUpload] Attempt ${attempt} Status: ${response.status}`);
 
           const responseData = await response.json();
 
@@ -62,7 +54,6 @@ export const useUpload = () => {
           }
         } catch (err) {
           if (attempt < 2) { // Try up to 2 times
-            console.warn(`⚠️ [useUpload] Attempt ${attempt} failed. Retrying in 1.5s...`, err);
             await new Promise(res => setTimeout(res, 1500));
             return tryUpload(attempt + 1);
           }

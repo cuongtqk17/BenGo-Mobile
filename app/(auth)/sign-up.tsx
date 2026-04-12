@@ -21,6 +21,7 @@ import { useRegister } from "@/hooks/useAuthActions";
 import { useAuth } from "@/context/AuthContext";
 
 const SignUp = () => {
+  console.log("Rendering SignUp screen...");
   const { t } = useTranslation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { setAuth } = useAuth();
@@ -52,6 +53,7 @@ const SignUp = () => {
   };
 
   const onSignUpPress = async () => {
+    console.log("Sign Up button pressed, form data:", form);
     if (!form.name || !form.phone || !form.password || !form.email) {
       showAlert(t("common.error"), "Vui lòng nhập đầy đủ Tên, Số điện thoại, Email và Mật khẩu");
       return;
@@ -65,7 +67,9 @@ const SignUp = () => {
       type: "CUSTOMER"
     }, {
       onSuccess: (res: any) => {
+        console.log("Registration Response:", res);
         const registrationData = res.data;
+        console.log("Registration Data:", registrationData);
         if (registrationData && registrationData.accessToken && registrationData.user) {
           setAuth(registrationData.accessToken, registrationData.user);
           setShowSuccessModal(true);
@@ -74,9 +78,23 @@ const SignUp = () => {
         }
       },
       onError: (err: any) => {
+        let errorMsg = err.message || "Đăng ký thất bại. Vui lòng thử lại sau.";
+
+        // Cố gắng lấy message từ chuỗi JSON trong lỗi HTTP
+        if (errorMsg.includes(" - {")) {
+          try {
+            const jsonPart = errorMsg.substring(errorMsg.indexOf(" - ") + 3);
+            const errorData = JSON.parse(jsonPart);
+            if (errorData.message) {
+              errorMsg = errorData.message;
+            }
+          } catch (e) {
+          }
+        }
+
         showAlert(
           t("common.error"),
-          err.message || "Đăng ký thất bại. Vui lòng thử lại sau."
+          errorMsg
         );
       }
     });

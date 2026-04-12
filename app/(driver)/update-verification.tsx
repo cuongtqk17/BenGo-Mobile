@@ -257,7 +257,6 @@ const UpdateVerificationScreen = () => {
           },
         }
       };
-      console.log("🛠️ [DriverVerification] Update Profile Payload:", JSON.stringify(profileUpdatePayload, null, 2));
 
       await updateProfile(profileUpdatePayload);
 

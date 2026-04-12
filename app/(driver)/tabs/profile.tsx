@@ -6,7 +6,6 @@ import {
   Image,
   ActivityIndicator,
   RefreshControl,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthContext";
@@ -19,7 +18,7 @@ import { fetchAPI } from "@/lib/fetch";
 import { useState, useCallback } from "react";
 import CustomButton from "@/components/Common/CustomButton";
 import CustomModal from "@/components/Common/CustomModal";
-import { User, DriverProfile, DriverDocument } from "@/types/type";
+import StatusBadge from "@/components/Common/StatusBadge";
 
 const ProfileScreen = () => {
   const { user, logout, token } = useAuth();
@@ -143,12 +142,6 @@ const ProfileScreen = () => {
                   className="w-full h-full rounded-full"
                 />
               </View>
-              <TouchableOpacity
-                className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md"
-                onPress={() => showAlert("Thông báo", "Chức năng cập nhật ảnh đang phát triển")}
-              >
-                <Ionicons name="camera" size={18} color="#22C55E" />
-              </TouchableOpacity>
             </View>
 
             <Text className="text-xl font-JakartaBold text-gray-700 mt-4">
@@ -156,15 +149,9 @@ const ProfileScreen = () => {
             </Text>
 
             <View className="flex-row items-center mt-2 gap-2">
-              <View className="flex-row items-center px-3 py-1 bg-amber-100 rounded-full border border-amber-200">
-                <Ionicons name="ribbon" size={14} color="#D97706" />
-                <Text className="text-amber-700 font-JakartaBold ml-1 text-sm">
-                  {rank.toUpperCase()}
-                </Text>
-              </View>
               <View className="flex-row items-center px-3 py-1 bg-green-100 rounded-full border border-green-200">
                 <Ionicons name="star" size={14} color="#EAB308" />
-                <Text className="text-green-700 font-JakartaBold ml-1 text-sm">
+                <Text className="text-amber-400 font-JakartaBold ml-1 text-sm">
                   {rating.toFixed(1)}
                 </Text>
               </View>
@@ -275,12 +262,8 @@ const MenuActionItem = ({
       <Text className="font-JakartaBold text-gray-700 text-base">{label}</Text>
       <View className="flex-row items-center">
         {status && (
-          <View className={`px-2 py-0.5 rounded-full mr-2 ${status === 'APPROVED' ? 'bg-green-100' : status === 'PENDING' ? 'bg-amber-100' : 'bg-red-100'
-            }`}>
-            <Text className={`text-sm font-JakartaBold ${status === 'APPROVED' ? 'text-green-700' : status === 'PENDING' ? 'text-amber-700' : 'text-red-700'
-              }`}>
-              {status}
-            </Text>
+          <View className="mr-2">
+            <StatusBadge status={status} />
           </View>
         )}
         <Ionicons name="chevron-forward" size={20} color="#CBD5E1" />
@@ -292,4 +275,3 @@ const MenuActionItem = ({
 const Divider = () => <View className="h-[1px] bg-gray-50 mx-4" />;
 
 export default ProfileScreen;
-

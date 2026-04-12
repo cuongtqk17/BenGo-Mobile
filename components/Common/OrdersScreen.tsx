@@ -41,22 +41,20 @@ const OrdersScreen = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  // Hook for Driver - Only enable if user is a driver
   const driverQuery = useDriverOrders({
     page,
     limit: 10,
     status: statusFilter,
     search,
     time: timeFilter,
-    enabled: isDriver // <-- Added enabled flag
+    enabled: isDriver
   });
 
-  // Hook for Customer - Only enable if user is NOT a driver
   const customerQuery = useOrderHistory({
     status: statusFilter,
     page,
     limit: 10,
-    enabled: !isDriver // <-- Added enabled flag
+    enabled: !isDriver
   });
 
   const query = isDriver ? driverQuery : customerQuery;
@@ -74,7 +72,7 @@ const OrdersScreen = () => {
         setHasMore(newItems.length === 10);
       }
     }
-  }, [data, page, isDriver, statusFilter, timeFilter, search]); // Added filters to dependencies
+  }, [data, page, isDriver, statusFilter, timeFilter, search]);
 
   useEffect(() => {
     setPage(1);

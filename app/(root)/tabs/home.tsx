@@ -64,10 +64,16 @@ export default function HomeScreen() {
       if (status !== "granted") return;
 
       let location = await Location.getCurrentPositionAsync();
-      const address = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      let address: Location.LocationGeocodedAddress[] = [];
+
+      try {
+        address = await Location.reverseGeocodeAsync({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch {
+        address = [];
+      }
 
       const addressString = address && address[0]
         ? `${address[0].name || ""}, ${address[0].region || ""}`.replace(/^, |, $/, "")
@@ -79,7 +85,6 @@ export default function HomeScreen() {
         address: addressString,
       });
     } catch (error) {
-      console.error("Location error:", error);
     }
   };
 

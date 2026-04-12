@@ -11,6 +11,11 @@ const statusConfig: Record<string, { label: string; container: string; text: str
     container: "bg-amber-50 border-amber-100",
     text: "text-amber-600",
   },
+  APPROVED: {
+    label: "Đã duyệt",
+    container: "bg-green-50 border-green-100",
+    text: "text-green-600",
+  },
   ACCEPTED: {
     label: "Đã nhận",
     container: "bg-blue-50 border-blue-100",
@@ -28,6 +33,11 @@ const statusConfig: Record<string, { label: string; container: string; text: str
   },
   CANCELLED: {
     label: "Đã hủy",
+    container: "bg-red-50 border-red-100",
+    text: "text-red-600",
+  },
+  REJECTED: {
+    label: "Từ chối",
     container: "bg-red-50 border-red-100",
     text: "text-red-600",
   },
@@ -69,7 +79,8 @@ const statusConfig: Record<string, { label: string; container: string; text: str
 };
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const config = statusConfig[status.toUpperCase()] || {
+  const normalizedStatus = status.toUpperCase();
+  const config = statusConfig[normalizedStatus] || {
     label: status,
     container: "bg-gray-50 border-gray-100",
     text: "text-gray-600",

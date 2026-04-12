@@ -5,11 +5,10 @@ import { router } from "expo-router";
 export const fetchAPI = async (url: string, options?: RequestInit) => {
     try {
         let finalUrl = url;
-        const baseUrl = process.env.EXPO_PUBLIC_SERVER_URL || "https://bengo-backend.onrender.com/api/v1";
+        const baseUrl = process.env.EXPO_PUBLIC_SERVER_URL || "http://localhost:5000/api/v1";
         const { token } = useAuthStore.getState();
 
         if (url.startsWith('/')) {
-            // Remove /(api) if it exists, as the remote API likely doesn't have it
             if (url.startsWith('/(api)')) {
                 finalUrl = `${baseUrl}${url.replace('/(api)', '')}`;
             } else {
@@ -17,7 +16,6 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             }
         }
 
-        // React Native's FormData often has a _parts property
         const isFormData = options?.body instanceof FormData || (options?.body && typeof options.body === 'object' && '_parts' in options.body);
 
         const headers: Record<string, string> = {
@@ -25,9 +23,6 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
             ...options?.headers as Record<string, string>,
         };
 
-        // IMPORTANT: For FormData, we must let fetch set the Content-Type header 
-        // with the correct boundary. Setting it manually (like application/json) 
-        // or leaving it empty if it was somehow set before will break it.
         if (isFormData) {
             delete headers['Content-Type'];
         } else if (!headers['Content-Type']) {
@@ -44,7 +39,6 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
         if (!response.ok) {
             const errorText = await response.text();
 
-            // --- Xử lý 401 Unauthorized ---
             if (response.status === 401) {
                 console.warn("🚨 [fetchAPI] 401 Unauthorized detected! Logging out...");
                 useAuthStore.getState().logout();

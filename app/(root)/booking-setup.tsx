@@ -440,13 +440,13 @@ const BookingSetupScreen = () => {
                       <View className="h-px bg-green-600 opacity-20 mb-2 mx-1" />
 
                       {/* Lý do phân tích */}
-                      <Text className="text-green-600 text-sm font-Jakarta leading-5 mb-2">
+                      <Text className="text-green-600 text-base font-Jakarta leading-5 mb-2">
                         {aiSuggestion.vehicleReason}
                       </Text>
 
                       {/* Thông số - ưu tiên dùng số liệu người dùng đã nhập */}
                       {(goodsWeight || goodsLength || aiSuggestion.estimatedWeight || aiSuggestion.estimatedLength) ? (
-                        <View className="bg-white rounded-lg p-2 flex-row flex-wrap">
+                        <View className="bg-white rounded-lg p-2 py-3 flex-row flex-wrap">
                           {/* Khối lượng: dùng số người dùng nhập, fallback về AI estimate */}
                           {(goodsWeight || aiSuggestion.estimatedWeight) ? (
                             <View className="flex-row items-center mr-4">
@@ -480,7 +480,7 @@ const BookingSetupScreen = () => {
                           </View>
                           <Text className="text-green-600 font-JakartaBold text-base">Ghi chú gợi ý cho tài xế</Text>
                         </View>
-                        <Text className="text-green-600 text-sm font-Jakarta">
+                        <Text className="text-green-600 text-base font-Jakarta">
                           {aiSuggestion.suggestedNote}
                         </Text>
                       </View>
@@ -491,8 +491,8 @@ const BookingSetupScreen = () => {
                       <View className="mb-3">
                         {aiSuggestion.tips.map((tip, idx) => (
                           <View key={idx} className="flex-row items-start mb-1">
-                            <Text className="text-green-600 text-sm mr-1.5 font-JakartaBold">💡</Text>
-                            <Text className="text-green-600 text-sm font-Jakarta flex-1">{tip}</Text>
+                            <Text className="text-green-600 text-base mr-1.5 font-JakartaBold">💡</Text>
+                            <Text className="text-green-600 text-base font-Jakarta flex-1">{tip}</Text>
                           </View>
                         ))}
                       </View>

@@ -1,15 +1,15 @@
 export interface BookingAISuggestion {
-  // Product lookup
-  correctedName: string;
+  // Thông tin tham khảo (hiển thị để người dùng biết, KHÔNG auto-fill vào form)
   estimatedWeight: string;
   estimatedLength: string;
   productInfo: string;
-  // Vehicle + note suggestion
+  // Gợi ý xe (áp dụng khi người dùng nhấn "Áp dụng")
   recommendedVehicle: 'BIKE' | 'VAN' | 'TRUCK';
   vehicleReason: string;
+  // Ghi chú gợi ý (áp dụng khi người dùng nhấn "Áp dụng")
   suggestedNote: string;
   tips: string[];
-  // Conflict warning
+  // Cảnh báo mâu thuẫn (chỉ hiển thị, không thay đổi dữ liệu)
   conflictWarning?: string;
 }
 
@@ -23,59 +23,40 @@ export interface BookingAIRequest {
   distance?: number;
 }
 
-const SYSTEM_PROMPT = `Bạn là trợ lý AI cho ứng dụng giao hàng BenGo. Bạn có 2 nhiệm vụ:
+const SYSTEM_PROMPT = `Bạn là trợ lý AI cho ứng dụng giao hàng BenGo. Nhiệm vụ của bạn là:
 
-**NHIỆM VỤ 1: TRA CỨU & SỬA THÔNG TIN SẢN PHẨM**
-Khi người dùng nhập tên hàng hóa (có thể viết tắt, sai chính tả, hoặc không đầy đủ), bạn phải:
-- Tra cứu từ kiến thức của bạn để nhận diện sản phẩm chính xác
-- Sửa lại tên đúng chính tả, viết hoa đúng chuẩn (tên thương hiệu, model...)
-- Ước tính cân nặng VÀ chiều dài/kích thước thực tế nếu người dùng chưa nhập hoặc nhập sai
-- Mô tả ngắn gọn về sản phẩm
+**PHÂN TÍCH HÀNG HÓA (chỉ để tham khảo)**
+Dựa vào tên hàng hóa người dùng nhập để:
+- Ước tính cân nặng thực tế của sản phẩm (estimatedWeight)
+- Ước tính kích thước/chiều dài thực tế (estimatedLength)
+- Mô tả ngắn về sản phẩm (productInfo)
+- Nếu thông tin người dùng khai có sự chênh lệch quá lớn so với thực tế, hãy hiển thị cảnh báo (conflictWarning) để người dùng lưu ý.
 
-Ví dụ:
-- "xe ab125" → "Honda Air Blade 125cc" - ~112 kg, dài ~1.9m
-- "may giat samsung 9kg" → "Máy giặt Samsung 9kg" - ~65 kg, dài ~60cm
-- "iphone 15 pro" → "iPhone 15 Pro" - ~0.19 kg, dài ~15cm
-- "tu lanh panasonic" → "Tủ lạnh Panasonic" - ~50-80 kg, cao ~1.7m
-- "ban ghe go" → "Bàn ghế gỗ" - ~30-50 kg, dài ~1.2m
-- "sofa 3 cho" → "Sofa 3 chỗ" - ~80-120 kg, dài ~2.1m
-
-**NHIỆM VỤ 2: GỢI Ý LOẠI XE & GHI CHÚ**
+**GỢI Ý LOẠI XE (BẮT BUỘC DỰA TRÊN THÔNG TIN NGƯỜI DÙNG NHẬP)**
 Các loại xe có sẵn:
-- BIKE: Xe máy - phù hợp hàng nhỏ gọn, dưới 20kg, dài dưới 50cm, không cồng kềnh
-- VAN: Xe tải van - phù hợp hàng trung bình 20-200kg, dài 50cm-1.8m, đồ gia dụng vừa
-- TRUCK: Xe tải lớn - phù hợp hàng nặng trên 200kg HOẶC dài trên 1.8m, cồng kềnh
+- BIKE: Xe máy - tối đa 20kg, dài dưới 50cm.
+- VAN: Xe tải van - từ 20-200kg, dài 50cm-1.8m.
+- TRUCK: Xe tải lớn - trên 200kg HOẶC dài trên 1.8m.
 
-**QUY TẮC XỬ LÝ MÂU THUẪN THÔNG TIN:**
-- Nếu người dùng khai khối lượng nhỏ nhưng tên hàng thực tế rất nặng (ví dụ: khai 5kg nhưng hàng là xe máy ~112kg):
-  → Dùng cân nặng THỰC TẾ của sản phẩm để gợi ý xe, đặt conflictWarning
-- Nếu người dùng có đính kèm ảnh (imageCount > 0):
-  → Lưu ý rằng ảnh có thể chứa hàng hóa nặng/cồng kềnh hơn mô tả. Hãy dựa vào tên sản phẩm để ước tính chính xác.
-  → Nếu số lượng ảnh nhiều (>= 3), khả năng đây là hàng cồng kềnh hoặc nhiều kiện.
-- Nếu chiều dài/kích thước vượt quá giới hạn của xe nhỏ:
-  → Phải ưu tiên gợi ý xe đủ lớn dù cân nặng có vẻ nhỏ
+QUY TẮC TỐI THƯỢNG:
+- Bạn PHẢI sử dụng Khối lượng và Kích thước mà người dùng ĐÃ NHẬP làm căn cứ duy nhất để gợi ý loại phương tiện.
+- KHÔNG ĐƯỢC tự ý dùng số liệu thực tế bạn ước tính để thay đổi gợi ý xe nếu người dùng đã nhập thông tin.
+- **Giải thích lý do (vehicleReason):** Bạn phải giải thích rõ ràng tại sao loại xe này phù hợp dựa trên số liệu người dùng đã nhập. Ví dụ: "Dựa trên khối lượng 10kg và kích thước 40cm bạn nhập, xe máy (BIKE) là lựa chọn tối ưu và tiết kiệm nhất." hoặc "Vì hàng dài 2m (vượt quá giới hạn 1.8m của xe Van), nên bạn cần sử dụng xe tải (TRUCK)."
 
 Trả về JSON chính xác (KHÔNG markdown, KHÔNG \`\`\`json):
 {
-  "correctedName": "Tên sản phẩm đúng chính tả, viết hoa chuẩn",
-  "estimatedWeight": "Số kg ước tính (chỉ số, ví dụ: 112)",
-  "estimatedLength": "Kích thước ước tính (ví dụ: 1.9m x 0.7m hoặc ~60cm)",
-  "productInfo": "Mô tả ngắn về sản phẩm (kích thước ước tính, lưu ý vận chuyển)",
+  "estimatedWeight": "Ước tính thực tế (ví dụ: ~112 kg)",
+  "estimatedLength": "Ước tính thực tế (ví dụ: 1.9m x 0.7m)",
+  "productInfo": "Mô tả ngắn về sản phẩm",
   "recommendedVehicle": "BIKE|VAN|TRUCK",
-  "vehicleReason": "Giải thích ngắn lý do chọn xe (1-2 câu), đề cập cân nặng VÀ kích thước",
-  "suggestedNote": "Ghi chú gợi ý cho tài xế",
+  "vehicleReason": "Giải thích logic lý do chọn xe bằng cách so khớp số liệu người dùng nhập với giới hạn của loại xe đó.",
+  "suggestedNote": "Ghi chú hướng dẫn tài xế cụ thể",
   "tips": ["Mẹo 1", "Mẹo 2"],
-  "conflictWarning": "Cảnh báo nếu thông tin người dùng nhập không khớp với thực tế (để trống nếu không có)"
+  "conflictWarning": "Cảnh báo nếu thông tin người dùng khai chênh lệch lớn so với sản phẩm thực tế"
 }
 
 Quy tắc bắt buộc:
-- correctedName: PHẢI sửa chính tả, viết hoa thương hiệu đúng chuẩn
-- estimatedWeight: Ưu tiên cân nặng THỰC TẾ của sản phẩm, không tin tuyệt đối vào số người dùng nhập nếu mâu thuẫn
-- estimatedLength: PHẢI ước tính kích thước/chiều dài sản phẩm để đánh giá sức chứa xe
-- recommendedVehicle: Phải xem xét CẢ cân nặng lẫn kích thước. Hàng dài/cồng kềnh cần xe lớn dù nhẹ
-- conflictWarning: Thêm cảnh báo khi người dùng khai cân nặng không phù hợp với thực tế sản phẩm
-- Ghi chú phải cụ thể và hữu ích cho tài xế
-- Tips tối đa 3 mục, ngắn gọn
+- vehicleReason: Phải chỉ ra sự tương quan giữa thông số (cân nặng/kích thước) của đơn hàng và khả năng đáp ứng của loại xe.
 - Dùng tiếng Việt tự nhiên`;
 
 export const getBookingAISuggestion = async (
@@ -83,26 +64,29 @@ export const getBookingAISuggestion = async (
   openaiApiKey: string
 ): Promise<BookingAISuggestion> => {
   const weightNote = !request.goodsWeight || request.goodsWeight === '0'
-    ? '(chưa nhập - hãy ước tính giúp)'
+    ? '(chưa nhập - AI hãy ước tính)'
     : `${request.goodsWeight} kg`;
 
   const lengthNote = !request.goodsLength || request.goodsLength.trim() === ''
-    ? '(chưa nhập - hãy ước tính giúp)'
+    ? '(chưa nhập - AI hãy ước tính)'
     : request.goodsLength;
 
   const imageNote = request.imageCount > 0
-    ? `Có ${request.imageCount} ảnh hàng hóa đính kèm. LƯU Ý: Ảnh có thể phản ánh hàng hóa nặng/cồng kềnh hơn mô tả. Hãy dùng kiến thức về sản phẩm để ước tính chính xác.`
+    ? `Có ${request.imageCount} ảnh hàng hóa đính kèm.`
     : 'Không có ảnh hàng hóa';
 
-  const userPrompt = `Thông tin hàng hóa:
-- Tên hàng (người dùng nhập): "${request.goodsName}"
-- Khối lượng (người dùng khai): ${weightNote}
-- Kích thước/Chiều dài: ${lengthNote}
-- ${imageNote}
-- Ghi chú hiện tại: ${request.currentNote || '(chưa có)'}
-${request.distance ? `- Khoảng cách giao: ${request.distance} km` : ''}
+  const userPrompt = `YÊU CẦU: Bạn PHẢI ưu tiên tuyệt đối thông tin người dùng đã nhập dưới đây để gợi ý loại xe và giải thích lý do lựa chọn một cách logic.
 
-QUAN TRỌNG: Hãy tra cứu thực tế của sản phẩm "${request.goodsName}" để biết cân nặng và kích thước thực tế. Nếu người dùng khai cân nặng không phù hợp với sản phẩm thực tế, hãy dùng số liệu thực tế và thêm cảnh báo. Gợi ý xe phải dựa trên cả cân nặng VÀ kích thước.`;
+Thông tin người dùng nhập:
+- Tên hàng: "${request.goodsName}"
+- Khối lượng người dùng khai: ${weightNote}
+- Kích thước người dùng khai: ${lengthNote}
+- ${imageNote}
+
+Hãy thực hiện:
+1. Gợi ý loại xe dựa TRÊN THÔNG TIN NGƯỜI DÙNG ĐÃ NHẬP.
+2. Tại mục "vehicleReason": Hãy giải thích rõ tại sao loại xe đó được chọn dựa trên các thông số người dùng đã cung cấp (so sánh với giới hạn tải trọng/kích thước của xe).
+3. Đưa ra thông tin ước tính thực tế để tham khảo và ghi cảnh báo nếu cần.`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -118,7 +102,7 @@ QUAN TRỌNG: Hãy tra cứu thực tế của sản phẩm "${request.goodsName
           { role: 'user', content: userPrompt },
         ],
         temperature: 0.3,
-        max_tokens: 1000,
+        max_tokens: 800,
       }),
     });
 
@@ -153,8 +137,7 @@ QUAN TRỌNG: Hãy tra cứu thực tế của sản phẩm "${request.goodsName
     }
 
     return {
-      correctedName: parsed.correctedName || request.goodsName,
-      estimatedWeight: parsed.estimatedWeight || request.goodsWeight || '0',
+      estimatedWeight: parsed.estimatedWeight || '',
       estimatedLength: parsed.estimatedLength || '',
       productInfo: parsed.productInfo || '',
       recommendedVehicle: parsed.recommendedVehicle || 'VAN',

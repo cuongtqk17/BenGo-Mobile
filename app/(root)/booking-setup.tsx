@@ -112,28 +112,13 @@ const BookingSetupScreen = () => {
 
   const handleAcceptAISuggestion = () => {
     if (aiSuggestion) {
-      // Auto-fill corrected name
-      if (aiSuggestion.correctedName) {
-        setGoodsName(aiSuggestion.correctedName);
-      }
-      // Auto-fill estimated weight
-      if (aiSuggestion.estimatedWeight && aiSuggestion.estimatedWeight !== '0') {
-        setGoodsWeight(aiSuggestion.estimatedWeight);
-      }
-      // Auto-fill estimated length/dimensions
-      if (aiSuggestion.estimatedLength) {
-        setGoodsLength(aiSuggestion.estimatedLength);
-      }
-      // Auto-fill vehicle
       setSelectedVehicle(aiSuggestion.recommendedVehicle);
-      // Auto-fill note
       if (aiSuggestion.suggestedNote) {
         setNote(aiSuggestion.suggestedNote);
       }
     }
   };
 
-  // C3: API Estimate Trigger
   const fetchEstimate = async (vehicleType: string) => {
     if (!userLatitude || !destinationLatitude) return;
 
@@ -396,20 +381,20 @@ const BookingSetupScreen = () => {
                 <TouchableOpacity
                   onPress={handleAISuggest}
                   disabled={isAILoading}
-                  className={`flex-row items-center justify-center py-3 rounded-2xl border-2 border-dashed ${isAILoading ? 'border-gray-200 bg-gray-50' : 'border-purple-300 bg-purple-50'
+                  className={`flex-row items-center justify-center py-3 rounded-2xl border-2 border-dashed ${isAILoading ? 'border-gray-200 bg-gray-50' : 'border-green-300 bg-green-50'
                     }`}
                 >
                   {isAILoading ? (
                     <>
                       <ActivityIndicator color="#9333EA" size="small" />
-                      <Text className="text-purple-600 font-JakartaBold text-base ml-2">
+                      <Text className="text-green-600 font-JakartaBold text-base ml-2">
                         AI đang phân tích hàng hóa...
                       </Text>
                     </>
                   ) : (
                     <>
                       <Ionicons name="sparkles" size={20} color="#9333EA" />
-                      <Text className="text-purple-600 font-JakartaBold text-base ml-2">
+                      <Text className="text-green-600 font-JakartaBold text-base ml-2">
                         AI Gợi ý loại xe & ghi chú
                       </Text>
                     </>
@@ -420,101 +405,83 @@ const BookingSetupScreen = () => {
                 {aiError && (
                   <View className="mt-2 bg-red-50 border border-red-200 p-3 rounded-xl flex-row items-start">
                     <Ionicons name="alert-circle" size={16} color="#EF4444" />
-                    <Text className="text-red-600 text-xs font-Jakarta ml-2 flex-1">{aiError}</Text>
+                    <Text className="text-red-600 text-sm font-Jakarta ml-2 flex-1">{aiError}</Text>
                   </View>
                 )}
 
                 {/* AI Suggestion Card */}
                 {aiSuggestion && !isAILoading && (
                   <View
-                    className="mt-3 bg-white rounded-2xl p-4 border border-purple-200"
-                    style={{
-                      shadowColor: '#9333EA',
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.08,
-                      shadowRadius: 8,
-                      elevation: 3,
-                    }}
+                    className="mt-3 bg-white rounded-2xl p-4 border border-green-200"
                   >
                     {/* Header */}
                     <View className="flex-row items-center mb-3">
-                      <View className="w-8 h-8 bg-purple-100 rounded-lg items-center justify-center mr-2">
-                        <Ionicons name="sparkles" size={16} color="#9333EA" />
+                      <View className="w-8 h-8 bg-green-50 rounded-lg items-center justify-center mr-2">
+                        <Ionicons name="sparkles" size={16} color="#16a34a" />
                       </View>
-                      <Text className="text-purple-700 font-JakartaBold text-base">Gợi ý từ AI</Text>
+                      <Text className="text-green-600 font-JakartaBold text-base">Gợi ý từ AI</Text>
                     </View>
 
-                    {/* Product Info - Name correction + Weight + Length */}
-                    <View className="bg-blue-50 rounded-xl p-3 mb-3 border border-blue-200">
+                    {/* Vehicle recommendation + Lý do chọn xe */}
+                    <View className="bg-green-50 rounded-xl p-3 mb-3 border border-green-600">
+                      {/* Header: Icon xe + Tên xe đề xuất */}
                       <View className="flex-row items-center mb-2">
-                        <Ionicons name="search" size={16} color="#2563EB" />
-                        <Text className="text-blue-800 font-JakartaBold text-sm ml-2">Thông tin sản phẩm</Text>
-                      </View>
-                      {/* Name correction */}
-                      <View className="flex-row items-center mb-1.5 ml-6">
-                        <Text className="text-gray-500 text-xs font-Jakarta">Tên: </Text>
-                        <Text className="text-gray-400 text-xs font-Jakarta line-through mr-1">{goodsName}</Text>
-                        <Ionicons name="arrow-forward" size={10} color="#2563EB" />
-                        <Text className="text-blue-700 text-xs font-JakartaBold ml-1">{aiSuggestion.correctedName}</Text>
-                      </View>
-                      {/* Weight estimation */}
-                      <View className="flex-row items-center mb-1.5 ml-6">
-                        <Text className="text-gray-500 text-xs font-Jakarta">Cân nặng: </Text>
-                        {goodsWeight && goodsWeight !== '0' ? (
-                          <>
-                            <Text className="text-gray-400 text-xs font-Jakarta line-through mr-1">{goodsWeight} kg</Text>
-                            <Ionicons name="arrow-forward" size={10} color="#2563EB" />
-                          </>
-                        ) : null}
-                        <Text className="text-blue-700 text-xs font-JakartaBold ml-1">~{aiSuggestion.estimatedWeight} kg</Text>
-                      </View>
-                      {/* Length/Dimensions estimation */}
-                      {aiSuggestion.estimatedLength ? (
-                        <View className="flex-row items-center mb-1.5 ml-6">
-                          <Text className="text-gray-500 text-xs font-Jakarta">Kích thước: </Text>
-                          <Text className="text-blue-700 text-xs font-JakartaBold ml-1">{aiSuggestion.estimatedLength}</Text>
+                        <View className="w-9 h-9 bg-green-600 rounded-xl items-center justify-center mr-2">
+                          <Ionicons
+                            name={VEHICLE_TYPES.find(v => v.id === aiSuggestion.recommendedVehicle)?.icon as any || "car"}
+                            size={20}
+                            color="#fff"
+                          />
                         </View>
-                      ) : null}
-                      {/* Product description */}
-                      {aiSuggestion.productInfo ? (
-                        <Text className="text-blue-600 text-xs font-Jakarta ml-6 mt-1 leading-4">
-                          ℹ️ {aiSuggestion.productInfo}
-                        </Text>
-                      ) : null}
-                    </View>
-
-                    {/* Conflict Warning */}
-                    {aiSuggestion.conflictWarning ? (
-                      <View className="bg-amber-50 rounded-xl p-3 mb-3 border border-amber-300 flex-row items-start">
-                        <Ionicons name="warning" size={16} color="#D97706" />
-                        <Text className="text-amber-800 text-xs font-JakartaMedium ml-2 flex-1">
-                          ⚠️ {aiSuggestion.conflictWarning}
-                        </Text>
+                        <Text className="text-green-600 font-JakartaBold text-base">Loại xe được đề xuất:  {VEHICLE_TYPES.find(v => v.id === aiSuggestion.recommendedVehicle)?.title || aiSuggestion.recommendedVehicle}</Text>
                       </View>
-                    ) : null}
 
-                    {/* Vehicle recommendation */}
-                    <View className="bg-purple-50 rounded-xl p-3 mb-3">
-                      <View className="flex-row items-center mb-1">
-                        <Ionicons name="car" size={16} color="#7C3AED" />
-                        <Text className="text-purple-800 font-JakartaBold text-sm ml-2">
-                          Xe đề xuất: {VEHICLE_TYPES.find(v => v.id === aiSuggestion.recommendedVehicle)?.title || aiSuggestion.recommendedVehicle}
-                        </Text>
-                      </View>
-                      <Text className="text-purple-600 text-xs font-Jakarta ml-6">
+                      {/* Divider */}
+                      <View className="h-px bg-green-600 opacity-20 mb-2 mx-1" />
+
+                      {/* Lý do phân tích */}
+                      <Text className="text-green-600 text-sm font-Jakarta leading-5 mb-2">
                         {aiSuggestion.vehicleReason}
                       </Text>
+
+                      {/* Thông số - ưu tiên dùng số liệu người dùng đã nhập */}
+                      {(goodsWeight || goodsLength || aiSuggestion.estimatedWeight || aiSuggestion.estimatedLength) ? (
+                        <View className="bg-white rounded-lg p-2 flex-row flex-wrap">
+                          {/* Khối lượng: dùng số người dùng nhập, fallback về AI estimate */}
+                          {(goodsWeight || aiSuggestion.estimatedWeight) ? (
+                            <View className="flex-row items-center mr-4">
+                              <Text className="text-gray-400 text-sm font-Jakarta">⚖️ </Text>
+                              <Text className="text-gray-600 text-sm font-JakartaMedium">
+                                {goodsWeight ? `${goodsWeight} kg` : aiSuggestion.estimatedWeight}
+                              </Text>
+                            </View>
+                          ) : null}
+                          {/* Kích thước: dùng số người dùng nhập, fallback về AI estimate */}
+                          {(goodsLength || aiSuggestion.estimatedLength) ? (
+                            <View className="flex-row items-center">
+                              <Text className="text-gray-400 text-sm font-Jakarta">📐 </Text>
+                              <Text className="text-gray-600 text-sm font-JakartaMedium">
+                                {goodsLength || aiSuggestion.estimatedLength}
+                              </Text>
+                            </View>
+                          ) : null}
+                        </View>
+                      ) : null}
                     </View>
 
                     {/* Suggested note */}
                     {aiSuggestion.suggestedNote ? (
-                      <View className="bg-amber-50 rounded-xl p-3 mb-3">
-                        <View className="flex-row items-center mb-1">
-                          <Ionicons name="document-text" size={16} color="#D97706" />
-                          <Text className="text-amber-800 font-JakartaBold text-sm ml-2">Ghi chú gợi ý</Text>
+                      <View className="bg-green-50 rounded-xl p-3 mb-3 border border-green-600 border-dashed">
+                        <View className="flex-row items-center mb-2">
+                          <View className="w-9 h-9 bg-green-600 rounded-xl items-center justify-center mr-2">
+                            <Ionicons name="document-text-outline"
+                              size={20}
+                              color="#fff" />
+                          </View>
+                          <Text className="text-green-600 font-JakartaBold text-base">Ghi chú gợi ý cho tài xế</Text>
                         </View>
-                        <Text className="text-amber-700 text-xs font-Jakarta ml-6">
-                          "{aiSuggestion.suggestedNote}"
+                        <Text className="text-green-600 text-sm font-Jakarta">
+                          {aiSuggestion.suggestedNote}
                         </Text>
                       </View>
                     ) : null}
@@ -524,28 +491,20 @@ const BookingSetupScreen = () => {
                       <View className="mb-3">
                         {aiSuggestion.tips.map((tip, idx) => (
                           <View key={idx} className="flex-row items-start mb-1">
-                            <Text className="text-green-500 text-xs mr-1.5">💡</Text>
-                            <Text className="text-gray-600 text-xs font-Jakarta flex-1">{tip}</Text>
+                            <Text className="text-green-600 text-sm mr-1.5 font-JakartaBold">💡</Text>
+                            <Text className="text-green-600 text-sm font-Jakarta flex-1">{tip}</Text>
                           </View>
                         ))}
                       </View>
                     )}
 
                     {/* Accept button */}
-                    <TouchableOpacity
+                    <CustomButton
+                      title="Áp dụng gợi ý: Chọn xe & Điền ghi chú"
                       onPress={handleAcceptAISuggestion}
-                      className="bg-purple-600 py-2.5 rounded-xl flex-row items-center justify-center"
-                      style={{
-                        shadowColor: '#9333EA',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 4,
-                        elevation: 4,
-                      }}
-                    >
-                      <Ionicons name="checkmark-circle" size={18} color="white" />
-                      <Text className="text-white font-JakartaBold text-sm ml-2">Áp dụng tất cả gợi ý</Text>
-                    </TouchableOpacity>
+                      className="bg-green-600"
+                      IconLeft={() => <Ionicons name="checkmark-circle" size={18} color="white" />}
+                    />
                   </View>
                 )}
               </View>

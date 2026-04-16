@@ -18,11 +18,50 @@ import { useUpload } from "@/hooks/useUpload";
 import * as ImagePicker from "expo-image-picker";
 import CustomButton from "@/components/Common/CustomButton";
 import CustomModal from "@/components/Common/CustomModal";
+import SupportContactModal from "@/components/Common/SupportContactModal";
 import InputField from "@/components/Common/InputField";
 import StatusBadge from "@/components/Common/StatusBadge";
+import VehicleBadge from "@/components/Common/VehicleBadge";
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { fetchAPI } from "@/lib/fetch";
+
+const capitalizeLabel = (value?: string) => {
+  if (!value) return "";
+  return value
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const formatDateLabel = (value?: string) => {
+  if (!value) return "Chưa xác định";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Chưa xác định";
+  return date.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+type HeaderSegment =
+  | {
+    key: string;
+    icon: React.ComponentProps<typeof Ionicons>["name"];
+    label: string;
+    type: "status";
+    statusValue: string;
+  }
+  | {
+    key: string;
+    icon: React.ComponentProps<typeof Ionicons>["name"];
+    label: string;
+    type: "info";
+    value: string;
+    subValue?: string;
+    badgeType?: string;
+  };
 
 const ProfileScreen = () => {
   const { user, logout, token } = useAuth();
@@ -45,6 +84,14 @@ const ProfileScreen = () => {
     onConfirm: undefined as (() => void) | undefined,
     onCancel: undefined as (() => void) | undefined
   });
+
+  const [supportModalVisible, setSupportModalVisible] = useState(false);
+  const supportEmail = "hello@bengo.vn";
+  const supportPhone = "19001234";
+  const supportDescription = "Bạn có thể gọi hoặc gửi email bất cứ lúc nào, đội ngũ BenGo luôn sẵn sàng trợ giúp.";
+
+  const openSupportModal = () => setSupportModalVisible(true);
+  const closeSupportModal = () => setSupportModalVisible(false);
 
   const showAlert = (title: string, message: string, onConfirm?: () => void, primaryButtonText = "Đóng", secondaryButtonText = "", onCancel?: () => void) => {
     setAlertModal({ visible: true, title, message, onConfirm, primaryButtonText, secondaryButtonText, onCancel });
@@ -171,14 +218,6 @@ const ProfileScreen = () => {
     );
   };
 
-  if (profileLoading && !refreshing) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#22C55E" />
-      </View>
-    );
-  }
-
   const driverStats = profileData?.stats || {
     totalTrips: 0,
     acceptanceRate: 0,
@@ -187,6 +226,60 @@ const ProfileScreen = () => {
 
   const rank = profileData?.rank || "Silver"; // Mock rank if not in API
   const rating = profileData?.rating || 5.0;
+  const docProfile = documentData?.data?.driverProfile;
+  const statusPieces = [
+    capitalizeLabel(profileData?.status),
+    capitalizeLabel(docProfile?.status),
+  ].filter(Boolean);
+  const statusDisplay = statusPieces.length ? statusPieces.join(" · ") : "Chưa cập nhật";
+  const memberSinceLabel = useMemo(() => formatDateLabel(profileData?.createdAt), [profileData?.createdAt]);
+  const phoneNumberLabel = profileData?.phone || user?.phone || "Chưa cập nhật";
+  const vehicleTypeLabel = capitalizeLabel(docProfile?.vehicleType) || "Chưa cập nhật";
+  const plateNumberLabel = docProfile?.plateNumber ? docProfile.plateNumber.toUpperCase() : "Chưa cập nhật";
+
+  const headerSegments = useMemo<HeaderSegment[]>(
+    () => [
+      {
+        key: "status",
+        icon: "shield-checkmark-outline",
+        label: "Trạng thái tài khoản",
+        type: "status" as const,
+        statusValue: docProfile?.status || profileData?.status || "info",
+      },
+      {
+        key: "member",
+        icon: "calendar-outline",
+        label: "Thành viên từ",
+        type: "info" as const,
+        value: memberSinceLabel,
+      },
+      {
+        key: "vehicle",
+        icon: "car-outline",
+        label: "Phương tiện",
+        type: "info" as const,
+        value: vehicleTypeLabel,
+        subValue: `Biển số: ${plateNumberLabel}`,
+        badgeType: docProfile?.vehicleType || vehicleTypeLabel,
+      },
+      {
+        key: "phone",
+        icon: "call-outline",
+        label: "Số điện thoại",
+        type: "info" as const,
+        value: phoneNumberLabel,
+      },
+    ],
+    [memberSinceLabel, vehicleTypeLabel, plateNumberLabel, phoneNumberLabel, docProfile?.status, profileData?.status]
+  );
+
+  if (profileLoading && !refreshing) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#22C55E" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={['top']}>
@@ -207,59 +300,47 @@ const ProfileScreen = () => {
             className="absolute h-48 w-full"
           />
 
-          <View className="absolute top-24 left-0 right-0 items-center">
-            <View className="relative">
-              <View className="w-[100px] h-[100px] rounded-full bg-gray-100 p-1 shadow-lg items-center justify-center overflow-hidden border-2 border-white">
-                <Image
-                  source={{ uri: profileData?.avatar || `https://api.dicebear.com/9.x/avataaars/png?seed=${user?.name || 'Driver'}` }}
-                  className="w-full h-full rounded-full"
-                />
-              </View>
-            </View>
-
-            <Text className="text-xl font-JakartaBold text-gray-700 mt-4">
-              {user?.name || "Tài xế BenGo"}
-            </Text>
-
-            <View className="flex-row items-center mt-2 gap-2">
-              <View className="flex-row items-center px-3 py-1 bg-green-100 rounded-full border border-green-200">
-                <Ionicons name="star" size={14} color="#EAB308" />
-                <Text className="text-amber-400 font-JakartaBold ml-1 text-sm">
-                  {rating.toFixed(1)}
-                </Text>
-              </View>
+          <View className="absolute top-32 left-0 right-0 items-center px-6">
+            <View className="w-[100px] h-[100px] rounded-full bg-gray-100 p-1 shadow-lg items-center justify-center overflow-hidden border-2 border-white">
+              <Image
+                source={{ uri: profileData?.avatar || `https://api.dicebear.com/9.x/avataaars/png?seed=${user?.name || 'Driver'}` }}
+                className="w-full h-full rounded-full"
+              />
             </View>
           </View>
         </View>
 
-        <View className="px-4 mt-16">
-          {/* P2: Performance Stats Card */}
-          <View
-            className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex-row items-center"
-          >
-            <View className="flex-1 items-center">
-              <Ionicons name="car" size={24} color="#3B82F6" />
-              <Text className="text-gray-500 text-sm mt-1 font-Jakarta">Số chuyến</Text>
-              <Text className="text-gray-700 font-JakartaBold mt-1">{driverStats.totalTrips || 0}</Text>
-            </View>
-
-            <View className="w-[1px] h-10 bg-gray-100" />
-
-            <View className="flex-1 items-center">
-              <Ionicons name="checkmark-circle-outline" size={24} color="#10B981" />
-              <Text className="text-gray-500 text-sm mt-1 font-Jakarta">Tỷ lệ nhận</Text>
-              <Text className="text-gray-700 font-JakartaBold mt-1">{driverStats.acceptanceRate || 0}%</Text>
-            </View>
-
-            <View className="w-[1px] h-10 bg-gray-100" />
-
-            <View className="flex-1 items-center">
-              <Ionicons name="time-outline" size={24} color="#F59E0B" />
-              <Text className="text-gray-500 text-sm mt-1 font-Jakarta">Thâm niên</Text>
-              <Text className="text-gray-700 font-JakartaBold mt-1">{driverStats.seniority || "New"}</Text>
-            </View>
+        <View className="px-4 ">
+          <View className="bg-white rounded-3xl border border-gray-100 shadow-sm p-4 flex-row flex-wrap">
+            <Text className="text-base font-JakartaBold text-gray-700 mb-4 pb-4 border-b border-b-gray-100  w-full">
+              👋 Xin chào tài xế, {user?.name || "Tài xế BenGo"}
+            </Text>
+            {headerSegments.map((item) => (
+              <View key={item.key} className="w-1/2 mb-3">
+                <View className="flex-row items-start gap-3">
+                  <View className="flex-1">
+                    <Text className="text-gray-500 font-JakartaBold mb-1 uppercase text-sm">{item.label}</Text>
+                    {item.type === "status" ? (
+                      <>
+                        <StatusBadge status={item.statusValue || "info"} />
+                      </>
+                    ) : (
+                      <>
+                        {item.badgeType ? (
+                          <VehicleBadge vehicleType={item.badgeType} />
+                        ) : (
+                          <Text className="text-sm font-JakartaBold text-gray-800">{item.value}</Text>
+                        )}
+                      </>
+                    )}
+                  </View>
+                </View>
+              </View>
+            ))}
           </View>
+        </View>
 
+        <View className="px-4">
           {/* P3: Action Menu List */}
           <View className="mt-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
             <MenuActionItem
@@ -276,15 +357,9 @@ const ProfileScreen = () => {
             />
             <Divider />
             <MenuActionItem
-              icon="settings-outline"
-              label="Cài đặt ứng dụng"
-              onPress={() => showAlert("Thông báo", "Chuyển đến màn hình Cài đặt")}
-            />
-            <Divider />
-            <MenuActionItem
               icon="help-buoy-outline"
               label="Trung tâm hỗ trợ"
-              onPress={() => showAlert("Thông báo", "Chuyển đến Trung tâm hỗ trợ")}
+              onPress={openSupportModal}
             />
           </View>
 
@@ -295,7 +370,7 @@ const ProfileScreen = () => {
             bgVariant="danger"
             textVariant="danger"
             IconRight={() => <Ionicons name="log-out-outline" size={24} color="#FFF" />}
-            className="my-8"
+            className="my-4"
           />
         </View>
       </ScrollView>
@@ -308,6 +383,13 @@ const ProfileScreen = () => {
         primaryButtonText={alertModal.primaryButtonText}
         secondaryButtonText={alertModal.secondaryButtonText}
         onSecondaryPress={handleSecondaryPress}
+      />
+      <SupportContactModal
+        visible={supportModalVisible}
+        onClose={closeSupportModal}
+        email={supportEmail}
+        phone={supportPhone}
+        description={supportDescription}
       />
 
       <BottomSheet

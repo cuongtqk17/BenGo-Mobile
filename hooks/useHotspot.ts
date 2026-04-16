@@ -28,7 +28,8 @@ export const useHotspot = (): UseHotspotReturn => {
         throw new Error('Thiếu OPENAI API KEY. Vui lòng thêm EXPO_PUBLIC_OPENAI_API_KEY vào file .env');
       }
 
-      const response = await predictHotspots({ latitude, longitude, radius }, apiKey);
+      const googleApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+      const response = await predictHotspots({ latitude, longitude, radius }, apiKey, googleApiKey);
       setHotspots(response.locations);
       setSummary(response.summary);
       setAnalyzedAt(response.analyzedAt);

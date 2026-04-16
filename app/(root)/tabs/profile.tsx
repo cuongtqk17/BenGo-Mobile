@@ -7,8 +7,6 @@ import {
     Image,
     ActivityIndicator,
     RefreshControl,
-    Dimensions,
-    Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,6 +15,7 @@ import { router } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import CustomModal from "@/components/Common/CustomModal";
+import SupportContactModal from "@/components/Common/SupportContactModal";
 import CustomButton from "@/components/Common/CustomButton";
 
 const CustomerProfileScreen = () => {
@@ -33,6 +32,14 @@ const CustomerProfileScreen = () => {
         onConfirm: undefined as (() => void) | undefined,
         onCancel: undefined as (() => void) | undefined
     });
+
+    const [supportModalVisible, setSupportModalVisible] = useState(false);
+    const supportEmail = "hello@bengo.vn";
+    const supportPhone = "19001234";
+    const supportDescription = "Bạn có thể gọi hoặc gửi email bất cứ lúc nào, đội ngũ BenGo luôn sẵn sàng trợ giúp.";
+
+    const openSupportModal = () => setSupportModalVisible(true);
+    const closeSupportModal = () => setSupportModalVisible(false);
 
     const showAlert = (title: string, message: string, onConfirm?: () => void, primaryButtonText = "Đóng", secondaryButtonText = "", onCancel?: () => void) => {
         setAlertModal({ visible: true, title, message, onConfirm, primaryButtonText, secondaryButtonText, onCancel });
@@ -174,7 +181,7 @@ const CustomerProfileScreen = () => {
                         <MenuActionItem
                             icon="help-buoy-outline"
                             label="Trung tâm hỗ trợ"
-                            onPress={() => Linking.openURL('tel:19001234')}
+                            onPress={openSupportModal}
                         />
                         <Divider />
                         <MenuActionItem
@@ -206,6 +213,13 @@ const CustomerProfileScreen = () => {
                 primaryButtonText={alertModal.primaryButtonText}
                 secondaryButtonText={alertModal.secondaryButtonText}
                 onSecondaryPress={handleSecondaryPress}
+            />
+            <SupportContactModal
+                visible={supportModalVisible}
+                onClose={closeSupportModal}
+                email={supportEmail}
+                phone={supportPhone}
+                description={supportDescription}
             />
         </SafeAreaView>
     );

@@ -52,6 +52,7 @@ const BookingSetupScreen = () => {
   } = useLocationStore();
   const [goodsName, setGoodsName] = useState("");
   const [goodsWeight, setGoodsWeight] = useState("");
+  const [goodsLength, setGoodsLength] = useState("");
   const [note, setNote] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState(VEHICLE_TYPES[1].id); // Default VAN
@@ -101,6 +102,7 @@ const BookingSetupScreen = () => {
     await getAISuggestion({
       goodsName,
       goodsWeight: goodsWeight || '0',
+      goodsLength: goodsLength || '',
       hasImages: images.length > 0,
       imageCount: images.length,
       currentNote: note,
@@ -117,6 +119,10 @@ const BookingSetupScreen = () => {
       // Auto-fill estimated weight
       if (aiSuggestion.estimatedWeight && aiSuggestion.estimatedWeight !== '0') {
         setGoodsWeight(aiSuggestion.estimatedWeight);
+      }
+      // Auto-fill estimated length/dimensions
+      if (aiSuggestion.estimatedLength) {
+        setGoodsLength(aiSuggestion.estimatedLength);
       }
       // Auto-fill vehicle
       setSelectedVehicle(aiSuggestion.recommendedVehicle);
@@ -301,6 +307,8 @@ const BookingSetupScreen = () => {
                   initialLocation={userAddress || ""}
                   handlePress={(location) => setUserLocation(location)}
                   containerStyle="bg-gray-100"
+                  userLatitude={userLatitude}
+                  userLongitude={userLongitude}
                 />
               </View>
               {/* Dropoff Section */}
@@ -310,6 +318,8 @@ const BookingSetupScreen = () => {
                   initialLocation={destinationAddress || ""}
                   handlePress={(location) => setDestinationLocation(location)}
                   containerStyle="bg-gray-100"
+                  userLatitude={userLatitude}
+                  userLongitude={userLongitude}
                 />
               </View>
               {/* C2: Goods Info Card */}
@@ -335,6 +345,14 @@ const BookingSetupScreen = () => {
                   value={goodsWeight}
                   onChangeText={setGoodsWeight}
                   keyboardType="numeric"
+                />
+
+                <InputField
+                  label="Kích thước / Chiều dài (Tùy chọn)"
+                  labelStyle="text-base text-neutral-600 font-JakartaMedium mb-0"
+                  placeholder="Ví dụ: 1.9m x 0.7m hoặc ~60cm"
+                  value={goodsLength}
+                  onChangeText={setGoodsLength}
                 />
 
                 <TextArea
@@ -384,14 +402,14 @@ const BookingSetupScreen = () => {
                   {isAILoading ? (
                     <>
                       <ActivityIndicator color="#9333EA" size="small" />
-                      <Text className="text-purple-600 font-JakartaBold text-sm ml-2">
+                      <Text className="text-purple-600 font-JakartaBold text-base ml-2">
                         AI đang phân tích hàng hóa...
                       </Text>
                     </>
                   ) : (
                     <>
                       <Ionicons name="sparkles" size={20} color="#9333EA" />
-                      <Text className="text-purple-600 font-JakartaBold text-sm ml-2">
+                      <Text className="text-purple-600 font-JakartaBold text-base ml-2">
                         AI Gợi ý loại xe & ghi chú
                       </Text>
                     </>
@@ -426,7 +444,7 @@ const BookingSetupScreen = () => {
                       <Text className="text-purple-700 font-JakartaBold text-base">Gợi ý từ AI</Text>
                     </View>
 
-                    {/* Product Info - Name correction + Weight */}
+                    {/* Product Info - Name correction + Weight + Length */}
                     <View className="bg-blue-50 rounded-xl p-3 mb-3 border border-blue-200">
                       <View className="flex-row items-center mb-2">
                         <Ionicons name="search" size={16} color="#2563EB" />
@@ -450,6 +468,13 @@ const BookingSetupScreen = () => {
                         ) : null}
                         <Text className="text-blue-700 text-xs font-JakartaBold ml-1">~{aiSuggestion.estimatedWeight} kg</Text>
                       </View>
+                      {/* Length/Dimensions estimation */}
+                      {aiSuggestion.estimatedLength ? (
+                        <View className="flex-row items-center mb-1.5 ml-6">
+                          <Text className="text-gray-500 text-xs font-Jakarta">Kích thước: </Text>
+                          <Text className="text-blue-700 text-xs font-JakartaBold ml-1">{aiSuggestion.estimatedLength}</Text>
+                        </View>
+                      ) : null}
                       {/* Product description */}
                       {aiSuggestion.productInfo ? (
                         <Text className="text-blue-600 text-xs font-Jakarta ml-6 mt-1 leading-4">
@@ -457,6 +482,16 @@ const BookingSetupScreen = () => {
                         </Text>
                       ) : null}
                     </View>
+
+                    {/* Conflict Warning */}
+                    {aiSuggestion.conflictWarning ? (
+                      <View className="bg-amber-50 rounded-xl p-3 mb-3 border border-amber-300 flex-row items-start">
+                        <Ionicons name="warning" size={16} color="#D97706" />
+                        <Text className="text-amber-800 text-xs font-JakartaMedium ml-2 flex-1">
+                          ⚠️ {aiSuggestion.conflictWarning}
+                        </Text>
+                      </View>
+                    ) : null}
 
                     {/* Vehicle recommendation */}
                     <View className="bg-purple-50 rounded-xl p-3 mb-3">

@@ -78,13 +78,13 @@ const DriverHome = () => {
   );
 
   const pendingOrders = isOnline ? rawPendingOrders : [];
-
-  const { data: driverStats = { totalEarnings: 0, totalTrips: 0, rating: 5 }, isLoading: isLoadingStats } = useDriverStats(
-    today,
-    today
-  );
-
   const { data: activeOrder, isLoading: isLoadingActiveOrder } = useDriverActiveOrder();
+
+  const { data: driverStats } = useDriverStats(
+    today,
+    today,
+    { refetchInterval: 4000 }
+  );
 
   const { data: todayOrdersData } = useDriverOrders({
     limit: 100,
@@ -325,8 +325,8 @@ const DriverHome = () => {
 
       <View className="flex-1">
         <SummaryCard
-          totalEarnings={calculatedTodayStats.totalNet}
-          totalTrips={calculatedTodayStats.totalTrips}
+          totalEarnings={driverStats?.totalEarnings || calculatedTodayStats.totalNet}
+          totalTrips={driverStats?.totalTrips || calculatedTodayStats.totalTrips}
         />
 
         {activeOrder && (

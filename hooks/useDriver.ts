@@ -23,11 +23,12 @@ export const useDriverActiveOrder = () => {
     });
 };
 
-export const useDriverStats = (from: string, to: string, enabled: boolean = true) => {
+export const useDriverStats = (from: string, to: string, options?: { enabled?: boolean; refetchInterval?: number }) => {
     return useQuery({
         queryKey: ["driver-stats", from, to],
         queryFn: () => DriverApi.getStats(from, to),
-        enabled: enabled && !!from && !!to,
+        enabled: (options?.enabled !== false) && !!from && !!to,
+        ...options
     });
 };
 

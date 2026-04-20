@@ -1,4 +1,6 @@
 import { transporter } from './config';
+import dotenv from 'dotenv';
+dotenv.config();
 import {
   getRideConfirmationHTML,
   getRideConfirmationText,
@@ -11,6 +13,10 @@ export const sendRideConfirmationEmail = async (
   data: RideConfirmationData
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
+    console.log("sendRideConfirmationEmail process.env check:", {
+      EMAIL_USER: process.env.EMAIL_USER ? "Defined" : "Undefined",
+      EMAIL_PASS: process.env.EMAIL_PASS ? "Defined" : "Undefined"
+    });
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       return {
         success: false,
@@ -44,6 +50,10 @@ export const sendVerificationEmail = async (
   otp: string
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
+    console.log("sendVerificationEmail process.env check:", {
+      EMAIL_USER: process.env.EMAIL_USER ? "Defined" : "Undefined",
+      EMAIL_PASS: process.env.EMAIL_PASS ? "Defined" : "Undefined"
+    });
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       return {
         success: false,

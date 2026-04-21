@@ -124,7 +124,7 @@ const HOTSPOT_CATEGORY_CONFIG: Array<{
       category: "port",
       placeTypes: ["establishment"],
       label: "Cảng / Bến tàu",
-      keyword: "cảng",
+      keyword: "bến cảng",
     },
     {
       category: "building_materials",
@@ -372,9 +372,6 @@ const fetchCategoryPlaces = async (
     `&language=vi` +
     `&key=${googleApiKey}`;
 
-  __DEV__ && console.log(
-    `🗺️ [GGMap] Request: ${config.label} (type=${primaryType}${config.keyword ? `, keyword=${config.keyword}` : ""})`
-  );
 
   // #7: retry tối đa 2 lần khi mạng lỗi hoặc 5xx
   const res = await fetchWithRetry(() => fetch(url));
@@ -396,10 +393,7 @@ const fetchCategoryPlaces = async (
     isPlaceRelevant((place.name ?? "") as string, config.category)
   );
   const removedCount = results.length - filtered.length;
-  __DEV__ && console.log(
-    `🗺️ [GGMap] Response: ${config.label} → ${results.length} kết quả` +
-    (removedCount > 0 ? ` (−${removedCount} bị lọc)` : "")
-  );
+
 
   return filtered.map((place) => ({
     id: place.place_id as string,
@@ -440,18 +434,14 @@ export const searchNearbyHotspots = async (
   const cacheKey = getPlacesCacheKey(latitude, longitude, radiusKm);
   const cached = placesCache.get(cacheKey);
   if (cached && Date.now() < cached.expiry) {
-    __DEV__ && console.log(
-      `🗺️ [Hotspot] Cache hit → ${cached.data.places.length} địa điểm (còn ${Math.round((cached.expiry - Date.now()) / 1000)}s)`
-    );
+
     return cached.data;
   }
 
   const googleApiKey = getGoogleApiKey();
   const radiusMeters = Math.min(radiusKm * 1000, 50000);
 
-  __DEV__ && console.log(
-    `🗺️ [Hotspot] Bắt đầu tìm địa điểm — tọa độ: ${latitude}, ${longitude} | bán kính: ${radiusKm}km | ${HOTSPOT_CATEGORY_CONFIG.length} nhóm (song song)`
-  );
+
 
   // ── Gọi 6 nhóm song song ─────────────────────────────────────────────────
   const settled = await Promise.allSettled(
@@ -485,7 +475,6 @@ export const searchNearbyHotspots = async (
     }
   }
 
-  __DEV__ && console.log(`🗺️ [Hotspot] Hoàn thành tìm địa điểm → tổng ${allPlaces.length} nơi (sau khi loại trùng)`);
 
   const nearbyResult: NearbyHotspotsResult = {
     latitude,
@@ -517,9 +506,7 @@ export const getWeatherByCoords = async (
   const cacheKey = getWeatherCacheKey(lat, lng);
   const cached = weatherCache.get(cacheKey);
   if (cached && Date.now() < cached.expiry) {
-    __DEV__ && console.log(
-      `☁️ [Weather] Cache hit → ${cached.data.description} ${cached.data.temperature}°C (còn ${Math.round((cached.expiry - Date.now()) / 1000)}s)`
-    );
+
     return cached.data;
   }
 
@@ -529,7 +516,6 @@ export const getWeatherByCoords = async (
     `?lat=${lat}&lon=${lng}` +
     `&appid=${owApiKey}&units=metric&lang=vi`;
 
-  __DEV__ && console.log(`☁️ [Weather] Request: OpenWeatherMap (${lat}, ${lng})`);
 
   // #7: retry tối đa 2 lần
   const res = await fetchWithRetry(() => fetch(url));
@@ -688,7 +674,6 @@ export const predictHotspots = async (
   const radiusKm = request.radius ?? 10;
   const maxResults = getMaxResultsByRadius(radiusKm);
 
-  __DEV__ && console.log(`🔥 [Hotspot] Bán kính ${radiusKm}km → tối đa ${maxResults} kết quả`);
 
   // ── Bước 1 & 2: Song song lấy địa điểm (Google Places) và thời tiết ────────
   // searchNearbyHotspots và getWeatherByCoords hoàn toàn độc lập → chạy đồng thời
@@ -784,11 +769,6 @@ export const predictHotspots = async (
     `Chọn ĐÚNG ${maxResults} địa điểm có tiềm năng đơn vận chuyển cao nhất tại ${timeStr} ${dayName}. ` +
     `Ưu tiên: Siêu thị > Chợ > Cảng > VLXD > Xây dựng > Xuất khẩu.`;
 
-  __DEV__ && console.log(
-    `🤖 [AI Prompt] System (${buildAiRankingPrompt(maxResults, cityContext).length} chars) | User (${userPrompt.length} chars)\n` +
-    `Gửi ${placesForAi.length} địa điểm (${[...byCategory.keys()].join(", ")})`
-  );
-  __DEV__ && console.log(`🤖 [AI UserPrompt]\n${userPrompt}`);
 
 
   // ── Bước 4: Gửi AI phân tích ─────────────────────────────────────────────
@@ -828,8 +808,6 @@ export const predictHotspots = async (
     throw new Error("Không nhận được phản hồi từ AI");
   }
 
-  // DEBUG: log toàn bộ nội dung AI trả về để kiểm tra chất lượng
-  __DEV__ && console.log(`🤖 [AI Response] tokens=${aiData.usage?.total_tokens ?? "?"} | content:\n${content}`);
 
   // ── Bước 5: Parse JSON — response_format json_object đảm bảo luôn hợp lệ ──
   let rawJson: unknown;
@@ -848,13 +826,7 @@ export const predictHotspots = async (
   }
   const parsed = zodResult.data;
 
-  __DEV__ && console.log(
-    `🤖 [AI Ranked] ${parsed.rankedLocations.length} địa điểm được chọn:\n` +
-    parsed.rankedLocations.map((r, i) => {
-      const match = nearbyResult.places.find((p) => p.id === r.id);
-      return `  ${i + 1}. [${r.crowdLevel}] id=${r.id} → ${match ? `✅ ${match.name}` : "❌ KHÔNG MATCH"}`;
-    }).join("\n")
-  );
+
 
   // ── Bước 7: Map tọa độ thực tế từ Google Places → không tin tọa độ AI ────
   const rankedLocations: HotspotLocation[] = parsed.rankedLocations
